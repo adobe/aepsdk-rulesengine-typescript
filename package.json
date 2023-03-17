@@ -8,6 +8,7 @@
     "format": "prettier --write \"{src,test}/**/*.{js,ts}\" \"**/*.md\"",
     "pretty-quick": "pretty-quick",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "author": "Adobe",
   "license": "ISC",
