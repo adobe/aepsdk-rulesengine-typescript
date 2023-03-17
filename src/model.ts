@@ -7,7 +7,7 @@ const MATCHERS = {
   ne: createNotEquals(),
 };
 
-const evaluateAnd = (context, conditions) => {
+function evaluateAnd(context, conditions) {
   let result = true;
 
   for (let i = 0; i < conditions.length; i += 1) {
@@ -15,9 +15,9 @@ const evaluateAnd = (context, conditions) => {
   }
 
   return result;
-};
+}
 
-const evaluateOr = (context, conditions) => {
+function evaluateOr(context, conditions) {
   let result = false;
 
   for (let i = 0; i < conditions.length; i += 1) {
@@ -29,13 +29,13 @@ const evaluateOr = (context, conditions) => {
   }
 
   return false;
-};
+}
 
-export const createRules = (version, rules) => {
+export function createRules(version, rules) {
   return { version, rules };
-};
+}
 
-export const createRule = (condition, consequences) => {
+export function createRule(condition, consequences) {
   return {
     execute: (context) => {
       if (condition.evaluate(context)) {
@@ -48,9 +48,9 @@ export const createRule = (condition, consequences) => {
       return `Rule{condition=${condition}, consequences=${consequences}}`;
     },
   };
-};
+}
 
-export const createCondition = (type, definition) => {
+export function createCondition(type, definition) {
   return {
     evaluate: (context) => {
       return definition.evaluate(context);
@@ -59,13 +59,13 @@ export const createCondition = (type, definition) => {
       return `Condition{type=${type}, definition=${definition}}`;
     },
   };
-};
+}
 
-export const createConsequence = (id, type, detail) => {
+export function createConsequence(id, type, detail) {
   return { id, type, detail };
-};
+}
 
-export const createGroupDefinition = (logic, conditions) => {
+export function createGroupDefinition(logic, conditions) {
   return {
     evaluate: (context) => {
       if (AND === logic) {
@@ -79,9 +79,9 @@ export const createGroupDefinition = (logic, conditions) => {
       return false;
     },
   };
-};
+}
 
-export const createMatcherDefinition = (key, matcher, values) => {
+export function createMatcherDefinition(key, matcher, values) {
   return {
     evaluate: (context) => {
       const result = MATCHERS[matcher];
@@ -93,4 +93,4 @@ export const createMatcherDefinition = (key, matcher, values) => {
       return result.matches(context, key, values);
     },
   };
-};
+}

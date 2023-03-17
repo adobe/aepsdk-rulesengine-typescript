@@ -10,20 +10,20 @@ import {
 const MATCHER = "matcher";
 const GROUP = "group";
 
-const parseMatcherDefinition = (json) => {
+function parseMatcherDefinition(json) {
   const { key, matcher, values } = json;
 
   return createMatcherDefinition(key, matcher, values);
-};
+}
 
-const parseGroupDefinition = (json) => {
+function parseGroupDefinition(json) {
   const { logic, conditions } = json;
 
   // eslint-disable-next-line no-use-before-define
   return createGroupDefinition(logic, conditions.map(parseCondition));
-};
+}
 
-const parseCondition = (json) => {
+function parseCondition(json) {
   const { type, definition } = json;
 
   if (MATCHER === type) {
@@ -35,31 +35,31 @@ const parseCondition = (json) => {
   }
 
   throw new Error("Can not parse condition");
-};
+}
 
-const parseConsequence = (json) => {
+function parseConsequence(json) {
   const { id, type, detail } = json;
 
   return createConsequence(id, type, detail);
-};
+}
 
-const parseRule = (json) => {
+function parseRule(json) {
   const { condition, consequences } = json;
 
   return createRule(
     parseCondition(condition),
     consequences.map(parseConsequence)
   );
-};
+}
 
-export const parseRules = (json) => {
+export function parseRules(json) {
   const { version, rules } = json;
 
   return createRules(version, rules.map(parseRule));
-};
+}
 
-export const parse = (value) => {
+export function parse(value) {
   const json = JSON.parse(value);
 
   return parseRules(json);
-};
+}

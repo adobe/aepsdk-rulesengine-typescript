@@ -1,4 +1,4 @@
-export const createEquals = () => {
+export function createEquals() {
   return {
     matches: (context, key, values) => {
       const needle = context[key];
@@ -16,9 +16,9 @@ export const createEquals = () => {
       return false;
     },
   };
-};
+}
 
-export const createNotEquals = () => {
+export function createNotEquals() {
   return {
     matches: (context, key, values) => {
       const needle = context[key];
@@ -30,4 +30,4 @@ export const createNotEquals = () => {
       return values.indexOf(needle) === -1;
     },
   };
-};
+}
