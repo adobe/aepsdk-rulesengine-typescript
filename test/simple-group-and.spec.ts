@@ -48,7 +48,7 @@ describe("simple group-and", () => {
     ruleset = RulesEngine(RULE_DEFINITION);
   });
 
-  test("execute true", () => {
+  it("execute true", () => {
     const result = ruleset.execute({
       key1: "value1",
       key2: "value2",
@@ -58,7 +58,7 @@ describe("simple group-and", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  test("execute first condition false", () => {
+  it("execute first condition false", () => {
     const result = ruleset.execute({
       key1: "valueX",
       key2: "value2",
@@ -68,7 +68,7 @@ describe("simple group-and", () => {
     expect(result).toEqual([]);
   });
 
-  test("execute second condition false", () => {
+  it("execute second condition false", () => {
     const result = ruleset.execute({
       key1: "value1",
       key2: "value2",

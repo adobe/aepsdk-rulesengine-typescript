@@ -48,7 +48,7 @@ describe("simple group-or", () => {
     ruleset = RulesEngine(RULE_DEFINITION);
   });
 
-  test("execute both conditions true", () => {
+  it("execute both conditions true", () => {
     const result = ruleset.execute({
       key1: "value1",
       key2: "value2",
@@ -58,7 +58,7 @@ describe("simple group-or", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  test("execute first condition true", () => {
+  it("execute first condition true", () => {
     const result = ruleset.execute({
       key1: "value1",
       key2: "value2",
@@ -68,7 +68,7 @@ describe("simple group-or", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  test("execute second condition true", () => {
+  it("execute second condition true", () => {
     const result = ruleset.execute({
       key1: "valueX",
       key2: "value2",
@@ -78,7 +78,7 @@ describe("simple group-or", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  test("execute both conditions false", () => {
+  it("execute both conditions false", () => {
     const result = ruleset.execute({
       key1: "valueX",
       key2: "value2",
