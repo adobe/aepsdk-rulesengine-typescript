@@ -1,11 +1,7 @@
-import { createEquals, createNotEquals } from "./matchers";
+import { getMatcher } from "./matchers";
 
 const AND = "and";
 const OR = "or";
-const MATCHERS = {
-  eq: createEquals(),
-  ne: createNotEquals(),
-};
 
 function evaluateAnd(context, conditions) {
   let result = true;
@@ -81,16 +77,16 @@ export function createGroupDefinition(logic, conditions) {
   };
 }
 
-export function createMatcherDefinition(key, matcher, values) {
+export function createMatcherDefinition(key, matcherKey, values) {
   return {
     evaluate: (context) => {
-      const result = MATCHERS[matcher];
+      const matcher = getMatcher(matcherKey);
 
-      if (!result) {
+      if (!matcher) {
         return false;
       }
 
-      return result.matches(context, key, values);
+      return matcher.matches(context, key, values);
     },
   };
 }

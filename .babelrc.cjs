@@ -3,20 +3,23 @@ module.exports = {
   env: {
     development: {
       presets: [
-        ["@babel/preset-env", { targets: { node: "current" } }],
         "@babel/typescript",
+        ["@babel/preset-env", { targets: { node: "current" } }],
       ],
     },
     production: {
       presets: [
-        "@babel/env",
-        {
-          targets: {
-            browsers: ["chrome 95"],
+        "@babel/typescript",
+        [
+          "@babel/env",
+          {
+            targets: {
+              browsers: ["chrome 95"],
+            },
+            modules: false,
+            loose: true,
           },
-          modules: false,
-          loose: true,
-        },
+        ],
       ],
     },
   },

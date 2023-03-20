@@ -1,4 +1,6 @@
-export function createEquals() {
+import { Matcher } from "../types/matchers";
+
+export function createEquals(): Matcher {
   return {
     matches: (context, key, values) => {
       const needle = context[key];
@@ -14,20 +16,6 @@ export function createEquals() {
       }
 
       return false;
-    },
-  };
-}
-
-export function createNotEquals() {
-  return {
-    matches: (context, key, values) => {
-      const needle = context[key];
-
-      if (!needle) {
-        return false;
-      }
-
-      return values.indexOf(needle) === -1;
     },
   };
 }
