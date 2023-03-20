@@ -6,6 +6,7 @@ import {
   createRule,
   createRules,
 } from "./model";
+import { RuleSet } from "./types/rules";
 
 const MATCHER = "matcher";
 const GROUP = "group";
@@ -52,8 +53,8 @@ function parseRule(json) {
   );
 }
 
-export function parseRules(json) {
-  const { version, rules } = json;
+export function parseRules(ruleset: RuleSet) {
+  const { version, rules } = ruleset;
 
   return createRules(version, rules.map(parseRule));
 }

@@ -1,3 +1,7 @@
+export interface Context {
+  [key: string]: object;
+}
+
 export interface Consequence {
   type: string;
   detail: any;
