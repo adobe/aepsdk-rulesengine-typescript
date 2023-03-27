@@ -1,38 +1,71 @@
-# Mobile SDK Rules Engine – TypeScript Implementation
+# AEP Rules Engine
 
-A TypeScript implementation of the Adobe Mobile SDK rules engine.
+## Overview
+A simple, generic, extensible Rules Engine in TypeScript.
 
-Although written in TypeScript, the build produces javascript implementations that can be used anywhere JavaScript can be evaluated – like Node.js, browsers v8 or Rhino.
+## Installation
 
-There are many benefits to using TypeScript, some of them include:
+Although written in TypeScript, the build produces JavaScript implementations that can be used anywhere JavaScript can be evaluated.
 
-- Strong typing during development
-- Easy export and publishing of type definitions.
-- Including type definitions with npm module to improve developer experience.
+Install via npm.
 
-## Todo
+```bash
+npm install @adobe/aep-rules-engine
+```
 
-- [ ] Support all matchers
-  - Equals
-  - Not Equals
-  - Exists
-  - Not Exists
-  - Greater Than
-  - Greater Than or Equals
-  - Less Than
-  - Less Than or Equals
-  - Contains
-  - Not Contains
-  - Starts With
-  - Ends With
-- [ ] support events history
-- [ ] add types/interfaces
-- [ ] achieve >90% test coverage by adding unit tests and real world tests
-- [ ] publish on github.com/adobe open source
-- [ ] Add github actions to run tests, build, and publish to npm.
-- [ ] integrate with alloy as dependency
+## Usage
 
-## Reference
+```javascript
+const RulesEngine = require("@adobe/aep-rules-engine");
 
-- [Rules Engine Summary](https://wiki.corp.adobe.com/display/ADMSMobile/Rules+Engine)
-- [Definition of Rules](https://wiki.corp.adobe.com/display/ADMSMobile/Definition+of+Rules)
+const ruleset = RulesEngine({
+  version: 1,
+  rules: [
+    {
+      condition: {
+        definition: {
+          conditions: [
+            {
+              definition: {
+                conditions: [
+                  {
+                    definition: {
+                      key: "color",
+                      matcher: "eq",
+                      values: ["orange", "blue"],
+                    },
+                    type: "matcher",
+                  }
+                ],
+                logic: "and",
+              },
+              type: "group",
+            },
+          ],
+          logic: "and",
+        },
+        type: "group",
+      },
+      consequences: [
+        {
+          type: "item",
+          detail: {
+            hello: "world",
+          },
+          id: "abc123",
+        },
+      ],
+    },
+  ],
+});
+
+const consequences = ruleset.execute({action: "greet" });
+```
+
+## Contributing
+
+Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING.md) for more information.
+
+## Licensing
+
+This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.
