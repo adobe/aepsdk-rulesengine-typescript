@@ -7,9 +7,9 @@ const RULE_DEFINITION = {
       condition: {
         type: "matcher",
         definition: {
-          key: "key1",
+          key: "browser",
           matcher: "eq",
-          values: ["value1", "value2"],
+          values: ["firefox", "chrome"],
         },
       },
       consequences: [
@@ -25,7 +25,7 @@ const RULE_DEFINITION = {
   ],
 };
 
-describe("simple ruleset", () => {
+describe("matcher type - equals (eq)", () => {
   let ruleset;
 
   beforeEach(() => {
@@ -40,21 +40,21 @@ describe("simple ruleset", () => {
     expect(ruleset.numRules()).toBe(1);
   });
 
-  it("execute true", () => {
+  it("returns consequences when any of the values equals the relevant key:value in context", () => {
     const result = ruleset.execute({
-      key1: "value1",
-      key2: "value2",
-      key3: "value5",
+      browser: "firefox",
+      timeSpentOnPage: 5,
+      os: "windows",
     });
 
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("execute false", () => {
+  it("returns empty consequence when condition doesn't match meaning none of browser values matching the given context value of browser", () => {
     const result = ruleset.execute({
-      key1: "valueX",
-      key2: "valueX",
-      key3: "valueX",
+      browser: "safari",
+      timeSpentOnPage: 5,
+      os: "windows",
     });
 
     expect(result).toEqual([]);

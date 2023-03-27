@@ -1,4 +1,4 @@
-import RulesEngine from "./index";
+import RulesEngine from "../src";
 
 describe("RulesEngine", () => {
   it("evaluates a ruleset and returns consequences", () => {

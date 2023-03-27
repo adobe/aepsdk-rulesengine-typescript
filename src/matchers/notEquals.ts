@@ -1,4 +1,4 @@
-import { Matcher } from "../types/matchers";
+import { Matcher } from "../types/rules";
 
 export function createNotEquals(): Matcher {
   return {

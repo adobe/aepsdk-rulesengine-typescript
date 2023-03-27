@@ -1,5 +1,5 @@
 export interface Context {
-  [key: string]: object;
+  [key: string]: object | string;
 }
 
 export interface Consequence {
@@ -14,4 +14,7 @@ export interface Rule {
 export interface RuleSet {
   version: number;
   rules: Array<Rule>;
+}
+export interface Matcher {
+  matches(context, key, values): boolean;
 }
