@@ -14,12 +14,16 @@ import { createNotEquals } from "./notEquals";
 import { createExists } from "./exists";
 import { createNotExists } from "./notexists";
 import { Matcher } from "../types/rules";
+import { createGreaterThan } from "./GreaterThan";
+import { createGreaterThanEquals } from "./GreaterThanEquals";
 
 const MATCHERS = {
   eq: createEquals(),
   ne: createNotEquals(),
   ex: createExists(),
   nx: createNotExists(),
+  gt: createGreaterThan(),
+  ge: createGreaterThanEquals(),
 };
 
 export function getMatcher(key): Matcher {

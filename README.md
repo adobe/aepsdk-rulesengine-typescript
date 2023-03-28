@@ -1,6 +1,7 @@
 # AEP Rules Engine
 
 ## Overview
+
 A simple, generic, extensible Rules Engine in TypeScript.
 
 ## Installation
@@ -35,7 +36,7 @@ const ruleset = RulesEngine({
                       values: ["orange", "blue"],
                     },
                     type: "matcher",
-                  }
+                  },
                 ],
                 logic: "and",
               },
@@ -59,7 +60,7 @@ const ruleset = RulesEngine({
   ],
 });
 
-const consequences = ruleset.execute({action: "greet" });
+const consequences = ruleset.execute({ action: "greet" });
 ```
 
 ## Contributing
