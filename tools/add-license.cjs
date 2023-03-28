@@ -11,10 +11,13 @@ governing permissions and limitations under the License.
 */
 const fs = require("fs");
 const path = require("path");
+const stagedGitFiles = require("staged-git-files");
 const Handlebars = require("handlebars");
 
+const PROJECT_ROOT = path.resolve(__dirname, "../");
 const SOURCE_TEMPLATE = "source-header.handlebars";
 
+const GIT_DELETED = "Deleted";
 const SOURCE_FILE_EXTENSIONS = ["js", "ts", "cjs", "mjs"];
 
 async function walk(dir, matchesFilter) {
@@ -36,7 +39,49 @@ async function walk(dir, matchesFilter) {
   return files.reduce((all, folderContents) => all.concat(folderContents), []);
 }
 
+async function getStagedGitFiles() {
+  return (await stagedGitFiles())
+    .filter((detail) => {
+      const parts = detail.filename.split(".");
+      return (
+        detail.status !== GIT_DELETED &&
+        parts.length > 1 &&
+        SOURCE_FILE_EXTENSIONS.indexOf(parts[1]) > -1
+      );
+    })
+    .map((detail) => path.join(PROJECT_ROOT, detail.filename));
+}
+async function getAllSourceFiles() {
+  const IGNORED = ["node_modules", ".git"];
+  return await walk(PROJECT_ROOT, (file, dir) => {
+    const filePath = path.join(dir, file);
+    const stats = fs.statSync(filePath);
+
+    for (const ignoredString of IGNORED) {
+      if (filePath.includes(ignoredString)) {
+        return false;
+      }
+    }
+
+    if (stats.isDirectory()) {
+      return true;
+    }
+
+    if (stats.isFile()) {
+      for (const extension of SOURCE_FILE_EXTENSIONS) {
+        if (file.endsWith(extension)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  });
+}
+
 async function run() {
+  const stagedOnly = typeof process.env.STAGED_ONLY !== "undefined";
+
   const template = fs.readFileSync(
     path.resolve(__dirname, SOURCE_TEMPLATE),
     "utf-8"
@@ -48,34 +93,9 @@ async function run() {
     year: new Date().getFullYear(),
   });
 
-  const IGNORED = ["node_modules", ".git"];
-  const sourceFiles = await walk(
-    path.resolve(__dirname, "../"),
-    (file, dir) => {
-      const filePath = path.join(dir, file);
-      const stats = fs.statSync(filePath);
-
-      for (const ignoredString of IGNORED) {
-        if (filePath.includes(ignoredString)) {
-          return false;
-        }
-      }
-
-      if (stats.isDirectory()) {
-        return true;
-      }
-
-      if (stats.isFile()) {
-        for (const extension of SOURCE_FILE_EXTENSIONS) {
-          if (file.endsWith(extension)) {
-            return true;
-          }
-        }
-      }
-
-      return false;
-    }
-  );
+  const sourceFiles = stagedOnly
+    ? await getStagedGitFiles()
+    : await getAllSourceFiles();
 
   sourceFiles.forEach((file) => {
     const contents = fs.readFileSync(path.resolve(file), "utf-8");

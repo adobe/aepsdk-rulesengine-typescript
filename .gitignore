@@ -17,5 +17,5 @@ npm-debug.log
 *.tgz
 bundlesize-stats*.html
 .npmrc
-.husky
+.husky/_
 types/
