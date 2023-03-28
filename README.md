@@ -60,7 +60,7 @@ const ruleset = RulesEngine({
   ],
 });
 
-const consequences = ruleset.execute({ action: "greet" });
+const consequences = ruleset.execute({ color: "orange" });
 ```
 
 ## Contributing
