@@ -43,7 +43,6 @@ describe("matcher type - greater than  (gt)", () => {
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
-
   it("returns consequence  when the context key's value is greater than rule's condition definition values", () => {
     const result = ruleset.execute({
       country: "USA",
@@ -78,7 +77,6 @@ describe("matcher type - greater than  (gt)", () => {
   });
 
   it("returns empty consequence when the input context key's value is not greater than any rule's condition definition values", () => {
-
     const result = ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
@@ -99,5 +97,4 @@ describe("matcher type - greater than  (gt)", () => {
 
     expect(result).toEqual([]);
   });
-
 });

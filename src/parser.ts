@@ -31,7 +31,7 @@ function parseMatcherDefinition(json) {
 function parseGroupDefinition(json) {
   const { logic, conditions } = json;
 
-  // eslint-disable-next-line no-use-before-define
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   return createGroupDefinition(logic, conditions.map(parseCondition));
 }
 

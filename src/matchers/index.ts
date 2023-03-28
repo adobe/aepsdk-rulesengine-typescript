@@ -19,7 +19,6 @@ import { createGreaterThanEquals } from "./GreaterThanEquals";
 import { createlessThan } from "./lessThan";
 import { createLessThanEquals } from "./lessThanEquals";
 
-
 const MATCHERS = {
   eq: createEquals(),
   ne: createNotEquals(),

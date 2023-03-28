@@ -8,8 +8,8 @@ export function createGreaterThanEquals(): Matcher {
       if (!isNumber(needle)) {
         return false;
       }
-      for (let value of values) {
-        if (isNumber(value) && needle >= value) {
+      for (let i = 0; i < values.length; i += 1) {
+        if (isNumber(values[i]) && needle >= values[i]) {
           return true;
         }
       }

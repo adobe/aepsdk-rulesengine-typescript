@@ -1,4 +1,5 @@
 import { isNumber } from "./isNumber";
+
 describe("isNumber", () => {
   it("returns true for a given number", () => {
     const result = isNumber(2023);

@@ -49,7 +49,6 @@ describe("matcher type - greater than equals  (ge)", () => {
       city: "Salt Lake City",
       state: "UT",
       membershipPoint: 3000,
-
     });
 
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
