@@ -8,7 +8,7 @@ const RULE_SET = {
         type: "matcher",
         definition: {
           key: "membershipPoint",
-          matcher: "ge",
+          matcher: "lt",
           values: [6000, 3000],
         },
       },
@@ -25,14 +25,25 @@ const RULE_SET = {
   ],
 };
 
-describe("matcher type - greater than equals  (ge)", () => {
+describe("matcher type - less than  (lt)", () => {
   let ruleset;
 
   beforeEach(() => {
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("returns consequence  when the context key's values is greater than or equal to rule's condition definition values", () => {
+  it("returns consequence  when the context key's value is  lesser than rule's condition definition values", () => {
+    const result = ruleset.execute({
+      country: "USA",
+      city: "Salt Lake City",
+      state: "UT",
+      membershipPoint: 4000,
+    });
+
+    expect(result).toEqual([RULE_SET.rules[0].consequences]);
+  });
+
+  it("returns no consequence  when the context key's value is not lesser than rule's condition definition values", () => {
     const result = ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
@@ -40,22 +51,21 @@ describe("matcher type - greater than equals  (ge)", () => {
       membershipPoint: 6000,
     });
 
-    expect(result).toEqual([RULE_SET.rules[0].consequences]);
+    expect(result).toEqual([]);
   });
 
-  it("returns consequence  when the context key's values is  greater than or equal to rule's condition definition values", () => {
+  it("returns consequence  when the context key's value is  lesser than rule's condition definition values", () => {
     const result = ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",
-      membershipPoint: 3000,
-
+      membershipPoint: 5999,
     });
 
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
-  it("returns empty consequence when the context key's values is  null", () => {
+  it("returns empty consequence when the input context key's value is  null", () => {
     const result = ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
@@ -66,12 +76,23 @@ describe("matcher type - greater than equals  (ge)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns  empty consequence when the  context key's values is undefined", () => {
+  it("returns  empty consequence when the input context key's value is undefined", () => {
     const result = ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",
       membershipPoint: undefined,
+    });
+
+    expect(result).toEqual([]);
+  });
+
+  it("returns empty consequence when the input context key's value is not less than any rule's condition definition values", () => {
+    const result = ruleset.execute({
+      country: "USA",
+      city: "Salt Lake City",
+      state: "UT",
+      membershipPoint: 7000,
     });
 
     expect(result).toEqual([]);

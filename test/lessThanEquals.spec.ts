@@ -8,7 +8,7 @@ const RULE_SET = {
         type: "matcher",
         definition: {
           key: "membershipPoint",
-          matcher: "ge",
+          matcher: "le",
           values: [6000, 3000],
         },
       },
@@ -25,14 +25,14 @@ const RULE_SET = {
   ],
 };
 
-describe("matcher type - greater than equals  (ge)", () => {
+describe("matcher type - lesser than equals  (le)", () => {
   let ruleset;
 
   beforeEach(() => {
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("returns consequence  when the context key's values is greater than or equal to rule's condition definition values", () => {
+  it("returns consequence  when the context key's values is lesser than or equal to rule's condition definition values", () => {
     const result = ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
@@ -43,13 +43,12 @@ describe("matcher type - greater than equals  (ge)", () => {
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
-  it("returns consequence  when the context key's values is  greater than or equal to rule's condition definition values", () => {
+  it("returns consequence  when the context key's values is  lesser than or equal to any rule's condition definition values", () => {
     const result = ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",
-      membershipPoint: 3000,
-
+      membershipPoint: 4000,
     });
 
     expect(result).toEqual([RULE_SET.rules[0].consequences]);

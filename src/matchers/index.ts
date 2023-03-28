@@ -16,6 +16,9 @@ import { createNotExists } from "./notexists";
 import { Matcher } from "../types/rules";
 import { createGreaterThan } from "./GreaterThan";
 import { createGreaterThanEquals } from "./GreaterThanEquals";
+import { createlessThan } from "./lessThan";
+import { createLessThanEquals } from "./lessThanEquals";
+
 
 const MATCHERS = {
   eq: createEquals(),
@@ -24,6 +27,8 @@ const MATCHERS = {
   nx: createNotExists(),
   gt: createGreaterThan(),
   ge: createGreaterThanEquals(),
+  lt: createlessThan(),
+  le: createLessThanEquals(),
 };
 
 export function getMatcher(key): Matcher {
