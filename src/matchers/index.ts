@@ -14,8 +14,8 @@ import { createNotEquals } from "./notEquals";
 import { createExists } from "./exists";
 import { createNotExists } from "./notexists";
 import { Matcher } from "../types/rules";
-import { createGreaterThan } from "./GreaterThan";
-import { createGreaterThanEquals } from "./GreaterThanEquals";
+import { createGreaterThan } from "./greaterThan";
+import { createGreaterThanEquals } from "./greaterThanEquals";
 import { createlessThan } from "./lessThan";
 import { createLessThanEquals } from "./lessThanEquals";
 

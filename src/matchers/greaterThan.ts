@@ -9,6 +9,22 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-export function isNumber(value: any): boolean {
-  return typeof value === "number";
+import { Matcher } from "../types/rules";
+import { isNumber } from "../utils/isNumber";
+
+export function createGreaterThan(): Matcher {
+  return {
+    matches: (context, key, values) => {
+      const needle = context[key];
+      if (!isNumber(needle)) {
+        return false;
+      }
+      for (let i = 0; i < values.length; i += 1) {
+        if (isNumber(values[i]) && needle > values[i]) {
+          return true;
+        }
+      }
+      return false;
+    },
+  };
 }
