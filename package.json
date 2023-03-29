@@ -1,7 +1,7 @@
 {
-  "name": "aepsdk-rulesengine-typescript",
+  "name": "@adobe/aep-rules-engine",
   "version": "1.0.0",
-  "description": "A TypeScript implementation of the Adobe Mobile SDK rules engine.",
+  "description": "Adobe Experience Platform rules engine.",
   "repository": {
     "type": "git",
     "url": "https://github.com/adobe/aepsdk-rulesengine-typescript.git"
