@@ -18,6 +18,8 @@ import { createGreaterThan } from "./greaterThan";
 import { createGreaterThanEquals } from "./greaterThanEquals";
 import { createLessThan } from "./lessThan";
 import { createLessThanEquals } from "./lessThanEquals";
+import { createContains } from "./contains";
+import { createNotContains } from "./notContains";
 
 const MATCHERS = {
   eq: createEquals(),
@@ -28,6 +30,8 @@ const MATCHERS = {
   ge: createGreaterThanEquals(),
   lt: createLessThan(),
   le: createLessThanEquals(),
+  co: createContains(),
+  nc: createNotContains(),
 };
 
 export function getMatcher(key): Matcher {

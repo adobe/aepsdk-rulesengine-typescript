@@ -10,17 +10,22 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import { Matcher } from "../types/rules";
+import { isString } from "../utils/isString";
 
 export function createNotContains(): Matcher {
   return {
     matches: (context, key, values) => {
       const needle = context[key];
 
-      if (!needle) {
+      if (!isString(needle)) {
         return false;
       }
-
-      return !values.includes(needle);
+      for (let i = 0; i < values.length; i += 1) {
+        if (isString(values[i]) && values[i].indexOf(needle) !== -1) {
+          return false;
+        }
+      }
+      return true;
     },
   };
 }

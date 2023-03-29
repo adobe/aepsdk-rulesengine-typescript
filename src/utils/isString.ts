@@ -9,22 +9,6 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { Matcher } from "../types/rules";
-import { isString } from "../utils/isString";
-
-export function createContains(): Matcher {
-  return {
-    matches: (context, key, values) => {
-      const needle = context[key];
-      if (!isString(needle)) {
-        return false;
-      }
-      for (let i = 0; i < values.length; i += 1) {
-        if (isString(values[i]) && values[i].indexOf(needle) !== -1) {
-          return true;
-        }
-      }
-      return false;
-    },
-  };
+export function isString(value: any): boolean {
+  return typeof value === "string";
 }

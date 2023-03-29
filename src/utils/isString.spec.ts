@@ -9,22 +9,22 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { Matcher } from "../types/rules";
-import { isString } from "../utils/isString";
+import { isString } from "./isString";
 
-export function createContains(): Matcher {
-  return {
-    matches: (context, key, values) => {
-      const needle = context[key];
-      if (!isString(needle)) {
-        return false;
-      }
-      for (let i = 0; i < values.length; i += 1) {
-        if (isString(values[i]) && values[i].indexOf(needle) !== -1) {
-          return true;
-        }
-      }
-      return false;
-    },
-  };
-}
+describe("isString", () => {
+  it("returns true when passed a string", () => {
+    expect(isString("firefox")).toBe(true);
+  });
+  it("returns false when passed a number", () => {
+    expect(isString(2023)).toBe(false);
+  });
+  it("returns false when passed an object", () => {
+    expect(isString({ prop: "value" })).toBe(false);
+  });
+  it("returns false for null", () => {
+    expect(isString(null)).toBe(false);
+  });
+  it("returns false for undefined", () => {
+    expect(isString(undefined)).toBe(false);
+  });
+});
