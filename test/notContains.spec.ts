@@ -20,11 +20,7 @@ const RULE_DEFINITION = {
         definition: {
           key: "color",
           matcher: "nc",
-          values: [
-            "red is my favorite",
-            "blue No water, no life",
-            "Stay green, stay in the woods, and stay safe",
-          ],
+          values: ["red", "blue", "green"],
         },
       },
       consequences: [
@@ -51,7 +47,9 @@ describe("matcher type - not contains (nc)", () => {
     const result = ruleset.execute({
       fabric: "cotton",
       brand: "Nike",
-      color: "yellow",
+      color:
+        "Light and electromagnetic radiation both create additive color. " +
+        "In this model of color theory, the combination of all colors creates the perception of white",
     });
 
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
@@ -61,7 +59,7 @@ describe("matcher type - not contains (nc)", () => {
     const result = ruleset.execute({
       fabric: "cotton",
       brand: "Polo",
-      color: "green",
+      color: "red is my favorite",
     });
 
     expect(result).toEqual([]);

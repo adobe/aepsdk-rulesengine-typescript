@@ -15,12 +15,12 @@ import { isString } from "../utils/isString";
 export function createContains(): Matcher {
   return {
     matches: (context, key, values) => {
-      const needle = context[key];
-      if (!isString(needle)) {
+      const contextValue: string = <string>context[key];
+      if (!isString(contextValue)) {
         return false;
       }
       for (let i = 0; i < values.length; i += 1) {
-        if (isString(values[i]) && values[i].indexOf(needle) !== -1) {
+        if (isString(values[i]) && contextValue.indexOf(values[i]) !== -1) {
           return true;
         }
       }

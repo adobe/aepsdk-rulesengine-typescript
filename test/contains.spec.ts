@@ -20,11 +20,7 @@ const RULE_DEFINITION = {
         definition: {
           key: "color",
           matcher: "co",
-          values: [
-            "red is my favorite",
-            "blue No water, no life",
-            "Stay green, stay in the woods, and stay safe",
-          ],
+          values: ["red", "blue", "green"],
         },
       },
       consequences: [
@@ -51,7 +47,7 @@ describe("matcher type - contains (co)", () => {
     const result = ruleset.execute({
       fabric: "cotton",
       brand: "Nike",
-      color: "green",
+      color: "Stay green, stay in the woods, and stay safe",
     });
 
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
@@ -61,7 +57,7 @@ describe("matcher type - contains (co)", () => {
     const result = ruleset.execute({
       fabric: "cotton",
       brand: "Polo",
-      color: "yellow",
+      color: "yellow yellow ",
     });
 
     expect(result).toEqual([]);
