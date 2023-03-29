@@ -20,7 +20,17 @@ const RULE_DEFINITION = {
         definition: {
           key: "color",
           matcher: "co",
-          values: ["red", "blue", "green"],
+          values: [
+            "red",
+            "blue",
+            "GREEN",
+            {},
+            new Set(),
+            undefined,
+            null,
+            true,
+            "🙃",
+          ],
         },
       },
       consequences: [
@@ -53,6 +63,16 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
+  it("returns consequences irrespective of casing when any of the condition definition values contains the relevant key's value of given context", () => {
+    const result = ruleset.execute({
+      fabric: "cotton",
+      brand: "Nike",
+      color: "Water Is Blue ",
+    });
+
+    expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
+  });
+
   it("returns empty consequence when any of the condition definition values does not contain the relevant key's value of given context", () => {
     const result = ruleset.execute({
       fabric: "cotton",
@@ -63,7 +83,7 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is  null", () => {
+  it("returns empty consequence when the input context key's value is null", () => {
     const result = ruleset.execute({
       fabric: "cotton",
       brand: "Polo",
@@ -73,7 +93,7 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns  empty consequence when the input context key's value is undefined", () => {
+  it("returns empty consequence when the input context key's value is undefined", () => {
     const result = ruleset.execute({
       fabric: "cotton",
       brand: "Polo",
@@ -81,5 +101,44 @@ describe("matcher type - contains (co)", () => {
     });
 
     expect(result).toEqual([]);
+  });
+
+  it("returns empty consequence when the input context key's value is new Set()", () => {
+    const result = ruleset.execute({
+      fabric: "cotton",
+      brand: "Polo",
+      color: new Set(),
+    });
+
+    expect(result).toEqual([]);
+  });
+
+  it("returns empty consequence when the input context key's value is an object", () => {
+    const result = ruleset.execute({
+      fabric: "cotton",
+      brand: "Polo",
+      color: {},
+    });
+
+    expect(result).toEqual([]);
+  });
+
+  it("returns empty consequence when the input context key's value is boolean", () => {
+    const result = ruleset.execute({
+      fabric: "cotton",
+      brand: "Polo",
+      color: true,
+    });
+
+    expect(result).toEqual([]);
+  });
+
+  it("returns consequences when the input context key's value is emoji", () => {
+    const result = ruleset.execute({
+      fabric: "cotton",
+      brand: "Polo",
+      color: "🙃",
+    });
+    expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 });
