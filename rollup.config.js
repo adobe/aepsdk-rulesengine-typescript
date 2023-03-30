@@ -15,6 +15,7 @@ import babel from "@rollup/plugin-babel";
 import replace from "@rollup/plugin-replace";
 import typescript from "rollup-plugin-typescript2";
 import terser from "@rollup/plugin-terser";
+import cleanup from "rollup-plugin-cleanup";
 
 const extensions = [".ts"];
 const noDeclarationFiles = { compilerOptions: { declaration: false } };
@@ -37,6 +38,10 @@ export default defineConfig([
         plugins: [],
         babelHelpers: "bundled",
       }),
+      cleanup({
+        comments: "none",
+        extensions: ["js", "cjs", "mjs", "ts"],
+      }),
     ],
   },
 
@@ -54,6 +59,10 @@ export default defineConfig([
         extensions,
         plugins: [],
         babelHelpers: "bundled",
+      }),
+      cleanup({
+        comments: "none",
+        extensions: ["js", "cjs", "mjs", "ts"],
       }),
     ],
   },
