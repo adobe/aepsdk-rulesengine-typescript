@@ -10,11 +10,16 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import { getMatcher } from "./matchers";
+import {
+  Context,
+  Evaluable,
+  ExecutableRule,
+  ExecutableRuleSet,
+} from "./types/engine";
+import { Consequence } from "./types/schema";
+import { ConditionType, LogicType, MatcherType } from "./types/enums";
 
-const AND = "and";
-const OR = "or";
-
-function evaluateAnd(context, conditions) {
+function evaluateAnd(context: Context, conditions: Array<Evaluable>): boolean {
   let result = true;
 
   for (let i = 0; i < conditions.length; i += 1) {
@@ -24,7 +29,7 @@ function evaluateAnd(context, conditions) {
   return result;
 }
 
-function evaluateOr(context, conditions) {
+function evaluateOr(context: Context, conditions: Array<Evaluable>): boolean {
   let result = false;
 
   for (let i = 0; i < conditions.length; i += 1) {
@@ -38,13 +43,19 @@ function evaluateOr(context, conditions) {
   return false;
 }
 
-export function createRules(version, rules) {
+export function createRules(
+  version: number,
+  rules: Array<ExecutableRule>
+): ExecutableRuleSet {
   return { version, rules };
 }
 
-export function createRule(condition, consequences) {
+export function createRule(
+  condition: Evaluable,
+  consequences: Array<Consequence>
+): ExecutableRule {
   return {
-    execute: (context) => {
+    execute: (context: Context) => {
       if (condition.evaluate(context)) {
         return consequences;
       }
@@ -57,7 +68,10 @@ export function createRule(condition, consequences) {
   };
 }
 
-export function createCondition(type, definition) {
+export function createCondition(
+  type: ConditionType,
+  definition: Evaluable
+): Evaluable {
   return {
     evaluate: (context) => {
       return definition.evaluate(context);
@@ -68,18 +82,25 @@ export function createCondition(type, definition) {
   };
 }
 
-export function createConsequence(id, type, detail) {
+export function createConsequence(
+  id: string,
+  type: string,
+  detail: any
+): Consequence {
   return { id, type, detail };
 }
 
-export function createGroupDefinition(logic, conditions) {
+export function createGroupDefinition(
+  logic: LogicType,
+  conditions: Array<Evaluable>
+): Evaluable {
   return {
     evaluate: (context) => {
-      if (AND === logic) {
+      if (LogicType.AND === logic) {
         return evaluateAnd(context, conditions);
       }
 
-      if (OR === logic) {
+      if (LogicType.OR === logic) {
         return evaluateOr(context, conditions);
       }
 
@@ -88,7 +109,11 @@ export function createGroupDefinition(logic, conditions) {
   };
 }
 
-export function createMatcherDefinition(key, matcherKey, values) {
+export function createMatcherDefinition(
+  key: string,
+  matcherKey: MatcherType,
+  values: Array<any>
+): Evaluable {
   return {
     evaluate: (context) => {
       const matcher = getMatcher(matcherKey);

@@ -9,11 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
+
+import { Matcher } from "../types/engine";
+import { MatcherType } from "../types/enums";
 import { createEquals } from "./equals";
 import { createNotEquals } from "./notEquals";
 import { createExists } from "./exists";
 import { createNotExists } from "./notexists";
-import { Matcher } from "../types/rules";
 import { createGreaterThan } from "./greaterThan";
 import { createGreaterThanEquals } from "./greaterThanEquals";
 import { createLessThan } from "./lessThan";
@@ -21,19 +23,19 @@ import { createLessThanEquals } from "./lessThanEquals";
 import { createContains } from "./contains";
 import { createNotContains } from "./notContains";
 
-const MATCHERS = {
-  eq: createEquals(),
-  ne: createNotEquals(),
-  ex: createExists(),
-  nx: createNotExists(),
-  gt: createGreaterThan(),
-  ge: createGreaterThanEquals(),
-  lt: createLessThan(),
-  le: createLessThanEquals(),
-  co: createContains(),
-  nc: createNotContains(),
+const MATCHERS: { [key: string]: Matcher } = {
+  [MatcherType.EQUALS]: createEquals(),
+  [MatcherType.NOT_EQUALS]: createNotEquals(),
+  [MatcherType.EXISTS]: createExists(),
+  [MatcherType.NOT_EXISTS]: createNotExists(),
+  [MatcherType.GREATER_THAN]: createGreaterThan(),
+  [MatcherType.GREATER_THAN_OR_EQUAL_TO]: createGreaterThanEquals(),
+  [MatcherType.LESS_THAN]: createLessThan(),
+  [MatcherType.LESS_THAN_OR_EQUAL_TO]: createLessThanEquals(),
+  [MatcherType.CONTAINS]: createContains(),
+  [MatcherType.NOT_CONTAINS]: createNotContains(),
 };
 
-export function getMatcher(key): Matcher {
+export function getMatcher(key: MatcherType): Matcher {
   return MATCHERS[key];
 }

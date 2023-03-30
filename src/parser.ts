@@ -17,46 +17,61 @@ import {
   createRule,
   createRules,
 } from "./model";
-import { RuleSet } from "./types/rules";
+import {
+  Consequence,
+  GroupCondition,
+  GroupDefinition,
+  HistoricalCondition,
+  MatcherCondition,
+  MatcherDefinition,
+  Rule,
+  RuleSet,
+} from "./types/schema";
+import { Evaluable, ExecutableRule, ExecutableRuleSet } from "./types/engine";
+import { ConditionType } from "./types/enums";
 
-const MATCHER = "matcher";
-const GROUP = "group";
-
-function parseMatcherDefinition(json) {
-  const { key, matcher, values } = json;
+function parseMatcherDefinition(definition: MatcherDefinition): Evaluable {
+  const { key, matcher, values } = definition;
 
   return createMatcherDefinition(key, matcher, values);
 }
 
-function parseGroupDefinition(json) {
-  const { logic, conditions } = json;
+function parseGroupDefinition(definition: GroupDefinition): Evaluable {
+  const { logic, conditions } = definition;
 
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   return createGroupDefinition(logic, conditions.map(parseCondition));
 }
 
-function parseCondition(json) {
-  const { type, definition } = json;
+function parseCondition(
+  condition: MatcherCondition | GroupCondition | HistoricalCondition
+): Evaluable {
+  const { type, definition } = condition;
 
-  if (MATCHER === type) {
+  if (ConditionType.MATCHER === type) {
     return createCondition(type, parseMatcherDefinition(definition));
   }
 
-  if (GROUP === type) {
-    return createCondition(type, parseGroupDefinition(definition));
+  if (ConditionType.GROUP === type) {
+    return createCondition(
+      type,
+      parseGroupDefinition(<GroupDefinition>definition)
+    );
   }
+
+  // TODO: support ConditionType.HISTORICAL condition types
 
   throw new Error("Can not parse condition");
 }
 
-function parseConsequence(json) {
-  const { id, type, detail } = json;
+function parseConsequence(consequence: Consequence): Consequence {
+  const { id, type, detail } = consequence;
 
   return createConsequence(id, type, detail);
 }
 
-function parseRule(json) {
-  const { condition, consequences } = json;
+function parseRule(rule: Rule): ExecutableRule {
+  const { condition, consequences } = rule;
 
   return createRule(
     parseCondition(condition),
@@ -64,14 +79,8 @@ function parseRule(json) {
   );
 }
 
-export function parseRules(ruleset: RuleSet) {
+export function parseRules(ruleset: RuleSet): ExecutableRuleSet {
   const { version, rules } = ruleset;
 
   return createRules(version, rules.map(parseRule));
-}
-
-export function parse(value) {
-  const json = JSON.parse(value);
-
-  return parseRules(json);
 }
