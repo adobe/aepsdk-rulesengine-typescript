@@ -13,23 +13,24 @@ import { createEquals } from "./equals";
 import { createNotEquals } from "./notEquals";
 import { createExists } from "./exists";
 import { createNotExists } from "./notexists";
-import { Matcher } from "../types/rules";
 import { createGreaterThan } from "./greaterThan";
 import { createGreaterThanEquals } from "./greaterThanEquals";
 import { createLessThan } from "./lessThan";
 import { createLessThanEquals } from "./lessThanEquals";
+import { Matcher } from "../types/engine";
+import { MatcherType } from "../types/enums";
 
-const MATCHERS = {
-  eq: createEquals(),
-  ne: createNotEquals(),
-  ex: createExists(),
-  nx: createNotExists(),
-  gt: createGreaterThan(),
-  ge: createGreaterThanEquals(),
-  lt: createLessThan(),
-  le: createLessThanEquals(),
+const MATCHERS: { [key: string]: Matcher } = {
+  [MatcherType.EQUALS]: createEquals(),
+  [MatcherType.NOT_EQUALS]: createNotEquals(),
+  [MatcherType.EXISTS]: createExists(),
+  [MatcherType.NOT_EXISTS]: createNotExists(),
+  [MatcherType.GREATER_THAN]: createGreaterThan(),
+  [MatcherType.GREATER_THAN_OR_EQUAL_TO]: createGreaterThanEquals(),
+  [MatcherType.LESS_THAN]: createLessThan(),
+  [MatcherType.LESS_THAN_OR_EQUAL_TO]: createLessThanEquals(),
 };
 
-export function getMatcher(key): Matcher {
+export function getMatcher(key: MatcherType): Matcher {
   return MATCHERS[key];
 }

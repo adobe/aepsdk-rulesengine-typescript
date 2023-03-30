@@ -10,17 +10,18 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import { parseRules } from "./parser";
-import { Context, RuleSet } from "./types/rules";
+import { Consequence, RuleSet } from "./types/schema";
+import { Context, ExecutableRule } from "./types/engine";
 
 export default function RulesEngine(ruleset: RuleSet) {
   const { version, rules } = parseRules(ruleset);
 
   return {
-    execute: (context: Context) =>
+    execute: (context: Context): Array<Consequence[]> =>
       rules
-        .map((rule) => rule.execute(context))
-        .filter((arr) => arr.length > 0),
-    getVersion: () => version,
-    numRules: () => rules.length,
+        .map((rule: ExecutableRule) => rule.execute(context))
+        .filter((arr: Array<Consequence>) => arr.length > 0),
+    getVersion: (): number => version,
+    numRules: (): number => rules.length,
   };
 }
