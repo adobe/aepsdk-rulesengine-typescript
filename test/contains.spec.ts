@@ -128,29 +128,29 @@ describe("matcher type - contains (co)", () => {
   });
 
   it("returns consequence when the input context key's value is true in double quote", () => {
-    expect(
-      RulesEngine(<RuleSet>{
-        rules: [
-          {
-            condition: {
-              type: "matcher",
-              definition: {
-                key: "color",
-                matcher: "co",
-                values: [true],
-              },
+    const ruleSet: RuleSet = {
+      version: 1,
+      rules: [
+        {
+          condition: {
+            type: "matcher",
+            definition: {
+              key: "color",
+              matcher: "co",
+              values: [true],
             },
-            consequences: [
-              {
-                id: "123",
-                type: "data",
-                detail: {},
-              },
-            ],
           },
-        ],
-      }).execute({ color: "true" })
-    ).toEqual([
+          consequences: [
+            {
+              id: "123",
+              type: "data",
+              detail: {},
+            },
+          ],
+        },
+      ],
+    };
+    expect(RulesEngine(ruleSet).execute({ color: "true" })).toEqual([
       [
         {
           id: "123",
@@ -162,29 +162,30 @@ describe("matcher type - contains (co)", () => {
   });
 
   it("returns  consequence when the input context key's value is true", () => {
-    expect(
-      RulesEngine(<RuleSet>{
-        rules: [
-          {
-            condition: {
-              type: "matcher",
-              definition: {
-                key: "color",
-                matcher: "co",
-                values: ["true"],
-              },
+    const ruleSet: RuleSet = {
+      version: 1,
+      rules: [
+        {
+          condition: {
+            type: "matcher",
+            definition: {
+              key: "color",
+              matcher: "co",
+              values: ["true"],
             },
-            consequences: [
-              {
-                id: "123",
-                type: "data",
-                detail: {},
-              },
-            ],
           },
-        ],
-      }).execute({ color: true })
-    ).toEqual([
+          consequences: [
+            {
+              id: "123",
+              type: "data",
+              detail: {},
+            },
+          ],
+        },
+      ],
+    };
+
+    expect(RulesEngine(ruleSet).execute({ color: true })).toEqual([
       [
         {
           id: "123",
