@@ -116,7 +116,7 @@ describe("matcher type - not contains (nc)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is boolean", () => {
+  it("returns empty consequence when the input context key's value is boolean false", () => {
     const result = ruleset.execute({
       fabric: "cotton",
       brand: "Polo",

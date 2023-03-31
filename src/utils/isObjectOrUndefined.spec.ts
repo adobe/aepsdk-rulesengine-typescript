@@ -9,22 +9,22 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { isString } from "./isString";
+import { isObjectOrUndefined } from "./isObjectOrUndefined";
 
-describe("isString", () => {
-  it("returns true when passed a string", () => {
-    expect(isString("firefox")).toBe(true);
+describe("isObjectOrUndefined", () => {
+  it("returns false when passed a string", () => {
+    expect(isObjectOrUndefined("firefox")).toBe(false);
   });
   it("returns false when passed a number", () => {
-    expect(isString(2023)).toBe(false);
+    expect(isObjectOrUndefined(2023)).toBe(false);
   });
-  it("returns false when passed an object", () => {
-    expect(isString({ prop: "value" })).toBe(false);
+  it("returns true when passed an object", () => {
+    expect(isObjectOrUndefined({ prop: "value" })).toBe(true);
   });
-  it("returns false for null", () => {
-    expect(isString(null)).toBe(false);
+  it("returns true for null", () => {
+    expect(isObjectOrUndefined(null)).toBe(true);
   });
-  it("returns false for undefined", () => {
-    expect(isString(undefined)).toBe(false);
+  it("returns true for undefined", () => {
+    expect(isObjectOrUndefined(undefined)).toBe(true);
   });
 });

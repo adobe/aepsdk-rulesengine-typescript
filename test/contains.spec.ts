@@ -48,14 +48,8 @@ const RULE_DEFINITION: RuleSet = {
 };
 
 describe("matcher type - contains (co)", () => {
-  let ruleset;
-
-  beforeEach(() => {
-    ruleset = RulesEngine(RULE_DEFINITION);
-  });
-
   it("returns consequences when any of the condition definition values contains the relevant key's value of given context", () => {
-    const result = ruleset.execute({
+    const result = RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Nike",
       color: "Stay green, stay in the woods, and stay safe",
@@ -65,7 +59,7 @@ describe("matcher type - contains (co)", () => {
   });
 
   it("returns consequences irrespective of casing when any of the condition definition values contains the relevant key's value of given context", () => {
-    const result = ruleset.execute({
+    const result = RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Nike",
       color: "Water Is Blue ",
@@ -75,7 +69,7 @@ describe("matcher type - contains (co)", () => {
   });
 
   it("returns empty consequence when any of the condition definition values does not contain the relevant key's value of given context", () => {
-    const result = ruleset.execute({
+    const result = RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: "yellow yellow ",
@@ -85,7 +79,7 @@ describe("matcher type - contains (co)", () => {
   });
 
   it("returns empty consequence when the input context key's value is null", () => {
-    const result = ruleset.execute({
+    const result = RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: null,
@@ -95,7 +89,7 @@ describe("matcher type - contains (co)", () => {
   });
 
   it("returns empty consequence when the input context key's value is undefined", () => {
-    const result = ruleset.execute({
+    const result = RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: undefined,
@@ -105,7 +99,7 @@ describe("matcher type - contains (co)", () => {
   });
 
   it("returns empty consequence when the input context key's value is new Set()", () => {
-    const result = ruleset.execute({
+    const result = RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: new Set(),
@@ -115,7 +109,7 @@ describe("matcher type - contains (co)", () => {
   });
 
   it("returns empty consequence when the input context key's value is an object", () => {
-    const result = ruleset.execute({
+    const result = RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: {},
@@ -124,22 +118,80 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is boolean", () => {
-    const result = ruleset.execute({
-      fabric: "cotton",
-      brand: "Polo",
-      color: true,
-    });
-
-    expect(result).toEqual([]);
-  });
-
   it("returns consequences when the input context key's value is emoji", () => {
-    const result = ruleset.execute({
+    const result = RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: "🙃",
     });
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
+  });
+
+  it("returns consequence when the input context key's value is true in double quote", () => {
+    expect(
+      RulesEngine(<RuleSet>{
+        rules: [
+          {
+            condition: {
+              type: "matcher",
+              definition: {
+                key: "color",
+                matcher: "co",
+                values: [true],
+              },
+            },
+            consequences: [
+              {
+                id: "123",
+                type: "data",
+                detail: {},
+              },
+            ],
+          },
+        ],
+      }).execute({ color: "true" })
+    ).toEqual([
+      [
+        {
+          id: "123",
+          type: "data",
+          detail: {},
+        },
+      ],
+    ]);
+  });
+
+  it("returns  consequence when the input context key's value is true", () => {
+    expect(
+      RulesEngine(<RuleSet>{
+        rules: [
+          {
+            condition: {
+              type: "matcher",
+              definition: {
+                key: "color",
+                matcher: "co",
+                values: ["true"],
+              },
+            },
+            consequences: [
+              {
+                id: "123",
+                type: "data",
+                detail: {},
+              },
+            ],
+          },
+        ],
+      }).execute({ color: true })
+    ).toEqual([
+      [
+        {
+          id: "123",
+          type: "data",
+          detail: {},
+        },
+      ],
+    ]);
   });
 });

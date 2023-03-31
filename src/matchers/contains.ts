@@ -9,20 +9,20 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { isString } from "../utils/isString";
+import { isObjectOrUndefined } from "../utils/isObjectOrUndefined";
 import { Matcher } from "../types/engine";
 
 export function createContains(): Matcher {
   return {
     matches: (context, key, values) => {
-      if (!isString(context[key])) {
+      if (isObjectOrUndefined(context[key])) {
         return false;
       }
       const contextValue: string = String(context[key]).toLowerCase();
       for (let i = 0; i < values.length; i += 1) {
         if (
-          isString(values[i]) &&
-          contextValue.indexOf(values[i].toLowerCase()) !== -1
+          !isObjectOrUndefined(values[i]) &&
+          contextValue.indexOf(String(values[i]).toLowerCase()) !== -1
         ) {
           return true;
         }
