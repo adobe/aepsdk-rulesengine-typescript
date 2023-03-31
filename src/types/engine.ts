@@ -17,7 +17,7 @@ export interface Context {
 }
 
 export interface Matcher {
-  matches(context: Context, key: string, values: Array<any>): boolean;
+  matches(context: Context, key: string, values?: Array<any>): boolean;
 }
 
 export interface Evaluable {

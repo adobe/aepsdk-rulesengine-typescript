@@ -10,46 +10,48 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-export enum ConditionType {
-  MATCHER = "matcher",
-  GROUP = "group",
-  HISTORICAL = "historical",
-}
+export const ConditionType = {
+  MATCHER: "matcher",
+  GROUP: "group",
+  HISTORICAL: "historical",
+};
+export const MatcherType = {
+  EQUALS: "eq",
+  NOT_EQUALS: "ne",
+  EXISTS: "ex",
+  NOT_EXISTS: "nx",
+  GREATER_THAN: "gt",
+  GREATER_THAN_OR_EQUAL_TO: "ge",
+  LESS_THAN: "lt",
+  LESS_THAN_OR_EQUAL_TO: "le",
+  CONTAINS: "co",
+  NOT_CONTAINS: "nc",
+  STARTS_WITH: "sw",
+  ENDS_WITH: "ew",
+};
 
-export type SupportedCondition = "matcher" | "group" | "historical";
+export const LogicType = {
+  AND: "and",
+  OR: "or",
+};
 
-export enum MatcherType {
-  EQUALS = "eq",
-  NOT_EQUALS = "ne",
-  EXISTS = "ex",
-  NOT_EXISTS = "nx",
-  GREATER_THAN = "gt",
-  GREATER_THAN_OR_EQUAL_TO = "ge",
-  LESS_THAN = "lt",
-  LESS_THAN_OR_EQUAL_TO = "le",
-  CONTAINS = "co",
-  NOT_CONTAINS = "nc",
-  STARTS_WITH = "sw",
-  ENDS_WITH = "ew",
-}
+export type SupportedCondition =
+  | typeof ConditionType.MATCHER
+  | typeof ConditionType.GROUP
+  | typeof ConditionType.HISTORICAL;
 
 export type SupportedMatcher =
-  | "eq"
-  | "ne"
-  | "ex"
-  | "nx"
-  | "gt"
-  | "ge"
-  | "lt"
-  | "le"
-  | "co"
-  | "nc"
-  | "sw"
-  | "ew";
+  | typeof MatcherType.EQUALS
+  | typeof MatcherType.NOT_EQUALS
+  | typeof MatcherType.EXISTS
+  | typeof MatcherType.NOT_EXISTS
+  | typeof MatcherType.GREATER_THAN
+  | typeof MatcherType.GREATER_THAN_OR_EQUAL_TO
+  | typeof MatcherType.LESS_THAN
+  | typeof MatcherType.LESS_THAN_OR_EQUAL_TO
+  | typeof MatcherType.CONTAINS
+  | typeof MatcherType.NOT_CONTAINS
+  | typeof MatcherType.STARTS_WITH
+  | typeof MatcherType.ENDS_WITH;
 
-export enum LogicType {
-  AND = "and",
-  OR = "or",
-}
-
-export type SupportedLogic = "and" | "or";
+export type SupportedLogic = typeof LogicType.AND | typeof LogicType.OR;

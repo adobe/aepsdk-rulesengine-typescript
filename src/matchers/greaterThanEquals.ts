@@ -13,7 +13,7 @@ import { isNumber } from "../utils/isNumber";
 
 export function createGreaterThanEquals(): Matcher {
   return {
-    matches: (context, key, values) => {
+    matches: (context, key, values = []) => {
       const needle = context[key];
       if (!isNumber(needle)) {
         return false;

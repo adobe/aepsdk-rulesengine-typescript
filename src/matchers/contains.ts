@@ -14,7 +14,7 @@ import { Matcher } from "../types/engine";
 
 export function createContains(): Matcher {
   return {
-    matches: (context, key, values) => {
+    matches: (context, key, values = []) => {
       if (isObjectOrUndefined(context[key])) {
         return false;
       }

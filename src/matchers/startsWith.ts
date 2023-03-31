@@ -14,18 +14,16 @@ import { isObjectOrUndefined } from "../utils/isObjectOrUndefined";
 
 export function createStartsWith(): Matcher {
   return {
-    matches: (context, key, values) => {
+    matches: (context, key, values = []) => {
       if (isObjectOrUndefined(context[key])) {
         return false;
       }
       const contextValue: string = String(context[key]).toLowerCase();
-      console.log(contextValue);
       for (let i = 0; i < values.length; i += 1) {
         if (
           !isObjectOrUndefined(values[i]) &&
           contextValue.startsWith(String(values[i]).toLowerCase())
         ) {
-          console.log(String(values[i]).toLowerCase());
           return true;
         }
       }

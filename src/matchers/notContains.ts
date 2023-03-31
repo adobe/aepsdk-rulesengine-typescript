@@ -14,7 +14,7 @@ import { isObjectOrUndefined } from "../utils/isObjectOrUndefined";
 
 export function createNotContains(): Matcher {
   return {
-    matches: (context, key, values) => {
+    matches: (context, key, values = []) => {
       if (isObjectOrUndefined(context[key])) {
         return false;
       }

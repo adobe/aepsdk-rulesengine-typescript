@@ -17,7 +17,12 @@ import {
   ExecutableRuleSet,
 } from "./types/engine";
 import { Consequence } from "./types/schema";
-import { ConditionType, LogicType, MatcherType } from "./types/enums";
+import {
+  LogicType,
+  SupportedCondition,
+  SupportedLogic,
+  SupportedMatcher,
+} from "./types/enums";
 
 function evaluateAnd(context: Context, conditions: Array<Evaluable>): boolean {
   let result = true;
@@ -69,7 +74,7 @@ export function createRule(
 }
 
 export function createCondition(
-  type: ConditionType,
+  type: SupportedCondition,
   definition: Evaluable
 ): Evaluable {
   return {
@@ -91,7 +96,7 @@ export function createConsequence(
 }
 
 export function createGroupDefinition(
-  logic: LogicType,
+  logic: SupportedLogic,
   conditions: Array<Evaluable>
 ): Evaluable {
   return {
@@ -111,8 +116,8 @@ export function createGroupDefinition(
 
 export function createMatcherDefinition(
   key: string,
-  matcherKey: MatcherType,
-  values: Array<any>
+  matcherKey: SupportedMatcher,
+  values?: Array<any>
 ): Evaluable {
   return {
     evaluate: (context) => {

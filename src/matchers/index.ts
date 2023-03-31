@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import { Matcher } from "../types/engine";
-import { MatcherType } from "../types/enums";
+import { MatcherType, SupportedMatcher } from "../types/enums";
 import { createEquals } from "./equals";
 import { createNotEquals } from "./notEquals";
 import { createExists } from "./exists";
@@ -40,6 +40,6 @@ const MATCHERS: { [key: string]: Matcher } = {
   [MatcherType.ENDS_WITH]: createEndsWith(),
 };
 
-export function getMatcher(key: MatcherType): Matcher {
+export function getMatcher(key: SupportedMatcher): Matcher {
   return MATCHERS[key];
 }

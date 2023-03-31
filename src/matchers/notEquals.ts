@@ -13,7 +13,7 @@ import { Matcher } from "../types/engine";
 
 export function createNotEquals(): Matcher {
   return {
-    matches: (context, key, values) => {
+    matches: (context, key, values = []) => {
       const needle = context[key];
 
       if (!needle) {

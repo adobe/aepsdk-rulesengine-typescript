@@ -49,7 +49,10 @@ function parseCondition(
   const { type, definition } = condition;
 
   if (ConditionType.MATCHER === type) {
-    return createCondition(type, parseMatcherDefinition(definition));
+    return createCondition(
+      type,
+      parseMatcherDefinition(<MatcherDefinition>definition)
+    );
   }
 
   if (ConditionType.GROUP === type) {
