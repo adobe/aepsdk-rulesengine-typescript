@@ -9,6 +9,9 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
+
+import { Matcher } from "../types/engine";
+import { MatcherType } from "../types/enums";
 import { createEquals } from "./equals";
 import { createNotEquals } from "./notEquals";
 import { createExists } from "./exists";
@@ -17,8 +20,8 @@ import { createGreaterThan } from "./greaterThan";
 import { createGreaterThanEquals } from "./greaterThanEquals";
 import { createLessThan } from "./lessThan";
 import { createLessThanEquals } from "./lessThanEquals";
-import { Matcher } from "../types/engine";
-import { MatcherType } from "../types/enums";
+import { createContains } from "./contains";
+import { createNotContains } from "./notContains";
 
 const MATCHERS: { [key: string]: Matcher } = {
   [MatcherType.EQUALS]: createEquals(),
@@ -29,6 +32,8 @@ const MATCHERS: { [key: string]: Matcher } = {
   [MatcherType.GREATER_THAN_OR_EQUAL_TO]: createGreaterThanEquals(),
   [MatcherType.LESS_THAN]: createLessThan(),
   [MatcherType.LESS_THAN_OR_EQUAL_TO]: createLessThanEquals(),
+  [MatcherType.CONTAINS]: createContains(),
+  [MatcherType.NOT_CONTAINS]: createNotContains(),
 };
 
 export function getMatcher(key: MatcherType): Matcher {

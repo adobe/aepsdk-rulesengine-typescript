@@ -52,7 +52,7 @@ async function getStagedGitFiles() {
     .map((detail) => path.join(PROJECT_ROOT, detail.filename));
 }
 async function getAllSourceFiles() {
-  const IGNORED = ["node_modules", ".git"];
+  const IGNORED = ["node_modules", ".git", "dist"];
   return await walk(PROJECT_ROOT, (file, dir) => {
     const filePath = path.join(dir, file);
     const stats = fs.statSync(filePath);
