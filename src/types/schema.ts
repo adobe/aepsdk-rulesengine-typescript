@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { LogicType, MatcherType, ConditionType } from "./enums";
+import { SupportedLogic, SupportedMatcher } from "./enums";
 
 export interface RuleSet {
   version: number;
@@ -23,29 +23,29 @@ export interface Rule {
 }
 
 export interface GroupCondition {
-  definition: GroupDefinition | MatcherDefinition;
-  type: ConditionType.GROUP;
+  definition: GroupDefinition;
+  type: "group";
 }
 
 export interface MatcherCondition {
   definition: MatcherDefinition;
-  type: ConditionType.MATCHER;
+  type: "matcher";
 }
 export interface HistoricalCondition {
   definition: HistoricalDefinition;
-  type: ConditionType.HISTORICAL;
+  type: "historical";
 }
 
 export interface MatcherDefinition {
   key: string;
-  matcher: MatcherType;
+  matcher: SupportedMatcher;
   values?: Array<any>;
 }
 export interface HistoricalDefinition {}
 
 export interface GroupDefinition {
   conditions: Array<MatcherCondition | GroupCondition | HistoricalCondition>;
-  logic: LogicType;
+  logic: SupportedLogic;
 }
 
 export interface Consequence {

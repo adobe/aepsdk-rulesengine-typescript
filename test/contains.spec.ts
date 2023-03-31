@@ -10,8 +10,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import RulesEngine from "../src/index";
+import { RuleSet } from "../src/types/schema";
 
-const RULE_DEFINITION = {
+const RULE_DEFINITION: RuleSet = {
   version: 1,
   rules: [
     {

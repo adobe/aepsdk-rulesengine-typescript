@@ -16,6 +16,8 @@ export enum ConditionType {
   HISTORICAL = "historical",
 }
 
+export type SupportedCondition = "matcher" | "group" | "historical";
+
 export enum MatcherType {
   EQUALS = "eq",
   NOT_EQUALS = "ne",
@@ -31,7 +33,23 @@ export enum MatcherType {
   ENDS_WITH = "ew",
 }
 
+export type SupportedMatcher =
+  | "eq"
+  | "ne"
+  | "ex"
+  | "nx"
+  | "gt"
+  | "ge"
+  | "lt"
+  | "le"
+  | "co"
+  | "nc"
+  | "sw"
+  | "ew";
+
 export enum LogicType {
   AND = "and",
   OR = "or",
 }
+
+export type SupportedLogic = "and" | "or";
