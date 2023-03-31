@@ -22,6 +22,8 @@ import { createLessThan } from "./lessThan";
 import { createLessThanEquals } from "./lessThanEquals";
 import { createContains } from "./contains";
 import { createNotContains } from "./notContains";
+import { createStartsWith } from "./startsWith";
+import { createEndsWith } from "./endsWith";
 
 const MATCHERS: { [key: string]: Matcher } = {
   [MatcherType.EQUALS]: createEquals(),
@@ -34,6 +36,8 @@ const MATCHERS: { [key: string]: Matcher } = {
   [MatcherType.LESS_THAN_OR_EQUAL_TO]: createLessThanEquals(),
   [MatcherType.CONTAINS]: createContains(),
   [MatcherType.NOT_CONTAINS]: createNotContains(),
+  [MatcherType.STARTS_WITH]: createStartsWith(),
+  [MatcherType.ENDS_WITH]: createEndsWith(),
 };
 
 export function getMatcher(key: MatcherType): Matcher {
