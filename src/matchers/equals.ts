@@ -9,19 +9,22 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
+import { isObjectOrUndefined } from "../utils/isObjectOrUndefined";
 import { Matcher } from "../types/engine";
 
 export function createEquals(): Matcher {
   return {
     matches: (context, key, values = []) => {
-      const needle = context[key];
-
-      if (!needle) {
+      if (isObjectOrUndefined(context[key])) {
         return false;
       }
 
+      const contextValue: string = String(context[key]).toLowerCase();
       for (let i = 0; i < values.length; i += 1) {
-        if (needle === values[i]) {
+        if (
+          !isObjectOrUndefined(values[i]) &&
+          contextValue === String(values[i]).toLowerCase()
+        ) {
           return true;
         }
       }

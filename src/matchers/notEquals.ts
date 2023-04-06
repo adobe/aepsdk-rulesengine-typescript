@@ -10,17 +10,24 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import { Matcher } from "../types/engine";
+import { isObjectOrUndefined } from "../utils/isObjectOrUndefined";
 
 export function createNotEquals(): Matcher {
   return {
     matches: (context, key, values = []) => {
-      const needle = context[key];
-
-      if (!needle) {
+      if (isObjectOrUndefined(context[key])) {
         return false;
       }
-
-      return values.indexOf(needle) === -1;
+      const contextValue: string = String(context[key]).toLowerCase();
+      for (let i = 0; i < values.length; i += 1) {
+        if (
+          !isObjectOrUndefined(values[i]) &&
+          contextValue === String(values[i]).toLowerCase()
+        ) {
+          return false;
+        }
+      }
+      return true;
     },
   };
 }
