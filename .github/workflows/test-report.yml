@@ -1,4 +1,4 @@
-name: Tests with coverage
+name: Rule engine continuous integration
 
 on:
  push:
