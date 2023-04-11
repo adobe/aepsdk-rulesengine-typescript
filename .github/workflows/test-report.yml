@@ -1,25 +1,21 @@
 name: Rule engine continuous integration
-
 on:
- push:
-  branches:[ main ]
- pull_request:
-  branches:
-    [ main ]
-
+  push: branches:[ main ]
+  pull_request:
+    branches:
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-     - uses: actions/checkout@v3
-     - name: Use Node.js 
-       uses: actions
-       with:
-          node-version: 'current'
-     - name: Install dependencies
-       run : npm ci
-     - name: Build Step
-       run: npm run build --if-present 
-     - name: Run tests with coverage
-       run: npm test  
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions
+        with:
+          node-version: current
+      - name: Install dependencies
+        run: npm ci
+      - name: Build Step
+        run: npm run build --if-present
+      - name: Run tests with coverage
+        run: npm test
