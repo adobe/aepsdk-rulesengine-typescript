@@ -15,6 +15,8 @@ jobs:
         run: npm run build --if-present
       - name: Run tests with coverage
         run: npm test -- --coverage
+      - name: Coveralls
+        uses: coverallsapp/github-action@v1
 #       - name: Check coverage
 #         run: |
 #           const coverage = require('./coverage/coverage-summary.json');
