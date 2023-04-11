@@ -158,4 +158,19 @@ describe("Track state event happens ", () => {
     });
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
+
+  it("should not return consequence when OS version starts conditions are not met", () => {
+    const result = ruleset.execute({
+      "~type": "com.adobe.eventType.generic.track",
+      "~source": "com.adobe.eventSource.requestContent",
+      state: "[]",
+      "~state.com.adobe.module.lifecycle/lifecyclecontextdata.osversion":
+        "YOLO",
+      "~state.com.adobe.module.lifecycle/lifecyclecontextdata.carriername":
+        "Verizon",
+      "~state.com.adobe.module.lifecycle/lifecyclecontextdata.dayssincefirstuse": 10,
+      "~state.com.adobe.module.lifecycle/lifecyclecontextdata.dayssincelastupgrade": 2,
+    });
+    expect(result).toEqual([]);
+  });
 });
