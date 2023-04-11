@@ -16,7 +16,16 @@ jobs:
       - name: Run tests with coverage
         run: npm test -- --coverage
       - name: Coveralls
-        uses: coverallsapp/github-action@v1
+        uses: coverallsapp/github-action@v1 
+        
+        
+  coverage:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: coveralls report
+        uses: coverallsapp/github-action@master    
+        
 #       - name: Check coverage
 #         run: |
 #           const coverage = require('./coverage/coverage-summary.json');
