@@ -9,16 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-#       - name: Use Node.js
-#         uses: actions
-#         with:
-#           node-version: current
       - name: Install dependencies
         run: npm ci
       - name: Build Step
         run: npm run build --if-present
       - name: Run tests with coverage
-        run: npm test
+        run: npm test -- --coverage
       - name: Check coverage
         run: |
           const coverage = require('./coverage/coverage-summary.json');
@@ -32,14 +28,8 @@ jobs:
             console.error(`Coverage below threshold: ${coverageThreshold}% < ${minCoverage}%`);
             process.exit(1);
           }
-          
-#       - name: Check Coverage
-#         run: | 
-#             coverage=$(jq -r '. total.lines' coverage/coverage-summary.json)
-#             if(($(echo "$coverage < 100" | bc -l) )); then
-#               echo "Coverage below 100%", $coverage%"
-#               exit 1
-#             else
-#              echo "Hurray! Good Job With Test Coverage%"
-#             fi
+          else
+           echo "Hurray! Good Job With Test Coverage%"
+          fi
+
               
