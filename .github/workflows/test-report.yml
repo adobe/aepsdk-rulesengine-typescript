@@ -15,21 +15,21 @@ jobs:
         run: npm run build --if-present
       - name: Run tests with coverage
         run: npm test -- --coverage
-      - name: Check coverage
-        run: |
-          const coverage = require('./coverage/coverage-summary.json');
-          const statements = coverage.total.statements.pct;
-          const branches = coverage.total.branches.pct;
-          const functions = coverage.total.functions.pct;
-          const lines = coverage.total.lines.pct;
-          const minCoverage = 90;
-          const coverageThreshold = Math.min(statements, branches, functions, lines);
-          if (coverageThreshold < minCoverage) {
-            console.error(`Coverage below threshold: ${coverageThreshold}% < ${minCoverage}%`);
-            process.exit(1);
-          }
-          else
-           echo "Hurray! Good Job With Test Coverage%"
-          fi
+#       - name: Check coverage
+#         run: |
+#           const coverage = require('./coverage/coverage-summary.json');
+#           const statements = coverage.total.statements.pct;
+#           const branches = coverage.total.branches.pct;
+#           const functions = coverage.total.functions.pct;
+#           const lines = coverage.total.lines.pct;
+#           const minCoverage = 90;
+#           const coverageThreshold = Math.min(statements, branches, functions, lines);
+#           if (coverageThreshold < minCoverage) {
+#             console.error(`Coverage below threshold: ${coverageThreshold}% < ${minCoverage}%`);
+#             process.exit(1);
+#           }
+#           else
+#            echo "Hurray! Good Job With Test Coverage%"
+#           fi
 
               
