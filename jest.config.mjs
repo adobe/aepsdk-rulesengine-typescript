@@ -24,9 +24,6 @@ export default {
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
-  coveragereporters: ["json-summary"]
-  coverageReportDirectory: "coverage"
-  coverageReportFile: "coverage-summary.json"
 
   // An array of regexp pattern strings used to skip coverage collection
   coveragePathIgnorePatterns: [
