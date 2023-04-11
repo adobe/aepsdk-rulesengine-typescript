@@ -173,4 +173,19 @@ describe("Track state event happens ", () => {
     });
     expect(result).toEqual([]);
   });
+
+  it("should not return consequence when not equals conditions are not met", () => {
+    const result = ruleset.execute({
+      "~type": "com.adobe.eventType.generic.track",
+      "~source": "com.adobe.eventSource.requestContent",
+      state: "[]",
+      "~state.com.adobe.module.lifecycle/lifecyclecontextdata.osversion":
+        "YOLO",
+      "~state.com.adobe.module.lifecycle/lifecyclecontextdata.carriername":
+        "Tmobile",
+      "~state.com.adobe.module.lifecycle/lifecyclecontextdata.dayssincefirstuse": 10,
+      "~state.com.adobe.module.lifecycle/lifecyclecontextdata.dayssincelastupgrade": 2,
+    });
+    expect(result).toEqual([]);
+  });
 });
