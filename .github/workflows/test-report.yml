@@ -19,3 +19,13 @@ jobs:
         run: npm run build --if-present
       - name: Run tests with coverage
         run: npm test
+      - name: Check Coverage
+        run: | 
+            coverage=$(jq -r '. total.lines' coverage/coverage-summary.json)
+            if(($(echo "$coverage < 100" | bc -l) )); then
+              echo "Coverage below 100%", $coverage%"
+              exit 1
+            else
+             echo "Hurray! Good Job With Test Coverage%"
+            fi
+              
