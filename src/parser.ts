@@ -13,6 +13,7 @@ import {
   createCondition,
   createConsequence,
   createGroupDefinition,
+  createHistoricalDefinition,
   createMatcherDefinition,
   createRule,
   createRules,
@@ -22,6 +23,7 @@ import {
   GroupCondition,
   GroupDefinition,
   HistoricalCondition,
+  HistoricalDefinition,
   MatcherCondition,
   MatcherDefinition,
   Rule,
@@ -41,6 +43,20 @@ function parseGroupDefinition(definition: GroupDefinition): Evaluable {
 
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   return createGroupDefinition(logic, conditions.map(parseCondition));
+}
+
+function parseHistoricalDefinition(
+  definition: HistoricalDefinition
+): Evaluable {
+  const { events, from, to, matcher, value, searchType } = definition;
+  return createHistoricalDefinition(
+    events,
+    from,
+    to,
+    matcher,
+    value,
+    searchType
+  );
 }
 
 function parseCondition(
@@ -63,6 +79,13 @@ function parseCondition(
   }
 
   // TODO: support ConditionType.HISTORICAL condition types
+
+  if (ConditionType.HISTORICAL === type) {
+    return createCondition(
+      type,
+      parseHistoricalDefinition(<HistoricalDefinition>definition)
+    );
+  }
 
   throw new Error("Can not parse condition");
 }

@@ -35,6 +35,11 @@ export const LogicType = {
   OR: "or",
 };
 
+export const SearchType = {
+  ANY: "any",
+  ORDERED: "ordered",
+};
+
 export type SupportedCondition =
   | typeof ConditionType.MATCHER
   | typeof ConditionType.GROUP
@@ -53,5 +58,9 @@ export type SupportedMatcher =
   | typeof MatcherType.NOT_CONTAINS
   | typeof MatcherType.STARTS_WITH
   | typeof MatcherType.ENDS_WITH;
+
+export type SupportedSearchType =
+  | typeof SearchType.ANY
+  | typeof SearchType.ORDERED;
 
 export type SupportedLogic = typeof LogicType.AND | typeof LogicType.OR;
