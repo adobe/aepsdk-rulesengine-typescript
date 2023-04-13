@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import RulesEngine from "../src";
-import { Consequence, RuleSet } from "../src/types/schema";
+import { Consequence } from "../src/types/schema";
 
 let CONSEQUENCE: Consequence = {
   id: "6df71dd7-a24f-4944-9787-49345c417b01",
