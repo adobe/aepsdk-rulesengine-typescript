@@ -60,12 +60,75 @@ describe("test helper functions", function () {
     expect(result).toBe(1);
     done();
   });
-  it("checkForHistoricalMatcher", function (done) {
+
+  it("returns 0 If any of the events are ordered but not within the time range", function (done) {
+    jest.setTimeout(10000);
+    let events = [{ "iam.id": "A" }, { "iam.id": "B" }, { "iam.id": "C" }];
+    let context = {
+      events: {
+        A: { count: 1, timestamp: 1 },
+        B: { count: 1, timestamp: 2 },
+        C: { count: 1, timestamp: 3 },
+      },
+    };
+    let from = 0;
+    let to = 2;
+    let result = queryAndCountOrderedEvent(events, context, from, to);
+    expect(result).toBe(0);
+    done();
+  });
+
+  it("Checks if the event count matches MatcherType.GREATER_THAN", function (done) {
     let eventCount = 1;
     let matcherKey = MatcherType.GREATER_THAN;
     let value = 1;
     let result = checkForHistoricalMatcher(eventCount, matcherKey, value);
     expect(result).toEqual(false);
+    done();
+  });
+
+  it("Checks if the event count matches MatcherType.EQUALS", function (done) {
+    let eventCount = 1;
+    let matcherKey = MatcherType.EQUALS;
+    let value = 1;
+    let result = checkForHistoricalMatcher(eventCount, matcherKey, value);
+    expect(result).toEqual(true);
+    done();
+  });
+
+  it("Checks if the event count matches MatcherType.GREATER_THAN_OR_EQUAL_TO", function (done) {
+    let eventCount = 1;
+    let matcherKey = MatcherType.GREATER_THAN_OR_EQUAL_TO;
+    let value = 1;
+    let result = checkForHistoricalMatcher(eventCount, matcherKey, value);
+    expect(result).toEqual(true);
+    done();
+  });
+
+  it("Checks if the event count matches MatcherType.GREATER_THAN_OR_EQUAL_TO", function (done) {
+    let eventCount = 1;
+    let matcherKey = MatcherType.LESS_THAN;
+    let value = 2;
+    let result = checkForHistoricalMatcher(eventCount, matcherKey, value);
+    expect(result).toEqual(true);
+    done();
+  });
+
+  it("Checks if the event count matches MatcherType.LESS_THAN_OR_EQUAL_TO", function (done) {
+    let eventCount = 2;
+    let matcherKey = MatcherType.LESS_THAN_OR_EQUAL_TO;
+    let value = 2;
+    let result = checkForHistoricalMatcher(eventCount, matcherKey, value);
+    expect(result).toEqual(true);
+    done();
+  });
+
+  it(" Checks if the event count matches MatcherType.NOT_EQUALS", function (done) {
+    let eventCount = 2;
+    let matcherKey = MatcherType.NOT_EQUALS;
+    let value = 1;
+    let result = checkForHistoricalMatcher(eventCount, matcherKey, value);
+    expect(result).toEqual(true);
     done();
   });
 });
