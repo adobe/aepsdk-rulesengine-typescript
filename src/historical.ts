@@ -53,7 +53,7 @@ export function queryAndCountAnyEvent(
 ) {
   for (let i = 0; i < events.length; i += 1) {
     const iamId = events[i]["iam.id"];
-    if (context.events[iamId] !== null) {
+    if (context.events[iamId] !== null && context.events[iamId] !== undefined) {
       const contextEvent = context.events[iamId];
       if (contextEvent.timestamp >= from && contextEvent.timestamp <= to) {
         return 1;

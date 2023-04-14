@@ -44,6 +44,33 @@ describe("test helper functions", function () {
     expect(result).toBe(1);
     done();
   });
+  it("should return 0 if none of the events is in the context", function (done) {
+    let events = [
+      {
+        "iam.id": "iamId1",
+        timestamp: 1,
+      },
+      {
+        "iam.id": "iamId2",
+        timestamp: 2,
+      },
+    ];
+    let context = {
+      events: {
+        iamId3: {
+          timestamp: 1,
+        },
+        iamId4: {
+          timestamp: 2,
+        },
+      },
+    };
+    let from = 1;
+    let to = 2;
+    let result = queryAndCountAnyEvent(events, context, from, to);
+    expect(result).toBe(0);
+    done();
+  });
   it("returns 1 (true )If all the events are ordered and within the time range", function (done) {
     jest.setTimeout(10000);
     let events = [{ "iam.id": "A" }, { "iam.id": "B" }, { "iam.id": "C" }];
