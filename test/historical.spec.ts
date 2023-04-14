@@ -131,4 +131,13 @@ describe("test helper functions", function () {
     expect(result).toEqual(true);
     done();
   });
+
+  it(" Checks for not supported matcher example MatcherType.EX", function (done) {
+    let eventCount = 2;
+    let matcherKey = MatcherType.EXISTS;
+    let value = 1;
+    let result = checkForHistoricalMatcher(eventCount, matcherKey, value);
+    expect(result).toEqual(false);
+    done();
+  });
 });
