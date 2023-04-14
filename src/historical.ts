@@ -35,6 +35,16 @@ export function checkForHistoricalMatcher(
   }
 }
 
+/**
+ * Iterates through the rule events and checks if any event occurs in context between
+ * the from and to timestamps defined in rule. It returns 1 (true) if the event is in the context and 0 otherwise.
+ *
+ * @param {Array<any>} events The list of events to query.
+ * @param {Context} context The context object.
+ * @param {number} from The from timestamp.
+ * @param {number} to The to timestamp.
+ * @returns {number} 1 if the event is in the context and 0 otherwise.
+ */
 export function queryAndCountAnyEvent(
   events: Array<any>,
   context: Context,
@@ -53,6 +63,18 @@ export function queryAndCountAnyEvent(
   return 0;
 }
 
+/**
+ * Iterates through the events in the query.
+ * If the event doesn't exist or has no count, return 0.
+ * If the event is in the right order, update the previousEventTimestamp.
+ * If the event is not in the right order, return 0
+ * If all events are in the right order, return 1
+ * @param events
+ * @param context
+ * @param from
+ * @param to
+ * @returns {number}
+ */
 export function queryAndCountOrderedEvent(
   events: Array<any>,
   context: Context,
