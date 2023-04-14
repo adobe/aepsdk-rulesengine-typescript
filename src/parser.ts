@@ -78,8 +78,6 @@ function parseCondition(
     );
   }
 
-  // TODO: support ConditionType.HISTORICAL condition types
-
   if (ConditionType.HISTORICAL === type) {
     return createCondition(
       type,

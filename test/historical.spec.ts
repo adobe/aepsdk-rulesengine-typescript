@@ -154,7 +154,6 @@ describe("rules from AJO", () => {
       })
     ).toEqual([]);
   });
-
   it(
     "When count of an event is greater than one, the subsequent event will be queried for using the oldest timestamp of " +
       "the previous event. If the end of the events array is reached and each event has been found, the evaluation returns one (1)",
@@ -232,78 +231,77 @@ describe("rules from AJO", () => {
       ).toEqual([[CONSEQUENCE]]);
     }
   );
-});
-
-it("When the count for any event is ever zero (it does not exist in the event history), the evaluation will shortcut out and return zero (0)", () => {
-  expect(
-    RulesEngine({
-      version: 1,
-      rules: [
-        {
-          condition: {
-            definition: {
-              conditions: [
-                {
-                  definition: {
-                    conditions: [
-                      {
-                        definition: {
-                          events: [
-                            {
-                              "iam.eventType": "display",
-                              "iam.id":
-                                "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-                            },
-                            {
-                              "iam.eventType": "interact",
-                              "iam.id":
-                                "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
-                            },
-                          ],
-                          matcher: "eq",
-                          value: 1,
-                          from: 1681321309855,
-                          to: 1996681309855,
-                          searchType: "ordered",
+  it("When the count for any event is ever zero (it does not exist in the event history), the evaluation will shortcut out and return zero (0)", () => {
+    expect(
+      RulesEngine({
+        version: 1,
+        rules: [
+          {
+            condition: {
+              definition: {
+                conditions: [
+                  {
+                    definition: {
+                      conditions: [
+                        {
+                          definition: {
+                            events: [
+                              {
+                                "iam.eventType": "display",
+                                "iam.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                              },
+                              {
+                                "iam.eventType": "interact",
+                                "iam.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
+                              },
+                            ],
+                            matcher: "eq",
+                            value: 1,
+                            from: 1681321309855,
+                            to: 1996681309855,
+                            searchType: "ordered",
+                          },
+                          type: "historical",
                         },
-                        type: "historical",
-                      },
-                    ],
-                    logic: "and",
+                      ],
+                      logic: "and",
+                    },
+                    type: "group",
                   },
-                  type: "group",
-                },
-              ],
-              logic: "and",
+                ],
+                logic: "and",
+              },
+              type: "group",
             },
-            type: "group",
+            consequences: [CONSEQUENCE],
           },
-          consequences: [CONSEQUENCE],
+        ],
+      }).execute({
+        events: {
+          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
+            {
+              event: {
+                "iam.eventType": "display",
+                "iam.id":
+                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+              },
+              timestamp: 1681321319855,
+              count: 1,
+            },
+          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb":
+            {
+              event: {
+                "iam.eventType": "interact",
+                "iam.id":
+                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
+              },
+              timestamp: 1681321339855,
+              count: 0,
+            },
         },
-      ],
-    }).execute({
-      events: {
-        "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-          {
-            event: {
-              "iam.eventType": "display",
-              "iam.id":
-                "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-            },
-            timestamp: 1681321319855,
-            count: 1,
-          },
-        "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb":
-          {
-            event: {
-              "iam.eventType": "interact",
-              "iam.id":
-                "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
-            },
-            timestamp: 1681321339855,
-            count: 0,
-          },
-      },
-    })
-  ).toEqual([]);
+      })
+    ).toEqual([]);
+  });
 });
