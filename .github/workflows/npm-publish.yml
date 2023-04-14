@@ -1,0 +1,43 @@
+name: Publish Package to npmjs
+on:
+  workflow_dispatch:
+    inputs:
+      semverBump:
+        description: "Bump which semver version number? (major, minor, patch)"
+        required: true
+        default: "patch"
+
+jobs:
+  npm-publish:
+    name: npm-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: main
+          fetch-depth: 0
+          token: ${{ secrets.ADOBE_BOT_GITHUB_TOKEN }}
+
+      - name: Configure git user for release commits
+        run: |
+          git config user.email "Grp-opensourceoffice@adobe.com"
+          git config user.name "Adobe Release Bot"
+      - name: Set up Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: 14
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Publish to registry.npmjs.org
+        run: |
+          npm ci
+          npm run publish ${{ github.event.inputs.semverBump }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ADOBE_BOT_GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
+          NPM_AUTH: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
+          NPM_REGISTRY: registry.npmjs.org
+          CI: true
