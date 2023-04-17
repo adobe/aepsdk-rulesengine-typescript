@@ -32,7 +32,7 @@ jobs:
       - name: Publish to registry.npmjs.org
         run: |
           npm ci
-          npm run publish ${{ github.event.inputs.semverBump }}
+          npm publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.ADOBE_BOT_GITHUB_TOKEN }}
