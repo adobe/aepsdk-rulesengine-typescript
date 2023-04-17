@@ -26,12 +26,12 @@ jobs:
         with:
           node-version: 16
       - run: |
-          npm install
+          npm ci
           npm test
       - name: Publish to registry.npmjs.org
         run: |
           npm ci
-          npm run publish ${{ github.event.inputs.semverBump }}
+          npm publish 
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
