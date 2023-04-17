@@ -15,7 +15,7 @@ jobs:
     name: checkout
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           token: ${{ secrets.ADOBE_BOT_GITHUB_TOKEN }}
       - name: Configure CI Git User
@@ -24,7 +24,7 @@ jobs:
           git config user.email grp-opensourceoffice@adobe.com
       - uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 14
       - run: |
           npm install
           npm test
