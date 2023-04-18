@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 import { MatcherType, SupportedMatcher } from "./types/enums";
 import { Context } from "./types/engine";
 import { HistoricalEvent } from "./types/schema";
+import { isUndefined } from "./utils/isUndefined";
 
 export function checkForHistoricalMatcher(
   eventCount: number,
@@ -47,8 +48,8 @@ export function checkForHistoricalMatcher(
 export function queryAndCountAnyEvent(
   events: Array<HistoricalEvent>,
   context: Context,
-  from?: number,
-  to?: number
+  from?: any,
+  to?: any
 ) {
   return events.reduce((countTotal, event) => {
     const { id } = event;
@@ -58,8 +59,8 @@ export function queryAndCountAnyEvent(
     }
     const { count: eventCount = 1 } = contextEvent;
     if (
-      typeof from === "undefined" ||
-      typeof to === "undefined" ||
+      isUndefined(from) ||
+      isUndefined(to) ||
       (contextEvent.timestamp >= from && contextEvent.timestamp <= to)
     ) {
       return countTotal + eventCount;
@@ -84,24 +85,25 @@ export function queryAndCountAnyEvent(
 export function queryAndCountOrderedEvent(
   events: Array<HistoricalEvent>,
   context: Context,
-  from?: number,
-  to?: number
+  from?: any,
+  to?: any
 ) {
   let previousEventTimestamp = from;
   const sameSequence = events.every((event) => {
     const { id } = event;
+    const contextEvent = context.events[id];
     if (
-      context.events[id] === null ||
-      typeof context.events[id] === "undefined" ||
-      context.events[id].count === 0
+      contextEvent === null ||
+      isUndefined(contextEvent) ||
+      contextEvent.count === 0
     ) {
       return false;
     }
 
     const ordered =
-      (typeof previousEventTimestamp === "undefined" ||
+      (isUndefined(previousEventTimestamp) ||
         context.events[id].timestamp >= previousEventTimestamp) &&
-      (typeof to === "undefined" || context.events[id].timestamp <= to);
+      (isUndefined(to) || context.events[id].timestamp <= to);
     previousEventTimestamp = context.events[id].timestamp;
     return ordered;
   });
