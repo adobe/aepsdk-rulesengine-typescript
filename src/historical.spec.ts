@@ -53,6 +53,44 @@ describe("test helper functions", () => {
     const result = queryAndCountAnyEvent(events, context, from, to);
     expect(result).toBe(8);
   });
+
+  it("should return total count of the number of events even if the `to` and `from` is undefined", () => {
+    const events = [
+      {
+        type: "display",
+        id: "abc",
+      },
+      {
+        type: "display",
+        id: "def",
+      },
+    ];
+    const context = {
+      events: {
+        abc: {
+          event: {
+            type: "display",
+            id: "abc",
+          },
+          timestamp: 1609086720000,
+          count: 2,
+        },
+        def: {
+          event: {
+            type: "display",
+            id: "def",
+          },
+          timestamp: 1609086720000,
+          count: 6,
+        },
+      },
+    };
+    const from = undefined;
+    const to = undefined;
+    const result = queryAndCountAnyEvent(events, context, from, to);
+    expect(result).toBe(8);
+  });
+
   it("returns 1 (true )If all the events are ordered and within the time range", () => {
     jest.setTimeout(10000);
     const events = [

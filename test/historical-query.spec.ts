@@ -95,7 +95,7 @@ describe("rules from AJO", () => {
     ).toEqual([[CONSEQUENCE]]);
   });
 
-  it("Check for historical condition when count doesn't match", () => {
+  it("Should return empty consequence for historical condition when count doesn't match with matcher provided", () => {
     expect(
       RulesEngine({
         version: 1,
@@ -150,7 +150,7 @@ describe("rules from AJO", () => {
       })
     ).toEqual([]);
   });
-  it("should return 1 in case count of an event is greater than one and the event is in the date range", () => {
+  it("should return consequence in case count of an event is greater than one and the event is in the date range for ordered search type", () => {
     expect(
       RulesEngine({
         version: 1,
@@ -219,7 +219,7 @@ describe("rules from AJO", () => {
       })
     ).toEqual([[CONSEQUENCE]]);
   });
-  it("Should return 0 if the count for any event is ever zero", () => {
+  it("Should return 0 if the count for any event is ever zero for ordered search type", () => {
     expect(
       RulesEngine({
         version: 1,
