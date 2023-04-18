@@ -47,10 +47,15 @@ export interface MatcherDefinition {
   values?: Array<any>;
 }
 
+export interface HistoricalEvent {
+  id: string;
+  type: string;
+}
+
 export interface HistoricalDefinition {
-  events: Array<any>;
-  from: number;
-  to: number;
+  events: Array<HistoricalEvent>;
+  from?: number;
+  to?: number;
   matcher: SupportedMatcher;
   value: number;
   searchType?: SupportedSearchType;

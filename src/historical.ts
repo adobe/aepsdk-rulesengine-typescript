@@ -11,9 +11,10 @@ governing permissions and limitations under the License.
 */
 import { MatcherType, SupportedMatcher } from "./types/enums";
 import { Context } from "./types/engine";
+import { HistoricalEvent } from "./types/schema";
 
 export function checkForHistoricalMatcher(
-  eventCount: any,
+  eventCount: number,
   matcherKey: SupportedMatcher,
   value: number
 ) {
@@ -36,31 +37,36 @@ export function checkForHistoricalMatcher(
 }
 
 /**
- * Iterates through the rule events and checks if any event occurs in context between
- * the from and to timestamps defined in rule. It returns 1 (true) if the event is in the context and 0 otherwise.
- *
- * @param {Array<any>} events The list of events to query.
- * @param {Context} context The context object.
- * @param {number} from The from timestamp.
- * @param {number} to The to timestamp.
- * @returns {number} 1 if the event is in the context and 0 otherwise.
+ * This function is used to query and count any event
+ * @param events
+ * @param context
+ * @param from
+ * @param to
+ * @returns countTotal
  */
 export function queryAndCountAnyEvent(
-  events: Array<any>,
+  events: Array<HistoricalEvent>,
   context: Context,
-  from: number,
-  to: number
+  from?: number,
+  to?: number
 ) {
-  for (let i = 0; i < events.length; i += 1) {
-    const iamId = events[i]["iam.id"];
-    if (context.events[iamId] !== null && context.events[iamId] !== undefined) {
-      const contextEvent = context.events[iamId];
-      if (contextEvent.timestamp >= from && contextEvent.timestamp <= to) {
-        return 1;
-      }
+  return events.reduce((countTotal, event) => {
+    const { id } = event;
+    const contextEvent = context.events[id];
+    if (!contextEvent) {
+      return countTotal;
     }
-  }
-  return 0;
+    const { count: eventCount = 1 } = contextEvent;
+    if (
+      typeof from === "undefined" ||
+      typeof to === "undefined" ||
+      (contextEvent.timestamp >= from && contextEvent.timestamp <= to)
+    ) {
+      return countTotal + eventCount;
+    }
+
+    return countTotal;
+  }, 0);
 }
 
 /**
@@ -76,25 +82,28 @@ export function queryAndCountAnyEvent(
  * @returns {number}
  */
 export function queryAndCountOrderedEvent(
-  events: Array<any>,
+  events: Array<HistoricalEvent>,
   context: Context,
   from: number,
   to: number
 ) {
   let previousEventTimestamp = from;
-  for (let i = 0; i < events.length; i += 1) {
-    const iamId = events[i]["iam.id"];
-    if (context.events[iamId] === null || context.events[iamId].count === 0) {
-      return 0;
-    }
+  const sameSequence = events.every((event) => {
+    const { id } = event;
     if (
-      context.events[iamId].timestamp >= previousEventTimestamp &&
-      context.events[iamId].timestamp <= to
+      context.events[id] === null ||
+      typeof context.events[id] === "undefined" ||
+      context.events[id].count === 0
     ) {
-      previousEventTimestamp = context.events[iamId].timestamp;
-    } else {
-      return 0;
+      return false;
     }
-  }
-  return 1;
+
+    const ordered =
+      context.events[id].timestamp >= previousEventTimestamp &&
+      context.events[id].timestamp <= to;
+    previousEventTimestamp = context.events[id].timestamp;
+    return ordered;
+  });
+
+  return sameSequence ? 1 : 0;
 }
