@@ -22,7 +22,14 @@ import {
   SupportedCondition,
   SupportedLogic,
   SupportedMatcher,
+  SearchType,
+  SupportedSearchType,
 } from "./types/enums";
+import {
+  checkForHistoricalMatcher,
+  queryAndCountAnyEvent,
+  queryAndCountOrderedEvent,
+} from "./historical";
 
 function evaluateAnd(context: Context, conditions: Array<Evaluable>): boolean {
   let result = true;
@@ -128,6 +135,27 @@ export function createMatcherDefinition(
       }
 
       return matcher.matches(context, key, values);
+    },
+  };
+}
+
+export function createHistoricalDefinition(
+  events: Array<any>,
+  matcherKey: SupportedMatcher,
+  value: number,
+  from?: number,
+  to?: number,
+  searchType?: SupportedSearchType
+): Evaluable {
+  return {
+    evaluate: (context) => {
+      let eventCount;
+      if (SearchType.ORDERED === searchType) {
+        eventCount = queryAndCountOrderedEvent(events, context, from, to);
+      } else {
+        eventCount = queryAndCountAnyEvent(events, context, from, to);
+      }
+      return checkForHistoricalMatcher(eventCount, matcherKey, value);
     },
   };
 }

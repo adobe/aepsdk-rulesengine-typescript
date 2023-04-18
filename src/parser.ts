@@ -13,6 +13,7 @@ import {
   createCondition,
   createConsequence,
   createGroupDefinition,
+  createHistoricalDefinition,
   createMatcherDefinition,
   createRule,
   createRules,
@@ -22,6 +23,7 @@ import {
   GroupCondition,
   GroupDefinition,
   HistoricalCondition,
+  HistoricalDefinition,
   MatcherCondition,
   MatcherDefinition,
   Rule,
@@ -43,6 +45,20 @@ function parseGroupDefinition(definition: GroupDefinition): Evaluable {
   return createGroupDefinition(logic, conditions.map(parseCondition));
 }
 
+function parseHistoricalDefinition(
+  definition: HistoricalDefinition
+): Evaluable {
+  const { events, from, to, matcher, value, searchType } = definition;
+  return createHistoricalDefinition(
+    events,
+    matcher,
+    value,
+    from,
+    to,
+    searchType
+  );
+}
+
 function parseCondition(
   condition: MatcherCondition | GroupCondition | HistoricalCondition
 ): Evaluable {
@@ -62,7 +78,12 @@ function parseCondition(
     );
   }
 
-  // TODO: support ConditionType.HISTORICAL condition types
+  if (ConditionType.HISTORICAL === type) {
+    return createCondition(
+      type,
+      parseHistoricalDefinition(<HistoricalDefinition>definition)
+    );
+  }
 
   throw new Error("Can not parse condition");
 }
