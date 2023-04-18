@@ -141,10 +141,10 @@ export function createMatcherDefinition(
 
 export function createHistoricalDefinition(
   events: Array<any>,
-  from: number,
-  to: number,
   matcherKey: SupportedMatcher,
   value: number,
+  from?: number,
+  to?: number,
   searchType?: SupportedSearchType
 ): Evaluable {
   return {

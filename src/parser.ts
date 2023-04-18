@@ -51,10 +51,10 @@ function parseHistoricalDefinition(
   const { events, from, to, matcher, value, searchType } = definition;
   return createHistoricalDefinition(
     events,
-    from,
-    to,
     matcher,
     value,
+    from,
+    to,
     searchType
   );
 }

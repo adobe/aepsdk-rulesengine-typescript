@@ -84,8 +84,8 @@ export function queryAndCountAnyEvent(
 export function queryAndCountOrderedEvent(
   events: Array<HistoricalEvent>,
   context: Context,
-  from: number,
-  to: number
+  from?: number,
+  to?: number
 ) {
   let previousEventTimestamp = from;
   const sameSequence = events.every((event) => {
@@ -99,8 +99,9 @@ export function queryAndCountOrderedEvent(
     }
 
     const ordered =
-      context.events[id].timestamp >= previousEventTimestamp &&
-      context.events[id].timestamp <= to;
+      (typeof previousEventTimestamp === "undefined" ||
+        context.events[id].timestamp >= previousEventTimestamp) &&
+      (typeof to === "undefined" || context.events[id].timestamp <= to);
     previousEventTimestamp = context.events[id].timestamp;
     return ordered;
   });
