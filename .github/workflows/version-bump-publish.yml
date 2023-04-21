@@ -28,7 +28,7 @@ jobs:
       - name: bump and pub
         if: ${{ github.event.inputs.level != '' }}
         run: |
-          npm version ${{ github.event.inputs.level }}
+          npm version --no-git-tag-version
           git push
       - uses: JS-DevTools/npm-publish@v1
         with:
