@@ -16,28 +16,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.ADOBE_BOT_GITHUB_TOKEN }}
-      - name: Configure CI Git User
-        run: |
-          git config user.name adobe-bot
-          git config user.email grp-opensourceoffice@adobe.com
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          registry-url: "https://registry.npmjs.org"
       - run: |
-          npm ci
+          npm install
           npm test
-      - name: Publish to registry.npmjs.org
+      - name: bump and pub
+        if: ${{ github.event.inputs.level != '' }}
         run: |
-          npm ci
-          npm publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.ADOBE_BOT_GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
-          NPM_AUTH_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
-          NPM_AUTH: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
-          NPM_REGISTRY: registry.npmjs.org
-          CI: true
+          npm version ${{ github.event.inputs.level }}
+          git push
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
+          tag: ${{ github.event.inputs.tag }}
+          access: "public"
