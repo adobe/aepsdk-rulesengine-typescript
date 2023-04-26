@@ -1,4 +1,4 @@
-name: version-bump-publish
+name: npm-publish
 on:
   workflow_dispatch:
     inputs:
@@ -25,11 +25,7 @@ jobs:
       - run: |
           npm install
           npm test
-      - name: bump and pub
-        if: ${{ github.event.inputs.level != '' }}
-        run: |
-          npm version --no-git-tag-version
-          git push
+    publish:
       - uses: JS-DevTools/npm-publish@v2
         with:
           token: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
