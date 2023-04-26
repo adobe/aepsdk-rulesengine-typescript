@@ -25,7 +25,7 @@ jobs:
       - run: |
           npm install
           npm test
-    publish:
+      - name: publish
       - uses: JS-DevTools/npm-publish@v2
         with:
           token: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
