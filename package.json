@@ -31,7 +31,8 @@
     "format": "prettier --write \"{src,test}/**/*.{js,cjs,mjs,ts}\" \"**/*.md\"",
     "prelint": "npm run format && npm run add-license",
     "lint": "./node_modules/.bin/eslint src/**",
-    "prepare": "husky install && rollup --config",
+    "prepare": "husky install",
+    "prepublishOnly": "rollup --config",
     "pretty-quick": "pretty-quick",
     "pretest": "npm run lint",
     "test": "NODE_ENV=development jest"
