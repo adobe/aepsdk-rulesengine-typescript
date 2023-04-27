@@ -19,9 +19,9 @@
     }
   },
   "files": [
-    "dist/",
-    "src/",
-    "types/"
+    "dist/*",
+    "types/*",
+    "src/**/!(*.spec).ts"
   ],
   "scripts": {
     "add-license": "node tools/add-license.cjs",
