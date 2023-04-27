@@ -1,6 +1,6 @@
 {
   "name": "@adobe/aep-rules-engine",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.1",
   "description": "Adobe Experience Platform rules engine.",
   "repository": {
     "type": "git",
@@ -19,9 +19,9 @@
     }
   },
   "files": [
-    "dist",
-    "src",
-    "types"
+    "dist/*",
+    "types/*",
+    "src/**/!(*.spec).ts"
   ],
   "scripts": {
     "add-license": "node tools/add-license.cjs",
@@ -32,6 +32,7 @@
     "prelint": "npm run format && npm run add-license",
     "lint": "./node_modules/.bin/eslint src/**",
     "prepare": "husky install",
+    "prepublishOnly": "rollup --config",
     "pretty-quick": "pretty-quick",
     "pretest": "npm run lint",
     "test": "NODE_ENV=development jest"
