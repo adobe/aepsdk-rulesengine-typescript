@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 import RulesEngine from "../src";
 import { Consequence } from "../src/types/schema";
+import { RuleSet } from "../types/types/schema";
 
 let CONSEQUENCE: Consequence = {
   id: "6df71dd7-a24f-4944-9787-49345c417b01",
@@ -278,5 +279,143 @@ describe("rules from AJO", () => {
         },
       })
     ).toEqual([]);
+  });
+
+  it("distinguishes between display and interact events with the same id", () => {
+    const displayRuleset = {
+      version: 1,
+      rules: [
+        {
+          condition: {
+            definition: {
+              conditions: [
+                {
+                  definition: {
+                    conditions: [
+                      {
+                        definition: {
+                          events: [
+                            {
+                              type: "display",
+                              id: "6cd5a8ed",
+                            },
+                          ],
+                          matcher: "ge",
+                          value: 1,
+                        },
+                        type: "historical",
+                      },
+                    ],
+                    logic: "and",
+                  },
+                  type: "group",
+                },
+              ],
+              logic: "and",
+            },
+            type: "group",
+          },
+          consequences: [CONSEQUENCE],
+        },
+      ],
+    };
+
+    const interactRuleset: RuleSet = {
+      version: 1,
+      rules: [
+        {
+          condition: {
+            definition: {
+              conditions: [
+                {
+                  definition: {
+                    conditions: [
+                      {
+                        definition: {
+                          events: [
+                            {
+                              type: "interact",
+                              id: "6cd5a8ed",
+                            },
+                          ],
+                          matcher: "ge",
+                          value: 1,
+                        },
+                        type: "historical",
+                      },
+                    ],
+                    logic: "and",
+                  },
+                  type: "group",
+                },
+              ],
+              logic: "and",
+            },
+            type: "group",
+          },
+          consequences: [CONSEQUENCE],
+        },
+      ],
+    };
+
+    expect(
+      RulesEngine(displayRuleset).execute({
+        events: {
+          "interact|6cd5a8ed": {
+            event: {
+              type: "interact",
+              id: "6cd5a8ed",
+            },
+            timestamp: 1681321939855,
+            count: 1,
+          },
+        },
+      })
+    ).toEqual([]);
+
+    expect(
+      RulesEngine(displayRuleset).execute({
+        events: {
+          "display|6cd5a8ed": {
+            event: {
+              type: "display",
+              id: "6cd5a8ed",
+            },
+            timestamp: 1681321939855,
+            count: 1,
+          },
+        },
+      })
+    ).toEqual([[CONSEQUENCE]]);
+
+    expect(
+      RulesEngine(interactRuleset).execute({
+        events: {
+          "display|6cd5a8ed": {
+            event: {
+              type: "display",
+              id: "6cd5a8ed",
+            },
+            timestamp: 1681321939855,
+            count: 1,
+          },
+        },
+      })
+    ).toEqual([]);
+
+    expect(
+      RulesEngine(interactRuleset).execute({
+        events: {
+          "interact|6cd5a8ed": {
+            event: {
+              type: "interact",
+              id: "6cd5a8ed",
+            },
+            timestamp: 1681321939855,
+            count: 1,
+          },
+        },
+      })
+    ).toEqual([[CONSEQUENCE]]);
   });
 });
