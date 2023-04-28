@@ -33,6 +33,7 @@
     "lint": "./node_modules/.bin/eslint src/**",
     "prepare": "husky install",
     "prepublishOnly": "rollup --config",
+    "publish": "node tools/npm-publish.cjs",
     "pretty-quick": "pretty-quick",
     "pretest": "npm run lint",
     "test": "NODE_ENV=development jest"
@@ -43,6 +44,7 @@
     "@babel/core": "^7.21.3",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-typescript": "^7.21.0",
+    "@jsdevtools/npm-publish": "^2.0.0",
     "@lwc/eslint-plugin-lwc": "^1.6.2",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-node-resolve": "^15.0.1",
