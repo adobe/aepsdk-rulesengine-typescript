@@ -1,6 +1,9 @@
 name: npm-publish
-jobs:
-  build:
+on:
+  workflow_dispatch:
+
+  npm-publish:
+    name: npm-publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -9,16 +12,16 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.ADOBE_BOT_GITHUB_TOKEN }}
 
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 18
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm run publish
+
+      - name: Publish to registry.npmjs.org
+        run: |
+          npm ci
+          npm run publish
         env:
           GITHUB_TOKEN: ${{ secrets.ADOBE_BOT_GITHUB_TOKEN }}
           NPM_TOKEN: ${{secrets.ADOBE_BOT_NPM_TOKEN}}
