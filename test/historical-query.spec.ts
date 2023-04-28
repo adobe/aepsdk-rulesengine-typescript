@@ -81,7 +81,7 @@ describe("rules from AJO", () => {
         ],
       }).execute({
         events: {
-          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
+          "display|6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
             {
               event: {
                 type: "display",
@@ -137,7 +137,7 @@ describe("rules from AJO", () => {
         ],
       }).execute({
         events: {
-          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
+          "display|6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
             {
               event: {
                 type: "display",
@@ -197,7 +197,7 @@ describe("rules from AJO", () => {
         ],
       }).execute({
         events: {
-          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
+          "display|6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
             {
               event: {
                 type: "display",
@@ -206,7 +206,7 @@ describe("rules from AJO", () => {
               timestamp: 1681321319855,
               count: 1,
             },
-          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb":
+          "interact|6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb":
             {
               event: {
                 type: "interact",
@@ -266,7 +266,7 @@ describe("rules from AJO", () => {
         ],
       }).execute({
         events: {
-          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
+          "display|6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
             {
               event: {
                 type: "display",
