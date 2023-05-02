@@ -52,8 +52,12 @@ export function queryAndCountAnyEvent(
   to?: any
 ) {
   return events.reduce((countTotal, event) => {
-    const { id } = event;
-    const contextEvent = context.events[id];
+    const eventsOfType = context.events[event.type];
+    if (!eventsOfType) {
+      return countTotal;
+    }
+
+    const contextEvent = eventsOfType[event.id];
     if (!contextEvent) {
       return countTotal;
     }
@@ -90,8 +94,12 @@ export function queryAndCountOrderedEvent(
 ) {
   let previousEventTimestamp = from;
   const sameSequence = events.every((event) => {
-    const { id } = event;
-    const contextEvent = context.events[id];
+    const eventsOfType = context.events[event.type];
+    if (!eventsOfType) {
+      return false;
+    }
+
+    const contextEvent = eventsOfType[event.id];
     if (
       contextEvent === null ||
       isUndefined(contextEvent) ||
@@ -102,9 +110,9 @@ export function queryAndCountOrderedEvent(
 
     const ordered =
       (isUndefined(previousEventTimestamp) ||
-        context.events[id].timestamp >= previousEventTimestamp) &&
-      (isUndefined(to) || context.events[id].timestamp <= to);
-    previousEventTimestamp = context.events[id].timestamp;
+        contextEvent.timestamp >= previousEventTimestamp) &&
+      (isUndefined(to) || contextEvent.timestamp <= to);
+    previousEventTimestamp = contextEvent.timestamp;
     return ordered;
   });
 
