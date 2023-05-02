@@ -82,15 +82,17 @@ describe("rules from AJO", () => {
         ],
       }).execute({
         events: {
-          "display|6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-            {
-              event: {
-                type: "display",
-                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+          display: {
+            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
+              {
+                event: {
+                  type: "display",
+                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                },
+                timestamp: 1681321319855,
+                count: 1,
               },
-              timestamp: 1681321319855,
-              count: 1,
-            },
+          },
         },
       })
     ).toEqual([[CONSEQUENCE]]);
@@ -138,15 +140,17 @@ describe("rules from AJO", () => {
         ],
       }).execute({
         events: {
-          "display|6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-            {
-              event: {
-                type: "display",
-                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+          display: {
+            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
+              {
+                event: {
+                  type: "display",
+                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                },
+                timestamp: 1681321319855,
+                count: 1,
               },
-              timestamp: 1681321319855,
-              count: 1,
-            },
+          },
         },
       })
     ).toEqual([]);
@@ -198,24 +202,28 @@ describe("rules from AJO", () => {
         ],
       }).execute({
         events: {
-          "display|6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-            {
-              event: {
-                type: "display",
-                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+          display: {
+            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
+              {
+                event: {
+                  type: "display",
+                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                },
+                timestamp: 1681321319855,
+                count: 1,
               },
-              timestamp: 1681321319855,
-              count: 1,
-            },
-          "interact|6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb":
-            {
-              event: {
-                type: "interact",
-                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
+          },
+          interact: {
+            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb":
+              {
+                event: {
+                  type: "interact",
+                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
+                },
+                timestamp: 1681321339855,
+                count: 1,
               },
-              timestamp: 1681321339855,
-              count: 1,
-            },
+          },
         },
       })
     ).toEqual([[CONSEQUENCE]]);
@@ -267,15 +275,17 @@ describe("rules from AJO", () => {
         ],
       }).execute({
         events: {
-          "display|6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-            {
-              event: {
-                type: "display",
-                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+          display: {
+            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
+              {
+                event: {
+                  type: "display",
+                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                },
+                timestamp: 1681321319855,
+                count: 1,
               },
-              timestamp: 1681321319855,
-              count: 1,
-            },
+          },
         },
       })
     ).toEqual([]);
@@ -361,13 +371,15 @@ describe("rules from AJO", () => {
     expect(
       RulesEngine(displayRuleset).execute({
         events: {
-          "interact|6cd5a8ed": {
-            event: {
-              type: "interact",
-              id: "6cd5a8ed",
+          interact: {
+            "6cd5a8ed": {
+              event: {
+                type: "interact",
+                id: "6cd5a8ed",
+              },
+              timestamp: 1681321939855,
+              count: 1,
             },
-            timestamp: 1681321939855,
-            count: 1,
           },
         },
       })
@@ -376,13 +388,15 @@ describe("rules from AJO", () => {
     expect(
       RulesEngine(displayRuleset).execute({
         events: {
-          "display|6cd5a8ed": {
-            event: {
-              type: "display",
-              id: "6cd5a8ed",
+          display: {
+            "6cd5a8ed": {
+              event: {
+                type: "display",
+                id: "6cd5a8ed",
+              },
+              timestamp: 1681321939855,
+              count: 1,
             },
-            timestamp: 1681321939855,
-            count: 1,
           },
         },
       })
@@ -391,13 +405,15 @@ describe("rules from AJO", () => {
     expect(
       RulesEngine(interactRuleset).execute({
         events: {
-          "display|6cd5a8ed": {
-            event: {
-              type: "display",
-              id: "6cd5a8ed",
+          display: {
+            "6cd5a8ed": {
+              event: {
+                type: "display",
+                id: "6cd5a8ed",
+              },
+              timestamp: 1681321939855,
+              count: 1,
             },
-            timestamp: 1681321939855,
-            count: 1,
           },
         },
       })
@@ -406,13 +422,15 @@ describe("rules from AJO", () => {
     expect(
       RulesEngine(interactRuleset).execute({
         events: {
-          "interact|6cd5a8ed": {
-            event: {
-              type: "interact",
-              id: "6cd5a8ed",
+          interact: {
+            "6cd5a8ed": {
+              event: {
+                type: "interact",
+                id: "6cd5a8ed",
+              },
+              timestamp: 1681321939855,
+              count: 1,
             },
-            timestamp: 1681321939855,
-            count: 1,
           },
         },
       })

@@ -14,10 +14,6 @@ import { Context } from "./types/engine";
 import { HistoricalEvent } from "./types/schema";
 import { isUndefined } from "./utils/isUndefined";
 
-function eventKey(event: HistoricalEvent) {
-  return `${event.type}|${event.id}`;
-}
-
 export function checkForHistoricalMatcher(
   eventCount: number,
   matcherKey: SupportedMatcher,
@@ -56,7 +52,12 @@ export function queryAndCountAnyEvent(
   to?: any
 ) {
   return events.reduce((countTotal, event) => {
-    const contextEvent = context.events[eventKey(event)];
+    const eventsOfType = context.events[event.type];
+    if (!eventsOfType) {
+      return countTotal;
+    }
+
+    const contextEvent = eventsOfType[event.id];
     if (!contextEvent) {
       return countTotal;
     }
@@ -93,8 +94,12 @@ export function queryAndCountOrderedEvent(
 ) {
   let previousEventTimestamp = from;
   const sameSequence = events.every((event) => {
-    const key = eventKey(event);
-    const contextEvent = context.events[key];
+    const eventsOfType = context.events[event.type];
+    if (!eventsOfType) {
+      return false;
+    }
+
+    const contextEvent = eventsOfType[event.id];
     if (
       contextEvent === null ||
       isUndefined(contextEvent) ||
@@ -105,9 +110,9 @@ export function queryAndCountOrderedEvent(
 
     const ordered =
       (isUndefined(previousEventTimestamp) ||
-        context.events[key].timestamp >= previousEventTimestamp) &&
-      (isUndefined(to) || context.events[key].timestamp <= to);
-    previousEventTimestamp = context.events[key].timestamp;
+        contextEvent.timestamp >= previousEventTimestamp) &&
+      (isUndefined(to) || contextEvent.timestamp <= to);
+    previousEventTimestamp = contextEvent.timestamp;
     return ordered;
   });
 

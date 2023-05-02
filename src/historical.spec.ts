@@ -30,21 +30,23 @@ describe("test helper functions", () => {
     ];
     const context = {
       events: {
-        "display|abc": {
-          event: {
-            type: "display",
-            id: "abc",
+        display: {
+          abc: {
+            event: {
+              type: "display",
+              id: "abc",
+            },
+            timestamp: 1609086720000,
+            count: 2,
           },
-          timestamp: 1609086720000,
-          count: 2,
-        },
-        "display|def": {
-          event: {
-            type: "display",
-            id: "def",
+          def: {
+            event: {
+              type: "display",
+              id: "def",
+            },
+            timestamp: 1609086720000,
+            count: 6,
           },
-          timestamp: 1609086720000,
-          count: 6,
         },
       },
     };
@@ -67,21 +69,23 @@ describe("test helper functions", () => {
     ];
     const context = {
       events: {
-        "display|abc": {
-          event: {
-            type: "display",
-            id: "abc",
+        display: {
+          abc: {
+            event: {
+              type: "display",
+              id: "abc",
+            },
+            timestamp: 1609086720000,
+            count: 2,
           },
-          timestamp: 1609086720000,
-          count: 2,
-        },
-        "display|def": {
-          event: {
-            type: "display",
-            id: "def",
+          def: {
+            event: {
+              type: "display",
+              id: "def",
+            },
+            timestamp: 1609086720000,
+            count: 6,
           },
-          timestamp: 1609086720000,
-          count: 6,
         },
       },
     };
@@ -100,9 +104,11 @@ describe("test helper functions", () => {
     ];
     const context = {
       events: {
-        "display|A": { count: 1, timestamp: 1 },
-        "display|B": { count: 1, timestamp: 2 },
-        "display|C": { count: 1, timestamp: 3 },
+        display: {
+          A: { count: 1, timestamp: 1 },
+          B: { count: 1, timestamp: 2 },
+          C: { count: 1, timestamp: 3 },
+        },
       },
     };
     const from = 0;
@@ -120,9 +126,11 @@ describe("test helper functions", () => {
     ];
     const context = {
       events: {
-        "display|A": { count: 1, timestamp: 1 },
-        "display|B": { count: 1, timestamp: 2 },
-        "display|C": { count: 1, timestamp: 3 },
+        display: {
+          A: { count: 1, timestamp: 1 },
+          B: { count: 1, timestamp: 2 },
+          C: { count: 1, timestamp: 3 },
+        },
       },
     };
     const from = 0;
