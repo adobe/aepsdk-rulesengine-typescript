@@ -20,12 +20,12 @@ describe("test helper functions", () => {
   it("should return a count of the number of events that match", () => {
     const events = [
       {
-        type: "display",
-        id: "abc",
+        "iam.eventType": "display",
+        "iam.id": "abc",
       },
       {
-        type: "display",
-        id: "def",
+        "iam.eventType": "display",
+        "iam.id": "def",
       },
     ];
     const context = {
@@ -33,16 +33,16 @@ describe("test helper functions", () => {
         display: {
           abc: {
             event: {
-              type: "display",
-              id: "abc",
+              "iam.eventType": "display",
+              "iam.id": "abc",
             },
             timestamp: 1609086720000,
             count: 2,
           },
           def: {
             event: {
-              type: "display",
-              id: "def",
+              "iam.eventType": "display",
+              "iam.id": "def",
             },
             timestamp: 1609086720000,
             count: 6,
@@ -59,12 +59,12 @@ describe("test helper functions", () => {
   it("should return total count of the number of events even if the `to` and `from` is undefined", () => {
     const events = [
       {
-        type: "display",
-        id: "abc",
+        "iam.eventType": "display",
+        "iam.id": "abc",
       },
       {
-        type: "display",
-        id: "def",
+        "iam.eventType": "display",
+        "iam.id": "def",
       },
     ];
     const context = {
@@ -72,16 +72,16 @@ describe("test helper functions", () => {
         display: {
           abc: {
             event: {
-              type: "display",
-              id: "abc",
+              "iam.eventType": "display",
+              "iam.id": "abc",
             },
             timestamp: 1609086720000,
             count: 2,
           },
           def: {
             event: {
-              type: "display",
-              id: "def",
+              "iam.eventType": "display",
+              "iam.id": "def",
             },
             timestamp: 1609086720000,
             count: 6,
@@ -98,9 +98,9 @@ describe("test helper functions", () => {
   it("returns 1 (true )If all the events are ordered and within the time range", () => {
     jest.setTimeout(10000);
     const events = [
-      { type: "display", id: "A" },
-      { type: "display", id: "B" },
-      { type: "display", id: "C" },
+      { "iam.eventType": "display", "iam.id": "A" },
+      { "iam.eventType": "display", "iam.id": "B" },
+      { "iam.eventType": "display", "iam.id": "C" },
     ];
     const context = {
       events: {
@@ -120,9 +120,9 @@ describe("test helper functions", () => {
   it("returns 0 If any of the events are ordered but not within the time range", () => {
     jest.setTimeout(10000);
     const events = [
-      { type: "display", id: "A" },
-      { type: "display", id: "B" },
-      { type: "display", id: "C" },
+      { "iam.eventType": "display", "iam.id": "A" },
+      { "iam.eventType": "display", "iam.id": "B" },
+      { "iam.eventType": "display", "iam.id": "C" },
     ];
     const context = {
       events: {

@@ -52,12 +52,12 @@ export function queryAndCountAnyEvent(
   to?: any
 ) {
   return events.reduce((countTotal, event) => {
-    const eventsOfType = context.events[event.type];
+    const eventsOfType = context.events[event["iam.eventType"]];
     if (!eventsOfType) {
       return countTotal;
     }
 
-    const contextEvent = eventsOfType[event.id];
+    const contextEvent = eventsOfType[event["iam.id"]];
     if (!contextEvent) {
       return countTotal;
     }
@@ -94,12 +94,12 @@ export function queryAndCountOrderedEvent(
 ) {
   let previousEventTimestamp = from;
   const sameSequence = events.every((event) => {
-    const eventsOfType = context.events[event.type];
+    const eventsOfType = context.events[event["iam.eventType"]];
     if (!eventsOfType) {
       return false;
     }
 
-    const contextEvent = eventsOfType[event.id];
+    const contextEvent = eventsOfType[event["iam.id"]];
     if (
       contextEvent === null ||
       isUndefined(contextEvent) ||
