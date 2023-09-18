@@ -48,16 +48,16 @@ export interface MatcherDefinition {
 }
 
 export interface HistoricalEvent {
-  id: string;
-  type: string;
+  "iam.eventType": string;
+  "iam.id": string;
 }
 
 export interface HistoricalDefinition {
   events: Array<HistoricalEvent>;
-  from?: number;
-  to?: number;
   matcher: SupportedMatcher;
   value: number;
+  from?: number;
+  to?: number;
   searchType?: SupportedSearchType;
 }
 
