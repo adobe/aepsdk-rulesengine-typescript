@@ -160,7 +160,7 @@ describe("rules from AJO", () => {
       })
     ).toEqual([]);
   });
-  it("should return  in case count of an event is greater than one and the event is in the date range for ordered search type", () => {
+  it("should return consequence in case count of an event is greater than one and the event is in the date range for ordered search type", () => {
     expect(
       RulesEngine({
         version: 1,
