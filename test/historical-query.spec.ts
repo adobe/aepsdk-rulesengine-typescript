@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 import RulesEngine from "../src";
 import { Consequence } from "../src/types/schema";
-import { RuleSet } from "../types/types/schema";
+import { RuleSet } from "../src/types/schema";
 
 let CONSEQUENCE: Consequence = {
   id: "6df71dd7-a24f-4944-9787-49345c417b01",
