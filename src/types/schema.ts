@@ -46,12 +46,6 @@ export interface MatcherDefinition {
   matcher: SupportedMatcher;
   values?: Array<any>;
 }
-
-export interface HistoricalEvent {
-  "iam.eventType": string;
-  "iam.id": string;
-}
-
 export interface HistoricalDefinition {
   events: Array<Object>;
   matcher: SupportedMatcher;
