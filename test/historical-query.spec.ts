@@ -160,8 +160,8 @@ describe("rules from AJO", () => {
                           definition: {
                             events: [
                               {
-                                "iam.eventType": "display",
-                                "iam.id":
+                                "ajo.eventType": "display",
+                                "ajo.id":
                                   "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
                               },
                               {
@@ -195,9 +195,9 @@ describe("rules from AJO", () => {
         events: [
           {
             id: 1,
-            "iam.id":
+            "ajo.id":
               "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-            "iam.eventType": "display",
+            "ajo.eventType": "display",
             timestamp: 1681321319855,
           },
           {
