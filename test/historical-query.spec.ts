@@ -81,23 +81,7 @@ describe("rules from AJO", () => {
             consequences: [CONSEQUENCE],
           },
         ],
-      }).execute({
-        events: {
-          display: {
-            "28bea011-e596-4429-b8f7-b5bd630c6743#b45498cb-96d1-417a-81eb-2f09157ad8c6":
-              {
-                event: {
-                  "iam.eventType": "display",
-                  "iam.id":
-                    "28bea011-e596-4429-b8f7-b5bd630c6743#b45498cb-96d1-417a-81eb-2f09157ad8c6",
-                },
-                firstTimestamp: 1695065771698,
-                timestamp: 1695065771698,
-                count: 0,
-              },
-          },
-        },
-      })
+      }).execute({})
     ).toEqual([[CONSEQUENCE]]);
   });
 
@@ -121,6 +105,11 @@ describe("rules from AJO", () => {
                                 "iam.id":
                                   "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
                               },
+                              {
+                                "ajo.eventType": "display",
+                                "ajo.id":
+                                  "38bea011-e596-4429-b8f7-b5bd630c6743#b45498cb-96d1-417a-81eb-2f09157ad8c6",
+                              },
                             ],
                             matcher: "eq",
                             value: 0,
@@ -143,20 +132,15 @@ describe("rules from AJO", () => {
           },
         ],
       }).execute({
-        events: {
-          display: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-              {
-                event: {
-                  "iam.eventType": "display",
-                  "iam.id":
-                    "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-                },
-                timestamp: 1681321319855,
-                count: 1,
-              },
+        events: [
+          {
+            id: 1,
+            "iam.id":
+              "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+            "iam.eventType": "display",
+            timestamp: 1681321319855,
           },
-        },
+        ],
       })
     ).toEqual([]);
   });
@@ -208,32 +192,22 @@ describe("rules from AJO", () => {
           },
         ],
       }).execute({
-        events: {
-          display: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-              {
-                event: {
-                  "iam.eventType": "display",
-                  "iam.id":
-                    "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-                },
-                timestamp: 1681321319855,
-                count: 1,
-              },
+        events: [
+          {
+            id: 1,
+            "iam.id":
+              "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+            "iam.eventType": "display",
+            timestamp: 1681321319855,
           },
-          interact: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb":
-              {
-                event: {
-                  "iam.eventType": "interact",
-                  "iam.id":
-                    "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
-                },
-                timestamp: 1681321339855,
-                count: 1,
-              },
+          {
+            id: 2,
+            "iam.id":
+              "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
+            "iam.eventType": "interact",
+            timestamp: 1681321339855,
           },
-        },
+        ],
       })
     ).toEqual([[CONSEQUENCE]]);
   });
@@ -285,20 +259,16 @@ describe("rules from AJO", () => {
           },
         ],
       }).execute({
-        events: {
-          display: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-              {
-                event: {
-                  "iam.eventType": "display",
-                  "iam.id":
-                    "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-                },
-                timestamp: 1681321319855,
-                count: 1,
-              },
+        events: [
+          {
+            id: 1,
+            "iam.id":
+              "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+            "iam.eventType": "display",
+            firstTimestamp: 1681321309855,
+            timestamp: 1681321319855,
           },
-        },
+        ],
       })
     ).toEqual([]);
   });
@@ -382,69 +352,53 @@ describe("rules from AJO", () => {
 
     expect(
       RulesEngine(displayRuleset).execute({
-        events: {
-          interact: {
-            "6cd5a8ed": {
-              event: {
-                "iam.eventType": "interact",
-                "iam.id": "6cd5a8ed",
-              },
-              timestamp: 1681321939855,
-              count: 1,
-            },
+        events: [
+          {
+            id: 1,
+            "iam.id": "6cd5a8ed",
+            "iam.eventType": "interact",
+            timestamp: 1681321939855,
           },
-        },
+        ],
       })
     ).toEqual([]);
 
     expect(
       RulesEngine(displayRuleset).execute({
-        events: {
-          display: {
-            "6cd5a8ed": {
-              event: {
-                "iam.eventType": "display",
-                "iam.id": "6cd5a8ed",
-              },
-              timestamp: 1681321939855,
-              count: 1,
-            },
+        events: [
+          {
+            id: 1,
+            "iam.id": "6cd5a8ed",
+            "iam.eventType": "display",
+            timestamp: 1681321939855,
           },
-        },
+        ],
       })
     ).toEqual([[CONSEQUENCE]]);
 
     expect(
       RulesEngine(interactRuleset).execute({
-        events: {
-          display: {
-            "6cd5a8ed": {
-              event: {
-                "iam.eventType": "display",
-                "iam.id": "6cd5a8ed",
-              },
-              timestamp: 1681321939855,
-              count: 1,
-            },
+        events: [
+          {
+            id: 1,
+            "iam.id": "6cd5a8ed",
+            "iam.eventType": "display",
+            timestamp: 1681321939855,
           },
-        },
+        ],
       })
     ).toEqual([]);
 
     expect(
       RulesEngine(interactRuleset).execute({
-        events: {
-          interact: {
-            "6cd5a8ed": {
-              event: {
-                "iam.eventType": "interact",
-                "iam.id": "6cd5a8ed",
-              },
-              timestamp: 1681321939855,
-              count: 1,
-            },
+        events: [
+          {
+            id: 1,
+            "iam.id": "6cd5a8ed",
+            "iam.eventType": "interact",
+            timestamp: 1681321939855,
           },
-        },
+        ],
       })
     ).toEqual([[CONSEQUENCE]]);
   });

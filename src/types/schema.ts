@@ -53,7 +53,7 @@ export interface HistoricalEvent {
 }
 
 export interface HistoricalDefinition {
-  events: Array<HistoricalEvent>;
+  events: Array<Object>;
   matcher: SupportedMatcher;
   value: number;
   from?: number;

@@ -11,7 +11,6 @@ governing permissions and limitations under the License.
 */
 import { MatcherType, SupportedMatcher } from "./types/enums";
 import { Context } from "./types/engine";
-import { HistoricalEvent } from "./types/schema";
 import { isUndefined } from "./utils/isUndefined";
 
 export function checkForHistoricalMatcher(
@@ -37,6 +36,11 @@ export function checkForHistoricalMatcher(
   }
 }
 
+const matches = (source, obj) =>
+  Object.keys(source).every(
+    (key) => Object.hasOwn(obj, key) && obj[key] === source[key]
+  );
+
 /**
  * This function is used to query and count any event
  * @param events
@@ -46,26 +50,36 @@ export function checkForHistoricalMatcher(
  * @returns countTotal
  */
 export function queryAndCountAnyEvent(
-  events: Array<HistoricalEvent>,
+  events: Array<Object>,
   context: Context,
   from?: any,
   to?: any
 ) {
   return events.reduce((countTotal, event) => {
-    const eventsOfType = context.events[event["iam.eventType"]];
-    if (!eventsOfType) {
+    if (!context || !context.events) {
       return countTotal;
     }
 
-    const contextEvent = eventsOfType[event["iam.id"]];
-    if (!contextEvent) {
+    const contextEvents = context.events.filter((contextEvent) =>
+      matches(event, contextEvent)
+    );
+    if (contextEvents.length === 0) {
       return countTotal;
     }
-    const { count: eventCount = 1 } = contextEvent;
+    const latestContextEvent = contextEvents.reduce(
+      (accumulator, currentValue) =>
+        accumulator.timestamp > currentValue.timestamp
+          ? accumulator
+          : currentValue,
+      contextEvents[0]
+    );
+
+    const eventCount = contextEvents.length;
     if (
       isUndefined(from) ||
       isUndefined(to) ||
-      (contextEvent.timestamp >= from && contextEvent.timestamp <= to)
+      (latestContextEvent.timestamp >= from &&
+        latestContextEvent.timestamp <= to)
     ) {
       return countTotal + eventCount;
     }
@@ -87,32 +101,38 @@ export function queryAndCountAnyEvent(
  * @returns {number}
  */
 export function queryAndCountOrderedEvent(
-  events: Array<HistoricalEvent>,
+  events: Array<Object>,
   context: Context,
   from?: any,
   to?: any
 ) {
   let previousEventTimestamp = from;
   const sameSequence = events.every((event) => {
-    const eventsOfType = context.events[event["iam.eventType"]];
-    if (!eventsOfType) {
+    if (!context || !context.events) {
       return false;
     }
 
-    const contextEvent = eventsOfType[event["iam.id"]];
-    if (
-      contextEvent === null ||
-      isUndefined(contextEvent) ||
-      contextEvent.count === 0
-    ) {
+    const contextEvents = context.events.filter((contextEvent) =>
+      matches(event, contextEvent)
+    );
+    if (contextEvents.length === 0) {
       return false;
     }
+    // @ts-ignore
+    // @ts-ignore
+    const latestContextEvent = contextEvents.reduce(
+      (accumulator, currentValue) =>
+        accumulator.timestamp > currentValue.timestamp
+          ? accumulator
+          : currentValue,
+      contextEvents[0]
+    );
 
     const ordered =
       (isUndefined(previousEventTimestamp) ||
-        contextEvent.timestamp >= previousEventTimestamp) &&
-      (isUndefined(to) || contextEvent.timestamp <= to);
-    previousEventTimestamp = contextEvent.timestamp;
+        latestContextEvent.timestamp >= previousEventTimestamp) &&
+      (isUndefined(to) || latestContextEvent.timestamp <= to);
+    previousEventTimestamp = latestContextEvent.timestamp;
     return ordered;
   });
 

@@ -29,29 +29,59 @@ describe("test helper functions", () => {
       },
     ];
     const context = {
-      events: {
-        display: {
-          abc: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "abc",
-            },
-            timestamp: 1609086720000,
-            count: 2,
-          },
-          def: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "def",
-            },
-            timestamp: 1609086720000,
-            count: 6,
-          },
+      events: [
+        {
+          id: 1,
+          "iam.id": "abc",
+          "iam.eventType": "display",
+          timestamp: 1609086720000,
         },
-      },
+        {
+          id: 2,
+          "iam.id": "abc",
+          "iam.eventType": "display",
+          timestamp: 1609086720010,
+        },
+        {
+          id: 3,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720000,
+        },
+        {
+          id: 4,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720010,
+        },
+        {
+          id: 5,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720020,
+        },
+        {
+          id: 6,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720030,
+        },
+        {
+          id: 7,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720040,
+        },
+        {
+          id: 8,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720050,
+        },
+      ],
     };
     const from = 1609086720000;
-    const to = 1609086720000;
+    const to = 1609086720060;
     const result = queryAndCountAnyEvent(events, context, from, to);
     expect(result).toBe(8);
   });
@@ -68,26 +98,56 @@ describe("test helper functions", () => {
       },
     ];
     const context = {
-      events: {
-        display: {
-          abc: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "abc",
-            },
-            timestamp: 1609086720000,
-            count: 2,
-          },
-          def: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "def",
-            },
-            timestamp: 1609086720000,
-            count: 6,
-          },
+      events: [
+        {
+          id: 1,
+          "iam.id": "abc",
+          "iam.eventType": "display",
+          timestamp: 1609086720000,
         },
-      },
+        {
+          id: 2,
+          "iam.id": "abc",
+          "iam.eventType": "display",
+          timestamp: 1609086720010,
+        },
+        {
+          id: 3,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720000,
+        },
+        {
+          id: 4,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720010,
+        },
+        {
+          id: 5,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720020,
+        },
+        {
+          id: 6,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720030,
+        },
+        {
+          id: 7,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720040,
+        },
+        {
+          id: 8,
+          "iam.id": "def",
+          "iam.eventType": "display",
+          timestamp: 1609086720050,
+        },
+      ],
     };
     const from = undefined;
     const to = undefined;
@@ -103,13 +163,26 @@ describe("test helper functions", () => {
       { "iam.eventType": "display", "iam.id": "C" },
     ];
     const context = {
-      events: {
-        display: {
-          A: { count: 1, timestamp: 1 },
-          B: { count: 1, timestamp: 2 },
-          C: { count: 1, timestamp: 3 },
+      events: [
+        {
+          id: 1,
+          "iam.id": "A",
+          "iam.eventType": "display",
+          timestamp: 1,
         },
-      },
+        {
+          id: 2,
+          "iam.id": "B",
+          "iam.eventType": "display",
+          timestamp: 2,
+        },
+        {
+          id: 3,
+          "iam.id": "C",
+          "iam.eventType": "display",
+          timestamp: 3,
+        },
+      ],
     };
     const from = 0;
     const to = 4;
@@ -125,13 +198,23 @@ describe("test helper functions", () => {
       { "iam.eventType": "display", "iam.id": "C" },
     ];
     const context = {
-      events: {
-        display: {
-          A: { count: 1, timestamp: 1 },
-          B: { count: 1, timestamp: 2 },
-          C: { count: 1, timestamp: 3 },
+      events: [
+        {
+          id: 1,
+          "iam.id": "A",
+          "iam.eventType": "display",
         },
-      },
+        {
+          id: 2,
+          "iam.id": "B",
+          "iam.eventType": "display",
+        },
+        {
+          id: 3,
+          "iam.id": "C",
+          "iam.eventType": "display",
+        },
+      ],
     };
     const from = 0;
     const to = 2;
