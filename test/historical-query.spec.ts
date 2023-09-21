@@ -12,6 +12,10 @@ governing permissions and limitations under the License.
 import RulesEngine from "../src";
 import { Consequence } from "../src/types/schema";
 import { RuleSet } from "../src/types/schema";
+import {
+  setupFakeIndexedDBWithData,
+  queryEventInIndexedDB,
+} from "./utils/fakeIndexedDB";
 
 let CONSEQUENCE: Consequence = {
   id: "6df71dd7-a24f-4944-9787-49345c417b01",
@@ -40,7 +44,38 @@ let CONSEQUENCE: Consequence = {
 };
 
 describe("rules from AJO", () => {
-  it("supports historical condition for searchType ANY", () => {
+  const records = [
+    {
+      "iam.id":
+        "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+      "iam.eventType": "display",
+      "iam.action": "",
+      someMagicalKey: 123,
+      futureKeys: "secret_abc_keys",
+      "ajo.id": 890,
+      firstTimestamp: 1609086720010,
+      timestamp: 1681321319855,
+    },
+    {
+      "iam.id":
+        "8cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+      "iam.eventType": "interact",
+      "iam.action": "",
+      someMagicalKey: 123,
+      futureKeys: "secret_abc_keys",
+      "ajo.id": 890,
+      firstTimestamp: 1609086720010,
+      timestamp: 1681321319865,
+    },
+  ];
+
+  it("supports historical condition for searchType ANY", async () => {
+    const db = await setupFakeIndexedDBWithData(records);
+    const eventContext = {
+      "iam.eventType": "display",
+      "iam.id":
+        "28bea011-e596-4429-b8f7-b5bd630c6743#b45498cb-96d1-417a-81eb-2f09157ad8c6",
+    };
     expect(
       RulesEngine({
         version: 1,
@@ -81,8 +116,9 @@ describe("rules from AJO", () => {
             consequences: [CONSEQUENCE],
           },
         ],
-      }).execute({})
+      }).execute(queryEventInIndexedDB(db, eventContext))
     ).toEqual([[CONSEQUENCE]]);
+    db.close();
   });
 
   it("Should return empty consequence for historical condition when count doesn't match with matcher provided", () => {

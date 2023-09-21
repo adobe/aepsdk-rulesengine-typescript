@@ -149,7 +149,7 @@ export function createHistoricalDefinition(
 ): Evaluable {
   return {
     evaluate: (context) => {
-      let eventCount;
+      let eventCount: any;
       if (SearchType.ORDERED === searchType) {
         eventCount = queryAndCountOrderedEvent(events, context, from, to);
       } else {

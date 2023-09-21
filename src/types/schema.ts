@@ -65,3 +65,7 @@ export interface Consequence {
   detail: any;
   id: string;
 }
+
+export interface ContextEventTimestamp {
+  timestamp: number;
+}

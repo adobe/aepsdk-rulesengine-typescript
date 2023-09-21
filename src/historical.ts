@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 import { MatcherType, SupportedMatcher } from "./types/enums";
 import { Context } from "./types/engine";
 import { isUndefined } from "./utils/isUndefined";
+import { ContextEventTimestamp } from "./types/schema";
 
 export function checkForHistoricalMatcher(
   eventCount: number,
@@ -36,11 +37,14 @@ export function checkForHistoricalMatcher(
   }
 }
 
-const matches = (source, obj) =>
+const matches = (
+  source: Record<string, any>,
+  obj: Record<string, any>
+): boolean =>
   Object.keys(source).every(
-    (key) => Object.hasOwn(obj, key) && obj[key] === source[key]
+    (key) =>
+      Object.prototype.hasOwnProperty.call(obj, key) && obj[key] === source[key]
   );
-
 /**
  * This function is used to query and count any event
  * @param events
@@ -60,14 +64,17 @@ export function queryAndCountAnyEvent(
       return countTotal;
     }
 
-    const contextEvents = context.events.filter((contextEvent) =>
-      matches(event, contextEvent)
+    const contextEvents = context.events.filter(
+      (contextEvent: ContextEventTimestamp) => matches(event, contextEvent)
     );
     if (contextEvents.length === 0) {
       return countTotal;
     }
     const latestContextEvent = contextEvents.reduce(
-      (accumulator, currentValue) =>
+      (
+        accumulator: ContextEventTimestamp,
+        currentValue: ContextEventTimestamp
+      ) =>
         accumulator.timestamp > currentValue.timestamp
           ? accumulator
           : currentValue,
@@ -112,16 +119,18 @@ export function queryAndCountOrderedEvent(
       return false;
     }
 
-    const contextEvents = context.events.filter((contextEvent) =>
-      matches(event, contextEvent)
+    const contextEvents = context.events.filter(
+      (contextEvent: ContextEventTimestamp) => matches(event, contextEvent)
     );
     if (contextEvents.length === 0) {
       return false;
     }
-    // @ts-ignore
-    // @ts-ignore
+
     const latestContextEvent = contextEvents.reduce(
-      (accumulator, currentValue) =>
+      (
+        accumulator: ContextEventTimestamp,
+        currentValue: ContextEventTimestamp
+      ) =>
         accumulator.timestamp > currentValue.timestamp
           ? accumulator
           : currentValue,
