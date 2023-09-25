@@ -49,49 +49,41 @@ describe("test helper functions", () => {
     ];
     const records = [
       {
-        id: 1,
         "iam.id": "abc",
         "iam.eventType": "display",
         timestamp: 1609086720000,
       },
       {
-        id: 2,
         "iam.id": "abc",
         "iam.eventType": "display",
         timestamp: 1609086720010,
       },
       {
-        id: 3,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720000,
       },
       {
-        id: 4,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720010,
       },
       {
-        id: 5,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720020,
       },
       {
-        id: 6,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720030,
       },
       {
-        id: 7,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720040,
       },
       {
-        id: 8,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720050,
@@ -108,6 +100,36 @@ describe("test helper functions", () => {
     );
     expect(result).toBe(8);
   });
+  it("should return a count of the number of events that match for ajo.id eventType", async () => {
+    const events = [
+      {
+        "ajo.id": "abc",
+        "ajo.eventType": "someEventType for AJO",
+      },
+    ];
+    const records = [
+      {
+        "ajo.id": "abc",
+        "ajo.eventType": "someEventType for AJO",
+        timestamp: 1609086720000,
+      },
+      {
+        something: "abc",
+        region: "USA",
+        timestamp: 1609086720010,
+      },
+    ];
+    db = await addDataToFakeIndexDB(records);
+    const from = 1609086720000;
+    const to = 1609086720060;
+    const result = await queryAndCountAnyEvent(
+      events,
+      { events: db },
+      from,
+      to
+    );
+    expect(result).toBe(1);
+  });
 
   it("should return total count of the number of events even if the `to` and `from` is undefined", async () => {
     const ruleEvents = [
@@ -122,49 +144,41 @@ describe("test helper functions", () => {
     ];
     const records = [
       {
-        id: 1,
         "iam.id": "abc",
         "iam.eventType": "display",
         timestamp: 1609086720000,
       },
       {
-        id: 2,
         "iam.id": "abc",
         "iam.eventType": "display",
         timestamp: 1609086720010,
       },
       {
-        id: 3,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720000,
       },
       {
-        id: 4,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720010,
       },
       {
-        id: 5,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720020,
       },
       {
-        id: 6,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720030,
       },
       {
-        id: 7,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720040,
       },
       {
-        id: 8,
         "iam.id": "def",
         "iam.eventType": "display",
         timestamp: 1609086720050,
@@ -191,19 +205,16 @@ describe("test helper functions", () => {
     ];
     const records = [
       {
-        id: 1,
         "iam.id": "A",
         "iam.eventType": "display",
         timestamp: 1,
       },
       {
-        id: 2,
         "iam.id": "B",
         "iam.eventType": "display",
         timestamp: 2,
       },
       {
-        id: 3,
         "iam.id": "C",
         "iam.eventType": "display",
         timestamp: 3,
@@ -230,17 +241,14 @@ describe("test helper functions", () => {
     ];
     const records = [
       {
-        id: 1,
         "iam.id": "A",
         "iam.eventType": "display",
       },
       {
-        id: 2,
         "iam.id": "B",
         "iam.eventType": "display",
       },
       {
-        id: 3,
         "iam.id": "C",
         "iam.eventType": "display",
       },
