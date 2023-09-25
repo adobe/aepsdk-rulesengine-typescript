@@ -14,12 +14,13 @@ import { Context } from "./types/engine";
 import { isUndefined } from "./utils/isUndefined";
 import { ContextEventTimestamp } from "./types/schema";
 
-const NAMES_UNDERSCORE_TO_DOT_MAP = new Map([
-  ["iam_id", "iam.id"],
-  ["iam_eventType", "iam.eventType"],
-  ["aoj_id", "aoj.id"],
-  ["aoj_eventType", "aoj.eventType"],
-]);
+const replaceUnderscoreWithDot = (record: any) => {
+  const updatedRecord = {};
+  Object.keys(record).forEach((key) => {
+    updatedRecord[key.replace("/_/g", ".")] = record[key];
+  });
+  return updatedRecord;
+};
 
 const ATTRIBUTE_KEYS = new Map([
   ["id", ["iam.id", "ajo.id"]],
@@ -57,19 +58,9 @@ const queryEventInIndexedDB = async (
           eventObjStore.target &&
           eventObjStore.target.result
         ) {
-          data = eventObjStore.target.result.map((record) => {
-            const parsedRecord = {};
-            Object.keys(record).forEach((key) => {
-              if (NAMES_UNDERSCORE_TO_DOT_MAP.has(key)) {
-                parsedRecord[NAMES_UNDERSCORE_TO_DOT_MAP.get(key)] =
-                  record[key];
-              } else {
-                parsedRecord[key] = record[key];
-              }
-            });
-
-            return parsedRecord;
-          });
+          data = eventObjStore.target.result.map((record) =>
+            replaceUnderscoreWithDot(record)
+          );
         }
         resolve(data);
       };
