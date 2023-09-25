@@ -14,8 +14,8 @@ import { Context } from "./types/engine";
 import { isUndefined } from "./utils/isUndefined";
 import { ContextEventTimestamp } from "./types/schema";
 
-const replaceUnderscoreWithDot = (record: any) => {
-  const updatedRecord = {};
+const replaceUnderscoreWithDot = (record: any): any => {
+  const updatedRecord: any = {};
   Object.keys(record).forEach((key) => {
     updatedRecord[key.replace("/_/g", ".")] = record[key];
   });
@@ -32,15 +32,15 @@ const ATTRIBUTE_INDEXES = new Map([
   ["ajo.id", "ajo_id_ajo_eventType_index"],
 ]);
 
-function getKeyAttr(key: String, ruleEvent: Object) {
+const getKeyAttr = (key: string, ruleEvent: Object) => {
   return ATTRIBUTE_KEYS.get(key).find((ele) =>
     Object.prototype.hasOwnProperty.call(ruleEvent, ele)
   );
-}
+};
 
 const queryEventInIndexedDB = async (
   db: IDBDatabase,
-  indexName: String,
+  indexName: string,
   eventValues: Array<any>
 ) => {
   return new Promise<any>((resolve, reject) => {
@@ -58,14 +58,13 @@ const queryEventInIndexedDB = async (
           eventObjStore.target &&
           eventObjStore.target.result
         ) {
-          data = eventObjStore.target.result.map((record) =>
+          data = eventObjStore.target.result.map((record: any) =>
             replaceUnderscoreWithDot(record)
           );
         }
         resolve(data);
       };
     } catch (error) {
-      console.error("Error verifying data:", error);
       reject(error);
     }
   });
@@ -94,7 +93,7 @@ export function checkForHistoricalMatcher(
   }
 }
 
-function getContextEventsFromDB(ruleEvent: Object, context: Context) {
+const getContextEventsFromDB = (ruleEvent: Object, context: Context) => {
   const idAttr = getKeyAttr("id", ruleEvent);
   const eventTypeAttr = getKeyAttr("eventType", ruleEvent);
   const eventValues = [ruleEvent[idAttr], ruleEvent[eventTypeAttr]];
@@ -104,7 +103,7 @@ function getContextEventsFromDB(ruleEvent: Object, context: Context) {
     ATTRIBUTE_INDEXES.get(idAttr),
     eventValues
   );
-}
+};
 
 /**
  * This function is used to query and count any event

@@ -11,8 +11,8 @@ governing permissions and limitations under the License.
 */
 import { indexedDB } from "fake-indexeddb";
 
-const replaceDotsWithUnderscores = (record: any) => {
-  const updatedRecord = {};
+const replaceDotsWithUnderscores = (record: any): any => {
+  const updatedRecord: any = {};
   for (const key in record) {
     updatedRecord[key.replace(/\./g, "_")] = record[key];
   }
