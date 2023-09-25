@@ -32,8 +32,12 @@ const ATTRIBUTE_INDEXES = new Map([
   ["ajo.id", "ajo_id_ajo_eventType_index"],
 ]);
 
-const getKeyAttr = (key: string, ruleEvent: Object) => {
-  return ATTRIBUTE_KEYS.get(key).find((ele) =>
+const getKeyAttr = (
+  key: string,
+  ruleEvent: Record<string, any>
+): string | undefined => {
+  const attributeKeys = ATTRIBUTE_KEYS.get(key);
+  return attributeKeys?.find((ele) =>
     Object.prototype.hasOwnProperty.call(ruleEvent, ele)
   );
 };
@@ -93,16 +97,22 @@ export function checkForHistoricalMatcher(
   }
 }
 
-const getContextEventsFromDB = (ruleEvent: Object, context: Context) => {
+const getContextEventsFromDB = (
+  ruleEvent: Record<string, any>,
+  context: Context
+) => {
   const idAttr = getKeyAttr("id", ruleEvent);
   const eventTypeAttr = getKeyAttr("eventType", ruleEvent);
-  const eventValues = [ruleEvent[idAttr], ruleEvent[eventTypeAttr]];
 
-  return queryEventInIndexedDB(
-    context.events,
-    ATTRIBUTE_INDEXES.get(idAttr),
-    eventValues
-  );
+  if (idAttr !== undefined && eventTypeAttr !== undefined) {
+    const eventValues = [ruleEvent[idAttr], ruleEvent[eventTypeAttr]];
+    return queryEventInIndexedDB(
+      context.events,
+      ATTRIBUTE_INDEXES.get(idAttr)!,
+      eventValues
+    );
+  }
+  throw new Error("idAttr or eventTypeAttr is undefined");
 };
 
 /**
