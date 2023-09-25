@@ -64,10 +64,7 @@ export function createRule(
 ): ExecutableRule {
   return {
     execute: async (context: Context) => {
-      // console.log("are you coming here as well --------------: ", context);
-      const result = await condition.evaluate(context);
-      console.log("are you coming here as well --------------: ", result);
-      if (result) {
+      if (await condition.evaluate(context)) {
         return consequences;
       }
 

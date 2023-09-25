@@ -17,7 +17,6 @@ export default function RulesEngine(ruleset: RuleSet) {
   const { version, rules } = parseRules(ruleset);
 
   return {
-    // console.log("Hello World");
     execute: async (context: Context): Promise<Array<Consequence[]>> => {
       const consequences = await Promise.all(
         rules.map((rule: ExecutableRule) => rule.execute(context))

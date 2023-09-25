@@ -124,7 +124,6 @@ describe("rules from AJO", () => {
       expect(results).toEqual([[CONSEQUENCE]]);
       await clearFakeIndexedDB(db);
     } catch (error) {
-      console.log("error: ", error);
       throw error;
     }
   });
@@ -190,7 +189,6 @@ describe("rules from AJO", () => {
       expect(results).toEqual([]);
       await clearFakeIndexedDB(db);
     } catch (error) {
-      console.log("error: ", error);
       throw error;
     }
   });
@@ -264,7 +262,6 @@ describe("rules from AJO", () => {
       expect(results).toEqual([[CONSEQUENCE]]);
       await clearFakeIndexedDB(db);
     } catch (error) {
-      console.log("error: ", error);
       throw error;
     }
   });
@@ -332,7 +329,6 @@ describe("rules from AJO", () => {
       expect(results).toEqual([]);
       await clearFakeIndexedDB(db);
     } catch (error) {
-      console.log("error: ", error);
       throw error;
     }
   });
@@ -467,7 +463,6 @@ describe("rules from AJO", () => {
       ).toEqual([[CONSEQUENCE]]);
       await clearFakeIndexedDB(db);
     } catch (error) {
-      console.log("error: ", error);
       throw error;
     }
   });

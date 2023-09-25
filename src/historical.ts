@@ -32,9 +32,9 @@ const ATTRIBUTE_INDEXES = new Map([
   ["ajo.id", "ajo_id_ajo_eventType_index"],
 ]);
 
-function getKeyAttr(key: String, event: Object) {
+function getKeyAttr(key: String, ruleEvent: Object) {
   return ATTRIBUTE_KEYS.get(key).find((ele) =>
-    Object.prototype.hasOwnProperty.call(event, ele)
+    Object.prototype.hasOwnProperty.call(ruleEvent, ele)
   );
 }
 
@@ -94,10 +94,10 @@ export function checkForHistoricalMatcher(
   }
 }
 
-function getContextEventsFromDB(event: Object, context: Context) {
-  const idAttr = getKeyAttr("id", event);
-  const eventTypeAttr = getKeyAttr("eventType", event);
-  const eventValues = [event[idAttr], event[eventTypeAttr]];
+function getContextEventsFromDB(ruleEvent: Object, context: Context) {
+  const idAttr = getKeyAttr("id", ruleEvent);
+  const eventTypeAttr = getKeyAttr("eventType", ruleEvent);
+  const eventValues = [ruleEvent[idAttr], ruleEvent[eventTypeAttr]];
 
   return queryEventInIndexedDB(
     context.events,
@@ -128,7 +128,6 @@ export async function queryAndCountAnyEvent(
     ruleEvents.map(async (ruleEvent) => {
       const contextEvents = await getContextEventsFromDB(ruleEvent, context);
 
-      console.log("contextEvents: ", contextEvents);
       if (!Array.isArray(contextEvents) || contextEvents.length === 0) {
         return 0;
       }
@@ -182,8 +181,6 @@ export async function queryAndCountOrderedEvent(
   const contextEventsArray = await Promise.all(
     ruleEvents.map((ruleEvent) => getContextEventsFromDB(ruleEvent, context))
   );
-
-  console.log("contextEventsArray: ", contextEventsArray);
 
   let previousEventTimestamp = from;
   const sameSequence = contextEventsArray.every((contextEvents) => {
