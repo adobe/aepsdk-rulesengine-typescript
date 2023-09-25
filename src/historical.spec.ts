@@ -22,7 +22,7 @@ import {
 import { MatcherType } from "./types/enums";
 
 describe("test helper functions", () => {
-  let db;
+  let db: IDBDatabase;
 
   beforeAll(async () => {
     db = await setupFakeIndexedDB();
