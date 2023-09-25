@@ -14,10 +14,29 @@ import {
   queryAndCountAnyEvent,
   queryAndCountOrderedEvent,
 } from "./historical";
+import {
+  addDataToFakeIndexDB,
+  clearFakeIndexedDB,
+  setupFakeIndexedDB,
+} from "../test/utils/fakeIndexedDB";
 import { MatcherType } from "./types/enums";
 
 describe("test helper functions", () => {
-  it("should return a count of the number of events that match", () => {
+  let db;
+
+  beforeAll(async () => {
+    db = await setupFakeIndexedDB();
+  });
+
+  afterAll(() => {
+    db.close();
+  });
+
+  afterEach(async () => {
+    await clearFakeIndexedDB(db);
+  });
+
+  it("should return a count of the number of events that match", async () => {
     const events = [
       {
         "iam.eventType": "display",
@@ -28,66 +47,70 @@ describe("test helper functions", () => {
         "iam.id": "def",
       },
     ];
-    const context = {
-      events: [
-        {
-          id: 1,
-          "iam.id": "abc",
-          "iam.eventType": "display",
-          timestamp: 1609086720000,
-        },
-        {
-          id: 2,
-          "iam.id": "abc",
-          "iam.eventType": "display",
-          timestamp: 1609086720010,
-        },
-        {
-          id: 3,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720000,
-        },
-        {
-          id: 4,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720010,
-        },
-        {
-          id: 5,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720020,
-        },
-        {
-          id: 6,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720030,
-        },
-        {
-          id: 7,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720040,
-        },
-        {
-          id: 8,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720050,
-        },
-      ],
-    };
+    const records = [
+      {
+        id: 1,
+        "iam.id": "abc",
+        "iam.eventType": "display",
+        timestamp: 1609086720000,
+      },
+      {
+        id: 2,
+        "iam.id": "abc",
+        "iam.eventType": "display",
+        timestamp: 1609086720010,
+      },
+      {
+        id: 3,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720000,
+      },
+      {
+        id: 4,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720010,
+      },
+      {
+        id: 5,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720020,
+      },
+      {
+        id: 6,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720030,
+      },
+      {
+        id: 7,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720040,
+      },
+      {
+        id: 8,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720050,
+      },
+    ];
+    db = await addDataToFakeIndexDB(records);
     const from = 1609086720000;
     const to = 1609086720060;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const result = await queryAndCountAnyEvent(
+      events,
+      { events: db },
+      from,
+      to
+    );
     expect(result).toBe(8);
   });
 
-  it("should return total count of the number of events even if the `to` and `from` is undefined", () => {
-    const events = [
+  it("should return total count of the number of events even if the `to` and `from` is undefined", async () => {
+    const ruleEvents = [
       {
         "iam.eventType": "display",
         "iam.id": "abc",
@@ -97,128 +120,140 @@ describe("test helper functions", () => {
         "iam.id": "def",
       },
     ];
-    const context = {
-      events: [
-        {
-          id: 1,
-          "iam.id": "abc",
-          "iam.eventType": "display",
-          timestamp: 1609086720000,
-        },
-        {
-          id: 2,
-          "iam.id": "abc",
-          "iam.eventType": "display",
-          timestamp: 1609086720010,
-        },
-        {
-          id: 3,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720000,
-        },
-        {
-          id: 4,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720010,
-        },
-        {
-          id: 5,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720020,
-        },
-        {
-          id: 6,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720030,
-        },
-        {
-          id: 7,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720040,
-        },
-        {
-          id: 8,
-          "iam.id": "def",
-          "iam.eventType": "display",
-          timestamp: 1609086720050,
-        },
-      ],
-    };
+    const records = [
+      {
+        id: 1,
+        "iam.id": "abc",
+        "iam.eventType": "display",
+        timestamp: 1609086720000,
+      },
+      {
+        id: 2,
+        "iam.id": "abc",
+        "iam.eventType": "display",
+        timestamp: 1609086720010,
+      },
+      {
+        id: 3,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720000,
+      },
+      {
+        id: 4,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720010,
+      },
+      {
+        id: 5,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720020,
+      },
+      {
+        id: 6,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720030,
+      },
+      {
+        id: 7,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720040,
+      },
+      {
+        id: 8,
+        "iam.id": "def",
+        "iam.eventType": "display",
+        timestamp: 1609086720050,
+      },
+    ];
+    db = await addDataToFakeIndexDB(records);
     const from = undefined;
     const to = undefined;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const result = await queryAndCountAnyEvent(
+      ruleEvents,
+      { events: db },
+      from,
+      to
+    );
     expect(result).toBe(8);
   });
 
-  it("returns 1 (true )If all the events are ordered and within the time range", () => {
+  it("returns 1 (true )If all the events are ordered and within the time range", async () => {
     jest.setTimeout(10000);
     const events = [
       { "iam.eventType": "display", "iam.id": "A" },
       { "iam.eventType": "display", "iam.id": "B" },
       { "iam.eventType": "display", "iam.id": "C" },
     ];
-    const context = {
-      events: [
-        {
-          id: 1,
-          "iam.id": "A",
-          "iam.eventType": "display",
-          timestamp: 1,
-        },
-        {
-          id: 2,
-          "iam.id": "B",
-          "iam.eventType": "display",
-          timestamp: 2,
-        },
-        {
-          id: 3,
-          "iam.id": "C",
-          "iam.eventType": "display",
-          timestamp: 3,
-        },
-      ],
-    };
+    const records = [
+      {
+        id: 1,
+        "iam.id": "A",
+        "iam.eventType": "display",
+        timestamp: 1,
+      },
+      {
+        id: 2,
+        "iam.id": "B",
+        "iam.eventType": "display",
+        timestamp: 2,
+      },
+      {
+        id: 3,
+        "iam.id": "C",
+        "iam.eventType": "display",
+        timestamp: 3,
+      },
+    ];
+    db = await addDataToFakeIndexDB(records);
     const from = 0;
     const to = 4;
-    const result = queryAndCountOrderedEvent(events, context, from, to);
+    const result = await queryAndCountOrderedEvent(
+      events,
+      { events: db },
+      from,
+      to
+    );
     expect(result).toBe(1);
   });
 
-  it("returns 0 If any of the events are ordered but not within the time range", () => {
+  it("returns 0 If any of the events are ordered but not within the time range", async () => {
     jest.setTimeout(10000);
     const events = [
       { "iam.eventType": "display", "iam.id": "A" },
       { "iam.eventType": "display", "iam.id": "B" },
       { "iam.eventType": "display", "iam.id": "C" },
     ];
-    const context = {
-      events: [
-        {
-          id: 1,
-          "iam.id": "A",
-          "iam.eventType": "display",
-        },
-        {
-          id: 2,
-          "iam.id": "B",
-          "iam.eventType": "display",
-        },
-        {
-          id: 3,
-          "iam.id": "C",
-          "iam.eventType": "display",
-        },
-      ],
-    };
+    const records = [
+      {
+        id: 1,
+        "iam.id": "A",
+        "iam.eventType": "display",
+      },
+      {
+        id: 2,
+        "iam.id": "B",
+        "iam.eventType": "display",
+      },
+      {
+        id: 3,
+        "iam.id": "C",
+        "iam.eventType": "display",
+      },
+    ];
+    db = await addDataToFakeIndexDB(records);
     const from = 0;
     const to = 2;
-    const result = queryAndCountOrderedEvent(events, context, from, to);
+    const result = await queryAndCountOrderedEvent(
+      events,
+      { events: db },
+      from,
+      to
+    );
     expect(result).toBe(0);
   });
 

@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 import RulesEngine from "../src";
 
 describe("RulesEngine", () => {
-  it("evaluates a ruleset and returns consequences", () => {
+  it("evaluates a ruleset and returns consequences", async () => {
     const ruleset = RulesEngine({
       version: 1,
       rules: [
@@ -62,7 +62,7 @@ describe("RulesEngine", () => {
       ],
     });
 
-    expect(ruleset.execute({ color: "blue", action: "greet" })).toEqual([
+    expect(await ruleset.execute({ color: "blue", action: "greet" })).toEqual([
       [
         {
           type: "item",
@@ -74,10 +74,12 @@ describe("RulesEngine", () => {
       ],
     ]);
 
-    expect(ruleset.execute({ color: "pink", action: "greet" })).toEqual([]);
+    expect(await ruleset.execute({ color: "pink", action: "greet" })).toEqual(
+      []
+    );
   });
 
-  it("evaluates multiple rulesets and returns consequences", () => {
+  it("evaluates multiple rulesets and returns consequences", async () => {
     const ruleset = RulesEngine({
       version: 1,
       rules: [
@@ -170,7 +172,7 @@ describe("RulesEngine", () => {
       ],
     });
 
-    expect(ruleset.execute({ color: "blue", action: "greet" })).toEqual([
+    expect(await ruleset.execute({ color: "blue", action: "greet" })).toEqual([
       [
         {
           type: "item",
@@ -182,7 +184,9 @@ describe("RulesEngine", () => {
       ],
     ]);
 
-    expect(ruleset.execute({ color: "orange", action: "farewell" })).toEqual([
+    expect(
+      await ruleset.execute({ color: "orange", action: "farewell" })
+    ).toEqual([
       [
         {
           type: "item",

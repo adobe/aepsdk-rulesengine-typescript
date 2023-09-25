@@ -44,8 +44,8 @@ describe("matcher type - greater than  (gt)", () => {
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("returns consequence  when the context key's value is  greater than rule's condition definition values", () => {
-    const result = ruleset.execute({
+  it("returns consequence  when the context key's value is  greater than rule's condition definition values", async () => {
+    const result = await ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",
@@ -55,8 +55,8 @@ describe("matcher type - greater than  (gt)", () => {
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
-  it("returns consequence  when the context key's value is greater than rule's condition definition values", () => {
-    const result = ruleset.execute({
+  it("returns consequence  when the context key's value is greater than rule's condition definition values", async () => {
+    const result = await ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",
@@ -66,8 +66,8 @@ describe("matcher type - greater than  (gt)", () => {
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
-  it("returns empty consequence when the input context key's value is  null", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when the input context key's value is  null", async () => {
+    const result = await ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",
@@ -77,8 +77,8 @@ describe("matcher type - greater than  (gt)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns  empty consequence when the input context key's value is undefined", () => {
-    const result = ruleset.execute({
+  it("returns  empty consequence when the input context key's value is undefined", async () => {
+    const result = await ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",
@@ -88,8 +88,8 @@ describe("matcher type - greater than  (gt)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is not greater than any rule's condition definition values", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when the input context key's value is not greater than any rule's condition definition values", async () => {
+    const result = await ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",
@@ -99,8 +99,8 @@ describe("matcher type - greater than  (gt)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is not greater than any rule's condition definition values", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when the input context key's value is not greater than any rule's condition definition values", async () => {
+    const result = await ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",

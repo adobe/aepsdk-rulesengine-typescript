@@ -52,8 +52,8 @@ describe("matcher type - equals (eq)", () => {
     expect(ruleset.numRules()).toBe(1);
   });
 
-  it("returns consequences when any of the values equals the relevant key:value in context", () => {
-    const result = ruleset.execute({
+  it("returns consequences when any of the values equals the relevant key:value in context", async () => {
+    const result = await ruleset.execute({
       browser: "firefox",
       timeSpentOnPage: 5,
       os: "windows",
@@ -62,8 +62,8 @@ describe("matcher type - equals (eq)", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("returns empty consequence when condition doesn't match meaning none of browser values matching the given context value of browser", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when condition doesn't match meaning none of browser values matching the given context value of browser", async () => {
+    const result = await ruleset.execute({
       browser: "safari",
       timeSpentOnPage: 5,
       os: "windows",

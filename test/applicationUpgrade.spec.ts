@@ -107,8 +107,8 @@ describe("( Application upgrade event happens) AND ( Days since upgrade ≥ 2 ) 
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("should return consequence when all the conditions are met", () => {
-    const result = ruleset.execute({
+  it("should return consequence when all the conditions are met", async () => {
+    const result = await ruleset.execute({
       "~type": "com.adobe.eventType.lifecycle",
       "~source": "com.adobe.eventSource.applicationLaunch",
       "~state.com.adobe.module.lifecycle/lifecyclecontextdata.upgradeevent":
@@ -119,8 +119,8 @@ describe("( Application upgrade event happens) AND ( Days since upgrade ≥ 2 ) 
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
-  it("shouldn't return consequence when any of the conditions are not met, here less than equals is not satisfied", () => {
-    const result = ruleset.execute({
+  it("shouldn't return consequence when any of the conditions are not met, here less than equals is not satisfied", async () => {
+    const result = await ruleset.execute({
       "~type": "com.adobe.eventType.lifecycle",
       "~source": "com.adobe.eventSource.applicationLaunch",
       "~state.com.adobe.module.lifecycle/lifecyclecontextdata.upgradeevent":
@@ -131,8 +131,8 @@ describe("( Application upgrade event happens) AND ( Days since upgrade ≥ 2 ) 
     expect(result).toEqual([]);
   });
 
-  it("shouldn't return consequence when any of the conditions are not met, here greater than equals is not satisfied", () => {
-    const result = ruleset.execute({
+  it("shouldn't return consequence when any of the conditions are not met, here greater than equals is not satisfied", async () => {
+    const result = await ruleset.execute({
       "~type": "com.adobe.eventType.lifecycle",
       "~source": "com.adobe.eventSource.applicationLaunch",
       "~state.com.adobe.module.lifecycle/lifecyclecontextdata.upgradeevent":

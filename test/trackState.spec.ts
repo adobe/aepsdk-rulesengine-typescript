@@ -123,8 +123,8 @@ describe("( Track state event happens) AND ( Context data summer contains discou
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("should display message for context data passed in all CAPS", () => {
-    const result = ruleset.execute({
+  it("should display message for context data passed in all CAPS", async () => {
+    const result = await ruleset.execute({
       "~type": "com.adobe.eventType.generic.track",
       "~source": "com.adobe.eventSource.requestContent",
       "contextdata.summer": "BIG DISCOUNT ON FLIGHTS THIS SUMMER",
@@ -132,8 +132,8 @@ describe("( Track state event happens) AND ( Context data summer contains discou
     });
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
-  it("shouldn't display message for unsupported type", () => {
-    const result = ruleset.execute({
+  it("shouldn't display message for unsupported type", async () => {
+    const result = await ruleset.execute({
       "~type": "com.adobe.eventType.generic.track",
       "~source": "com.adobe.eventSource.requestContent",
       "contextdata.summer": "DISCOUNT ON FLIGHTS",

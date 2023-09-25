@@ -9,48 +9,23 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { IDBDatabase, IDBFactory, IDBRequest } from "fake-indexeddb";
+import { indexedDB } from "fake-indexeddb";
 
-declare global {
-  interface Window {
-    indexedDB: IDBFactory;
+const replaceDotsWithUnderscores = (record: any) => {
+  const updatedRecord = {};
+  for (const key in record) {
+    updatedRecord[key.replace(/\./g, "_")] = record[key];
   }
-}
+  return updatedRecord;
+};
 
-window.indexedDB = new IDBFactory();
-
-const matches = (
-  source: Record<string, any>,
-  obj: Record<string, any>
-): boolean =>
-  Object.keys(source).every(
-    (key) =>
-      Object.prototype.hasOwnProperty.call(obj, key) && obj[key] === source[key]
-  );
-
-const namesDotToUnderscoreMap = new Map([
-  ["iam.id", "iam_id"],
-  ["iam.eventType", "iam_eventType"],
-]);
-
-const namesUnderscoreToDotMap = new Map([
-  ["iam_id", "iam.id"],
-  ["iam_eventType", "iam.eventType"],
-]);
-
-const setupFakeIndexedDBWithData = async (records: Record<string, any>) => {
+const setupFakeIndexedDB = async () => {
   return await new Promise<IDBDatabase>((resolve, reject) => {
-    const request = window.indexedDB.open("mockedIndexedDB", 1);
+    const request = indexedDB.open("mockedIndexedDB", 1);
 
     request.onerror = (event: Event) => {
       const dbRequest = event.target as IDBRequest;
       reject(dbRequest.error);
-    };
-
-    request.onsuccess = (event: Event) => {
-      const dbRequest = event.target as IDBRequest;
-      const db = dbRequest.result as IDBDatabase;
-      resolve(db);
     };
 
     request.onupgradeneeded = (event: Event) => {
@@ -71,56 +46,62 @@ const setupFakeIndexedDBWithData = async (records: Record<string, any>) => {
       objectStore.createIndex("iam_eventType_index", "iam.eventType", {
         unique: false,
       });
-
-      const parsedRecords = records.map((record) => {
-        let parsedRecord = {};
-        Object.keys(record).forEach((key) => {
-          if (namesDotToUnderscoreMap.has(key)) {
-            parsedRecord[namesDotToUnderscoreMap.get(key)] = record[key];
-          } else {
-            parsedRecord[key] = record[key];
-          }
-        });
-
-        return parsedRecord;
+      objectStore.createIndex(
+        "ajo_id_ajo_eventType_index",
+        ["ajo_id", "ajo_eventType"],
+        {
+          unique: false,
+        }
+      );
+      objectStore.createIndex("ajo_eventType_index", "ajo.eventType", {
+        unique: false,
       });
 
-      parsedRecords.forEach((record) => objectStore.add(record));
+      resolve(db);
     };
   });
 };
 
-const queryEventInIndexedDB = async (db: IDBDatabase, eventContext) => {
-  return await new Promise<any>((resolve, reject) => {
-    try {
-      const transaction = db.transaction("events", "readonly");
+const addDataToFakeIndexDB = async (records: Array<Object>) => {
+  return await new Promise<IDBDatabase>((resolve, reject) => {
+    const request = indexedDB.open("mockedIndexedDB", 1);
+
+    request.onerror = (event: Event) => {
+      const dbRequest = event.target as IDBRequest;
+      reject(dbRequest.error);
+    };
+
+    request.onsuccess = (event: Event) => {
+      const dbRequest = event.target as IDBRequest;
+      const db = dbRequest.result as IDBDatabase;
+
+      const transaction = db.transaction("events", "readwrite");
       const objectStore = transaction.objectStore("events");
-      objectStore
-        .index("iam_id_iam_eventType_index")
-        .getAll([
-          eventContext["iam.id"],
-          eventContext["iam.eventType"],
-        ]).onsuccess = (eventObjStore) => {
-        const data = eventObjStore.target.result.map((record) => {
-          let parsedRecord = {};
-          Object.keys(record).forEach((key) => {
-            if (namesUnderscoreToDotMap.has(key)) {
-              parsedRecord[namesUnderscoreToDotMap.get(key)] = record[key];
-            } else {
-              parsedRecord[key] = record[key];
-            }
-          });
 
-          return parsedRecord;
-        });
+      for (const record of records) {
+        const updatedRecord = replaceDotsWithUnderscores(record);
+        objectStore.add(updatedRecord);
+      }
 
-        resolve(data);
+      resolve(db);
+    };
+  });
+};
+
+const clearFakeIndexedDB = async (db: IDBDatabase) => {
+  return new Promise<any>((resolve, reject) => {
+    try {
+      const transaction = db.transaction("events", "readwrite");
+      const objectStore = transaction.objectStore("events");
+      const request = objectStore.clear();
+
+      request.onsuccess = () => {
+        resolve(true);
       };
     } catch (error) {
-      console.error("Error verifying data:", error);
       reject(error);
     }
   });
 };
 
-export { setupFakeIndexedDBWithData, queryEventInIndexedDB };
+export { setupFakeIndexedDB, addDataToFakeIndexDB, clearFakeIndexedDB };

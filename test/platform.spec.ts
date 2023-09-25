@@ -121,8 +121,8 @@ describe("( Sent data to Platform event happens) AND (( XDM event type is advert
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("Sent data to Platform", () => {
-    const result = ruleset.execute({
+  it("Sent data to Platform", async () => {
+    const result = await ruleset.execute({
       "~type": "com.adobe.eventType.edge",
       "~source": "com.adobe.eventSource.requestContent",
       "xdm.eventType": "Advertising.clicks",
@@ -131,8 +131,8 @@ describe("( Sent data to Platform event happens) AND (( XDM event type is advert
     });
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
-  it("shouldn't display message for not equals ~type value", () => {
-    const result = ruleset.execute({
+  it("shouldn't display message for not equals ~type value", async () => {
+    const result = await ruleset.execute({
       "~type": "com.adobe.eventType.generic.track",
       "~source": "com.adobe.eventSource.requestContent",
       "xdm.eventType": "application.launch",
@@ -141,8 +141,8 @@ describe("( Sent data to Platform event happens) AND (( XDM event type is advert
     });
     expect(result).toEqual([]);
   });
-  it("shouldn't display message for not supported values", () => {
-    const result = ruleset.execute({
+  it("shouldn't display message for not supported values", async () => {
+    const result = await ruleset.execute({
       "~type": new Date(),
       "~source": "com.adobe.eventSource.requestContent",
       "xdm.eventType": "application.launch",
@@ -151,8 +151,8 @@ describe("( Sent data to Platform event happens) AND (( XDM event type is advert
     });
     expect(result).toEqual([]);
   });
-  it("shouldn't display message for undefined", () => {
-    const result = ruleset.execute({
+  it("shouldn't display message for undefined", async () => {
+    const result = await ruleset.execute({
       "~type": undefined,
       "~source": "com.adobe.eventSource.requestContent",
       "xdm.eventType": "application.launch",
@@ -161,8 +161,8 @@ describe("( Sent data to Platform event happens) AND (( XDM event type is advert
     });
     expect(result).toEqual([]);
   });
-  it("shouldn't display message for null", () => {
-    const result = ruleset.execute({
+  it("shouldn't display message for null", async () => {
+    const result = await ruleset.execute({
       "~type": null,
       "~source": "com.adobe.eventSource.requestContent",
       "xdm.eventType": "application.launch",

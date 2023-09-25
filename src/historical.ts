@@ -14,6 +14,72 @@ import { Context } from "./types/engine";
 import { isUndefined } from "./utils/isUndefined";
 import { ContextEventTimestamp } from "./types/schema";
 
+const NAMES_UNDERSCORE_TO_DOT_MAP = new Map([
+  ["iam_id", "iam.id"],
+  ["iam_eventType", "iam.eventType"],
+  ["aoj_id", "aoj.id"],
+  ["aoj_eventType", "aoj.eventType"],
+]);
+
+const ATTRIBUTE_KEYS = new Map([
+  ["id", ["iam.id", "ajo.id"]],
+  ["eventType", ["iam.eventType", "ajo.eventType"]],
+]);
+
+const ATTRIBUTE_INDEXES = new Map([
+  ["iam.id", "iam_id_iam_eventType_index"],
+  ["ajo.id", "ajo_id_ajo_eventType_index"],
+]);
+
+function getKeyAttr(key: String, event: Object) {
+  return ATTRIBUTE_KEYS.get(key).find((ele) =>
+    Object.prototype.hasOwnProperty.call(event, ele)
+  );
+}
+
+const queryEventInIndexedDB = async (
+  db: IDBDatabase,
+  indexName: String,
+  eventValues: Array<any>
+) => {
+  return new Promise<any>((resolve, reject) => {
+    try {
+      const transaction = db.transaction("events", "readonly");
+      const objectStore = transaction.objectStore("events");
+      const index = objectStore.index(indexName);
+
+      const request = index.getAll(eventValues);
+
+      request.onsuccess = (eventObjStore) => {
+        let data = [];
+        if (
+          eventObjStore &&
+          eventObjStore.target &&
+          eventObjStore.target.result
+        ) {
+          data = eventObjStore.target.result.map((record) => {
+            const parsedRecord = {};
+            Object.keys(record).forEach((key) => {
+              if (NAMES_UNDERSCORE_TO_DOT_MAP.has(key)) {
+                parsedRecord[NAMES_UNDERSCORE_TO_DOT_MAP.get(key)] =
+                  record[key];
+              } else {
+                parsedRecord[key] = record[key];
+              }
+            });
+
+            return parsedRecord;
+          });
+        }
+        resolve(data);
+      };
+    } catch (error) {
+      console.error("Error verifying data:", error);
+      reject(error);
+    }
+  });
+};
+
 export function checkForHistoricalMatcher(
   eventCount: number,
   matcherKey: SupportedMatcher,
@@ -37,62 +103,67 @@ export function checkForHistoricalMatcher(
   }
 }
 
-const matches = (
-  source: Record<string, any>,
-  obj: Record<string, any>
-): boolean =>
-  Object.keys(source).every(
-    (key) =>
-      Object.prototype.hasOwnProperty.call(obj, key) && obj[key] === source[key]
+function getContextEventsFromDB(event: Object, context: Context) {
+  const idAttr = getKeyAttr("id", event);
+  const eventTypeAttr = getKeyAttr("eventType", event);
+  const eventValues = [event[idAttr], event[eventTypeAttr]];
+
+  return queryEventInIndexedDB(
+    context.events,
+    ATTRIBUTE_INDEXES.get(idAttr),
+    eventValues
   );
+}
+
 /**
  * This function is used to query and count any event
- * @param events
+ * @param ruleEvents
  * @param context
  * @param from
  * @param to
  * @returns countTotal
  */
-export function queryAndCountAnyEvent(
-  events: Array<Object>,
+export async function queryAndCountAnyEvent(
+  ruleEvents: Array<Object>,
   context: Context,
   from?: any,
   to?: any
 ) {
-  return events.reduce((countTotal, event) => {
-    if (!context || !context.events) {
-      return countTotal;
-    }
+  if (!context || !context.events) {
+    return 0;
+  }
 
-    const contextEvents = context.events.filter(
-      (contextEvent: ContextEventTimestamp) => matches(event, contextEvent)
-    );
-    if (contextEvents.length === 0) {
-      return countTotal;
-    }
-    const latestContextEvent = contextEvents.reduce(
-      (
-        accumulator: ContextEventTimestamp,
-        currentValue: ContextEventTimestamp
-      ) =>
-        accumulator.timestamp > currentValue.timestamp
-          ? accumulator
-          : currentValue,
-      contextEvents[0]
-    );
+  const eventCounts = await Promise.all(
+    ruleEvents.map(async (ruleEvent) => {
+      const contextEvents = await getContextEventsFromDB(ruleEvent, context);
 
-    const eventCount = contextEvents.length;
-    if (
-      isUndefined(from) ||
-      isUndefined(to) ||
-      (latestContextEvent.timestamp >= from &&
-        latestContextEvent.timestamp <= to)
-    ) {
-      return countTotal + eventCount;
-    }
+      console.log("contextEvents: ", contextEvents);
+      if (!Array.isArray(contextEvents) || contextEvents.length === 0) {
+        return 0;
+      }
+      const latestContextEvent = contextEvents.reduce(
+        (
+          accumulator: ContextEventTimestamp,
+          currentValue: ContextEventTimestamp
+        ) =>
+          accumulator.timestamp > currentValue.timestamp
+            ? accumulator
+            : currentValue,
+        contextEvents[0]
+      );
+      if (
+        isUndefined(from) ||
+        isUndefined(to) ||
+        (latestContextEvent.timestamp >= from &&
+          latestContextEvent.timestamp <= to)
+      ) {
+        return contextEvents.length;
+      }
+      return 0;
+    })
+  );
 
-    return countTotal;
-  }, 0);
+  return eventCounts.reduce((accum, eventCount) => accum + eventCount, 0);
 }
 
 /**
@@ -101,28 +172,31 @@ export function queryAndCountAnyEvent(
  * If the event is in the right order, update the previousEventTimestamp.
  * If the event is not in the right order, return 0
  * If all events are in the right order, return 1
- * @param events
+ * @param ruleEvents
  * @param context
  * @param from
  * @param to
  * @returns {number}
  */
-export function queryAndCountOrderedEvent(
-  events: Array<Object>,
+export async function queryAndCountOrderedEvent(
+  ruleEvents: Array<Object>,
   context: Context,
   from?: any,
   to?: any
 ) {
-  let previousEventTimestamp = from;
-  const sameSequence = events.every((event) => {
-    if (!context || !context.events) {
-      return false;
-    }
+  if (!context || !context.events) {
+    return false;
+  }
 
-    const contextEvents = context.events.filter(
-      (contextEvent: ContextEventTimestamp) => matches(event, contextEvent)
-    );
-    if (contextEvents.length === 0) {
+  const contextEventsArray = await Promise.all(
+    ruleEvents.map((ruleEvent) => getContextEventsFromDB(ruleEvent, context))
+  );
+
+  console.log("contextEventsArray: ", contextEventsArray);
+
+  let previousEventTimestamp = from;
+  const sameSequence = contextEventsArray.every((contextEvents) => {
+    if (!Array.isArray(contextEvents) || contextEvents.length === 0) {
       return false;
     }
 

@@ -38,9 +38,9 @@ let CONSEQUENCE: Consequence = {
   },
 };
 describe("rules from AJO", () => {
-  it("supports  'generic track action'", () => {
+  it("supports  'generic track action'", async () => {
     expect(
-      RulesEngine({
+      await RulesEngine({
         version: 1,
         rules: [
           {
@@ -121,7 +121,7 @@ describe("rules from AJO", () => {
       })
     ).toEqual([[CONSEQUENCE]]);
   });
-  it("supports 'Sent data to Platform'", () => {
+  it("supports 'Sent data to Platform'", async () => {
     const ruleset: RuleSet = {
       version: 1,
       rules: [
@@ -204,7 +204,7 @@ describe("rules from AJO", () => {
     };
 
     expect(
-      RulesEngine(ruleset).execute({
+      await RulesEngine(ruleset).execute({
         "~type": "com.adobe.eventType.edge",
         "~source": "com.adobe.eventSource.requestContent",
 

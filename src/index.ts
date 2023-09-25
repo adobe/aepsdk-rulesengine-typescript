@@ -17,10 +17,13 @@ export default function RulesEngine(ruleset: RuleSet) {
   const { version, rules } = parseRules(ruleset);
 
   return {
-    execute: (context: Context): Array<Consequence[]> =>
-      rules
-        .map((rule: ExecutableRule) => rule.execute(context))
-        .filter((arr: Array<Consequence>) => arr.length > 0),
+    // console.log("Hello World");
+    execute: async (context: Context): Promise<Array<Consequence[]>> => {
+      const consequences = await Promise.all(
+        rules.map((rule: ExecutableRule) => rule.execute(context))
+      );
+      return consequences.filter((arr: Array<Consequence>) => arr.length > 0);
+    },
     getVersion: (): number => version,
     numRules: (): number => rules.length,
   };

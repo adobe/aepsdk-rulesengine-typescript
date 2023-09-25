@@ -48,8 +48,8 @@ const RULE_DEFINITION: RuleSet = {
 };
 
 describe("matcher type - contains (co)", () => {
-  it("returns consequences when any of the condition definition values contains the relevant key's value of given context", () => {
-    const result = RulesEngine(RULE_DEFINITION).execute({
+  it("returns consequences when any of the condition definition values contains the relevant key's value of given context", async () => {
+    const result = await RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Nike",
       color: "Stay green, stay in the woods, and stay safe",
@@ -58,8 +58,8 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("returns consequences irrespective of casing when any of the condition definition values contains the relevant key's value of given context", () => {
-    const result = RulesEngine(RULE_DEFINITION).execute({
+  it("returns consequences irrespective of casing when any of the condition definition values contains the relevant key's value of given context", async () => {
+    const result = await RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Nike",
       color: "Water Is Blue ",
@@ -68,8 +68,8 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("returns empty consequence when any of the condition definition values does not contain the relevant key's value of given context", () => {
-    const result = RulesEngine(RULE_DEFINITION).execute({
+  it("returns empty consequence when any of the condition definition values does not contain the relevant key's value of given context", async () => {
+    const result = await RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: "yellow yellow ",
@@ -78,8 +78,8 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is null", () => {
-    const result = RulesEngine(RULE_DEFINITION).execute({
+  it("returns empty consequence when the input context key's value is null", async () => {
+    const result = await RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: null,
@@ -88,8 +88,8 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is undefined", () => {
-    const result = RulesEngine(RULE_DEFINITION).execute({
+  it("returns empty consequence when the input context key's value is undefined", async () => {
+    const result = await RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: undefined,
@@ -98,8 +98,8 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is new Set()", () => {
-    const result = RulesEngine(RULE_DEFINITION).execute({
+  it("returns empty consequence when the input context key's value is new Set()", async () => {
+    const result = await RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: new Set(),
@@ -108,8 +108,8 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is an object", () => {
-    const result = RulesEngine(RULE_DEFINITION).execute({
+  it("returns empty consequence when the input context key's value is an object", async () => {
+    const result = await RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: {},
@@ -118,8 +118,8 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns consequences when the input context key's value is emoji", () => {
-    const result = RulesEngine(RULE_DEFINITION).execute({
+  it("returns consequences when the input context key's value is emoji", async () => {
+    const result = await RulesEngine(RULE_DEFINITION).execute({
       fabric: "cotton",
       brand: "Polo",
       color: "🙃",
@@ -127,7 +127,7 @@ describe("matcher type - contains (co)", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("returns consequence when the input context key's value is true in double quote", () => {
+  it("returns consequence when the input context key's value is true in double quote", async () => {
     const ruleSet: RuleSet = {
       version: 1,
       rules: [
@@ -150,7 +150,7 @@ describe("matcher type - contains (co)", () => {
         },
       ],
     };
-    expect(RulesEngine(ruleSet).execute({ color: "true" })).toEqual([
+    expect(await RulesEngine(ruleSet).execute({ color: "true" })).toEqual([
       [
         {
           id: "123",
@@ -161,7 +161,7 @@ describe("matcher type - contains (co)", () => {
     ]);
   });
 
-  it("returns  consequence when the input context key's value is true", () => {
+  it("returns  consequence when the input context key's value is true", async () => {
     const ruleSet: RuleSet = {
       version: 1,
       rules: [
@@ -185,7 +185,7 @@ describe("matcher type - contains (co)", () => {
       ],
     };
 
-    expect(RulesEngine(ruleSet).execute({ color: true })).toEqual([
+    expect(await RulesEngine(ruleSet).execute({ color: true })).toEqual([
       [
         {
           id: "123",

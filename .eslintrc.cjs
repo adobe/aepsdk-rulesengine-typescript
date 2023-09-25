@@ -46,7 +46,6 @@ module.exports = {
         peerDependencies: false,
       },
     ],
-    "@lwc/lwc/no-async-await": "error",
     "no-restricted-properties": [
       2,
       {

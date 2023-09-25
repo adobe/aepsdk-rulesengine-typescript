@@ -133,9 +133,9 @@ const RULE_SET: RuleSet = {
   ],
 };
 /*
-( Track state event happens) 
+( Track state event happens)
  AND ( OS version starts with 13.2.1 (22D68), macOS Monterey, or macOS Ventura (version 13) )
- AND ( Carrier name does not equal T-Mobile ) 
+ AND ( Carrier name does not equal T-Mobile )
  AND(( Days since first use is less than or equal to 10 ) OR ( Days since upgrade ≥ 1 ))
 */
 describe("Track state event happens ", () => {
@@ -144,8 +144,8 @@ describe("Track state event happens ", () => {
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("should return consequence when OS version starts conditions are met", () => {
-    const result = ruleset.execute({
+  it("should return consequence when OS version starts conditions are met", async () => {
+    const result = await ruleset.execute({
       "~type": "com.adobe.eventType.generic.track",
       "~source": "com.adobe.eventSource.requestContent",
       state: "[]",

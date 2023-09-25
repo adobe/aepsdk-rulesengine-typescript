@@ -31,28 +31,24 @@ import {
   queryAndCountOrderedEvent,
 } from "./historical";
 
-function evaluateAnd(context: Context, conditions: Array<Evaluable>): boolean {
-  let result = true;
-
-  for (let i = 0; i < conditions.length; i += 1) {
-    result = result && conditions[i].evaluate(context);
-  }
-
-  return result;
+async function evaluateAnd(
+  context: Context,
+  conditions: Array<Evaluable>
+): Promise<boolean> {
+  const results = await Promise.all(
+    conditions.map((condition) => condition.evaluate(context))
+  );
+  return results.every((result) => result === true);
 }
 
-function evaluateOr(context: Context, conditions: Array<Evaluable>): boolean {
-  let result = false;
-
-  for (let i = 0; i < conditions.length; i += 1) {
-    result = result || conditions[i].evaluate(context);
-
-    if (result) {
-      return true;
-    }
-  }
-
-  return false;
+async function evaluateOr(
+  context: Context,
+  conditions: Array<Evaluable>
+): Promise<boolean> {
+  const results = await Promise.all(
+    conditions.map((condition) => condition.evaluate(context))
+  );
+  return results.some((result) => result === true);
 }
 
 export function createRules(
@@ -67,8 +63,11 @@ export function createRule(
   consequences: Array<Consequence>
 ): ExecutableRule {
   return {
-    execute: (context: Context) => {
-      if (condition.evaluate(context)) {
+    execute: async (context: Context) => {
+      // console.log("are you coming here as well --------------: ", context);
+      const result = await condition.evaluate(context);
+      console.log("are you coming here as well --------------: ", result);
+      if (result) {
         return consequences;
       }
 
@@ -107,7 +106,7 @@ export function createGroupDefinition(
   conditions: Array<Evaluable>
 ): Evaluable {
   return {
-    evaluate: (context) => {
+    evaluate: async (context) => {
       if (LogicType.AND === logic) {
         return evaluateAnd(context, conditions);
       }
@@ -127,8 +126,8 @@ export function createMatcherDefinition(
   values?: Array<any>
 ): Evaluable {
   return {
-    evaluate: (context) => {
-      const matcher = getMatcher(matcherKey);
+    evaluate: async (context) => {
+      const matcher = await getMatcher(matcherKey);
 
       if (!matcher) {
         return false;
@@ -148,12 +147,12 @@ export function createHistoricalDefinition(
   searchType?: SupportedSearchType
 ): Evaluable {
   return {
-    evaluate: (context) => {
+    evaluate: async (context) => {
       let eventCount: any;
       if (SearchType.ORDERED === searchType) {
-        eventCount = queryAndCountOrderedEvent(events, context, from, to);
+        eventCount = await queryAndCountOrderedEvent(events, context, from, to);
       } else {
-        eventCount = queryAndCountAnyEvent(events, context, from, to);
+        eventCount = await queryAndCountAnyEvent(events, context, from, to);
       }
       return checkForHistoricalMatcher(eventCount, matcherKey, value);
     },

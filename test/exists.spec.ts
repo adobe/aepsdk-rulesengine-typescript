@@ -43,8 +43,8 @@ describe("matcher type - exists (ex)", () => {
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("it returns consequences when key does exist", () => {
-    const result = ruleset.execute({
+  it("it returns consequences when key does exist", async () => {
+    const result = await ruleset.execute({
       browser: "firefox",
       timeSpentOnPage: 5,
       os: "windows",
@@ -53,8 +53,8 @@ describe("matcher type - exists (ex)", () => {
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
-  it("it returns empty when key does not exist", () => {
-    const result = ruleset.execute({
+  it("it returns empty when key does not exist", async () => {
+    const result = await ruleset.execute({
       browser: "safari",
       timeSpentOnPage: "5 seconds",
       os1: "mac",
@@ -63,8 +63,8 @@ describe("matcher type - exists (ex)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when key exist but value of key is undefined in the context", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when key exist but value of key is undefined in the context", async () => {
+    const result = await ruleset.execute({
       browser: "chrome",
       timeSpentOnPage: "10 seconds",
       os: undefined,
@@ -72,8 +72,8 @@ describe("matcher type - exists (ex)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when key exist but value of key is null in the context", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when key exist but value of key is null in the context", async () => {
+    const result = await ruleset.execute({
       browser: "IE11",
       timeSpentOnPage: "20 seconds",
       os: null,
