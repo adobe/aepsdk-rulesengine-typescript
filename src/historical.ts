@@ -55,14 +55,11 @@ const queryEventInIndexedDB = async (
 
       const request = index.getAll(eventValues);
 
-      request.onsuccess = (eventObjStore) => {
+      request.onsuccess = (eventObjStore: Event) => {
+        const dbRequest = eventObjStore.target as IDBRequest;
         let data = [];
-        if (
-          eventObjStore &&
-          eventObjStore.target &&
-          eventObjStore.target.result
-        ) {
-          data = eventObjStore.target.result.map((record: any) =>
+        if (dbRequest) {
+          data = dbRequest.result.map((record: any) =>
             replaceUnderscoreWithDot(record)
           );
         }
