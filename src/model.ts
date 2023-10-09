@@ -31,24 +31,30 @@ import {
   queryAndCountOrderedEvent,
 } from "./historical";
 
-async function evaluateAnd(
+function evaluateAnd(
   context: Context,
   conditions: Array<Evaluable>
 ): Promise<boolean> {
-  const results = await Promise.all(
-    conditions.map((condition) => condition.evaluate(context))
-  );
-  return results.every((result) => result === true);
+  return new Promise((resolve) => {
+    Promise.all(
+      conditions.map((condition) => condition.evaluate(context))
+    ).then((results) => {
+      resolve(results.every((result) => result === true));
+    });
+  });
 }
 
-async function evaluateOr(
+function evaluateOr(
   context: Context,
   conditions: Array<Evaluable>
 ): Promise<boolean> {
-  const results = await Promise.all(
-    conditions.map((condition) => condition.evaluate(context))
-  );
-  return results.some((result) => result === true);
+  return new Promise((resolve) => {
+    Promise.all(
+      conditions.map((condition) => condition.evaluate(context))
+    ).then((results) => {
+      resolve(results.some((result) => result === true));
+    });
+  });
 }
 
 export function createRules(
@@ -63,12 +69,12 @@ export function createRule(
   consequences: Array<Consequence>
 ): ExecutableRule {
   return {
-    execute: async (context: Context) => {
-      if (await condition.evaluate(context)) {
-        return consequences;
-      }
-
-      return [];
+    execute: (context: Context) => {
+      return new Promise((resolve) => {
+        condition.evaluate(context).then((result) => {
+          resolve(result ? consequences : []);
+        });
+      });
     },
     toString: () => {
       return `Rule{condition=${condition}, consequences=${consequences}}`;
@@ -103,16 +109,18 @@ export function createGroupDefinition(
   conditions: Array<Evaluable>
 ): Evaluable {
   return {
-    evaluate: async (context) => {
-      if (LogicType.AND === logic) {
-        return evaluateAnd(context, conditions);
-      }
+    evaluate: (context) => {
+      return new Promise((resolve) => {
+        if (LogicType.AND === logic) {
+          resolve(evaluateAnd(context, conditions));
+        }
 
-      if (LogicType.OR === logic) {
-        return evaluateOr(context, conditions);
-      }
+        if (LogicType.OR === logic) {
+          resolve(evaluateOr(context, conditions));
+        }
 
-      return false;
+        resolve(false);
+      });
     },
   };
 }
@@ -123,14 +131,17 @@ export function createMatcherDefinition(
   values?: Array<any>
 ): Evaluable {
   return {
-    evaluate: async (context) => {
-      const matcher = await getMatcher(matcherKey);
+    evaluate: (context) => {
+      return new Promise((resolve) => {
+        const matcher = getMatcher(matcherKey);
 
-      if (!matcher) {
-        return false;
-      }
+        if (!matcher) {
+          resolve(false);
+          return;
+        }
 
-      return matcher.matches(context, key, values);
+        resolve(matcher.matches(context, key, values));
+      });
     },
   };
 }
@@ -144,14 +155,22 @@ export function createHistoricalDefinition(
   searchType?: SupportedSearchType
 ): Evaluable {
   return {
-    evaluate: async (context) => {
-      let eventCount: any;
-      if (SearchType.ORDERED === searchType) {
-        eventCount = await queryAndCountOrderedEvent(events, context, from, to);
-      } else {
-        eventCount = await queryAndCountAnyEvent(events, context, from, to);
-      }
-      return checkForHistoricalMatcher(eventCount, matcherKey, value);
+    evaluate: (context) => {
+      return new Promise((resolve) => {
+        if (SearchType.ORDERED === searchType) {
+          queryAndCountOrderedEvent(events, context, from, to).then(
+            (eventCount) => {
+              resolve(checkForHistoricalMatcher(eventCount, matcherKey, value));
+            }
+          );
+        } else {
+          queryAndCountAnyEvent(events, context, from, to).then(
+            (eventCount) => {
+              resolve(checkForHistoricalMatcher(eventCount, matcherKey, value));
+            }
+          );
+        }
+      });
     },
   };
 }

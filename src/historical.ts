@@ -42,7 +42,7 @@ const getKeyAttr = (
   );
 };
 
-const queryEventInIndexedDB = async (
+const queryEventInIndexedDB = (
   db: IDBDatabase,
   indexName: string,
   eventValues: Array<any>
@@ -120,46 +120,48 @@ const getContextEventsFromDB = (
  * @param to
  * @returns countTotal
  */
-export async function queryAndCountAnyEvent(
+export function queryAndCountAnyEvent(
   ruleEvents: Array<Object>,
   context: Context,
   from?: any,
   to?: any
-) {
-  if (!context || !context.events) {
-    return 0;
-  }
+): Promise<number> {
+  return new Promise((resolve, reject) => {
+    if (!context || !context.events) {
+      reject(new Error("context or context.events is undefined"));
+    }
 
-  const eventCounts = await Promise.all(
-    ruleEvents.map(async (ruleEvent) => {
-      const contextEvents = await getContextEventsFromDB(ruleEvent, context);
-
-      if (!Array.isArray(contextEvents) || contextEvents.length === 0) {
-        return 0;
-      }
-      const latestContextEvent = contextEvents.reduce(
-        (
-          accumulator: ContextEventTimestamp,
-          currentValue: ContextEventTimestamp
-        ) =>
-          accumulator.timestamp > currentValue.timestamp
-            ? accumulator
-            : currentValue,
-        contextEvents[0]
-      );
-      if (
-        isUndefined(from) ||
-        isUndefined(to) ||
-        (latestContextEvent.timestamp >= from &&
-          latestContextEvent.timestamp <= to)
-      ) {
-        return contextEvents.length;
-      }
-      return 0;
-    })
-  );
-
-  return eventCounts.reduce((accum, eventCount) => accum + eventCount, 0);
+    Promise.all(
+      ruleEvents.map((ruleEvent) =>
+        getContextEventsFromDB(ruleEvent, context).then((contextEvents) => {
+          if (!Array.isArray(contextEvents) || contextEvents.length === 0) {
+            return 0;
+          }
+          const latestContextEvent = contextEvents.reduce(
+            (
+              accumulator: ContextEventTimestamp,
+              currentValue: ContextEventTimestamp
+            ) =>
+              accumulator.timestamp > currentValue.timestamp
+                ? accumulator
+                : currentValue,
+            contextEvents[0]
+          );
+          if (
+            isUndefined(from) ||
+            isUndefined(to) ||
+            (latestContextEvent.timestamp >= from &&
+              latestContextEvent.timestamp <= to)
+          ) {
+            return contextEvents.length;
+          }
+          return 0;
+        })
+      )
+    ).then((eventCounts) => {
+      resolve(eventCounts.reduce((accum, eventCount) => accum + eventCount, 0));
+    });
+  });
 }
 
 /**
@@ -174,44 +176,46 @@ export async function queryAndCountAnyEvent(
  * @param to
  * @returns {number}
  */
-export async function queryAndCountOrderedEvent(
+export function queryAndCountOrderedEvent(
   ruleEvents: Array<Object>,
   context: Context,
   from?: any,
   to?: any
-) {
-  if (!context || !context.events) {
-    return false;
-  }
-
-  const contextEventsArray = await Promise.all(
-    ruleEvents.map((ruleEvent) => getContextEventsFromDB(ruleEvent, context))
-  );
-
-  let previousEventTimestamp = from;
-  const sameSequence = contextEventsArray.every((contextEvents) => {
-    if (!Array.isArray(contextEvents) || contextEvents.length === 0) {
-      return false;
+): Promise<number> {
+  return new Promise((resolve, reject) => {
+    if (!context || !context.events) {
+      reject(new Error("context or context.events is undefined"));
     }
 
-    const latestContextEvent = contextEvents.reduce(
-      (
-        accumulator: ContextEventTimestamp,
-        currentValue: ContextEventTimestamp
-      ) =>
-        accumulator.timestamp > currentValue.timestamp
-          ? accumulator
-          : currentValue,
-      contextEvents[0]
-    );
+    Promise.all(
+      ruleEvents.map((ruleEvent) => getContextEventsFromDB(ruleEvent, context))
+    ).then((contextEventsArray) => {
+      let previousEventTimestamp = from;
+      const sameSequence = contextEventsArray.every((contextEvents) => {
+        if (!Array.isArray(contextEvents) || contextEvents.length === 0) {
+          return false;
+        }
 
-    const ordered =
-      (isUndefined(previousEventTimestamp) ||
-        latestContextEvent.timestamp >= previousEventTimestamp) &&
-      (isUndefined(to) || latestContextEvent.timestamp <= to);
-    previousEventTimestamp = latestContextEvent.timestamp;
-    return ordered;
+        const latestContextEvent = contextEvents.reduce(
+          (
+            accumulator: ContextEventTimestamp,
+            currentValue: ContextEventTimestamp
+          ) =>
+            accumulator.timestamp > currentValue.timestamp
+              ? accumulator
+              : currentValue,
+          contextEvents[0]
+        );
+
+        const ordered =
+          (isUndefined(previousEventTimestamp) ||
+            latestContextEvent.timestamp >= previousEventTimestamp) &&
+          (isUndefined(to) || latestContextEvent.timestamp <= to);
+        previousEventTimestamp = latestContextEvent.timestamp;
+        return ordered;
+      });
+
+      resolve(sameSequence ? 1 : 0);
+    });
   });
-
-  return sameSequence ? 1 : 0;
 }
