@@ -26,21 +26,17 @@ export default {
   coverageDirectory: "coverage",
 
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: [
-    "/node_modules/",
-    "/dist/",
-    "/types/"
-  ],
+  coveragePathIgnorePatterns: ["/node_modules/", "/dist/", "/types/"],
 
   // Indicates which provider should be used to instrument code for coverage
   // coverageProvider: "babel",
 
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: [
-       "json-summary",
-//     "text",
-       "lcov",
-//     "clover"
+    "json-summary",
+    //     "text",
+    "lcov",
+    //     "clover"
   ],
 
   // An object that configures minimum threshold enforcement for coverage results
@@ -49,9 +45,11 @@ export default {
       branches: 80,
       functions: 90,
       lines: 90,
-      statements: 90
-    }
+      statements: 90,
+    },
   },
+
+  testEnvironment: "jest-environment-jsdom",
 
   // A path to a custom dependency extractor
   // dependencyExtractor: undefined,

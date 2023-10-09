@@ -44,8 +44,8 @@ describe("matcher type - lesser than equals  (le)", () => {
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("returns consequence  when the context key's values is lesser than or equal to rule's condition definition values", () => {
-    const result = ruleset.execute({
+  it("returns consequence  when the context key's values is lesser than or equal to rule's condition definition values", async () => {
+    const result = await ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",
@@ -55,8 +55,8 @@ describe("matcher type - lesser than equals  (le)", () => {
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
-  it("returns consequence  when the context key's values is  lesser than or equal to any rule's condition definition values", () => {
-    const result = ruleset.execute({
+  it("returns consequence  when the context key's values is  lesser than or equal to any rule's condition definition values", async () => {
+    const result = await ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",
@@ -66,8 +66,8 @@ describe("matcher type - lesser than equals  (le)", () => {
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
-  it("returns empty consequence when the context key's values is  null", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when the context key's values is  null", async () => {
+    const result = await ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",
@@ -77,8 +77,8 @@ describe("matcher type - lesser than equals  (le)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns  empty consequence when the  context key's values is undefined", () => {
-    const result = ruleset.execute({
+  it("returns  empty consequence when the  context key's values is undefined", async () => {
+    const result = await ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
       state: "UT",

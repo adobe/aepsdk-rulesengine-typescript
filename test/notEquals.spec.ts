@@ -44,8 +44,8 @@ describe("matcher type - equals (ne)", () => {
     ruleset = RulesEngine(RULE_DEFINITION);
   });
 
-  it("returns consequences when any of the values not equals the relevant key:value in context", () => {
-    const result = ruleset.execute({
+  it("returns consequences when any of the values not equals the relevant key:value in context", async () => {
+    const result = await ruleset.execute({
       browser: "safari",
       timeSpentOnPage: 5,
       os: "windows",
@@ -54,8 +54,8 @@ describe("matcher type - equals (ne)", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("returns empty consequence when condition values matching the given context value of browser", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when condition values matching the given context value of browser", async () => {
+    const result = await ruleset.execute({
       browser: "CHROME",
       timeSpentOnPage: 5,
       os: "windows",
@@ -64,8 +64,8 @@ describe("matcher type - equals (ne)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when undefined value passed", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when undefined value passed", async () => {
+    const result = await ruleset.execute({
       browser: undefined,
       timeSpentOnPage: 5,
       os: "windows",
@@ -73,8 +73,8 @@ describe("matcher type - equals (ne)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when object value passed", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when object value passed", async () => {
+    const result = await ruleset.execute({
       browser: new Date(),
       timeSpentOnPage: 5,
       os: "windows",

@@ -31,28 +31,30 @@ import {
   queryAndCountOrderedEvent,
 } from "./historical";
 
-function evaluateAnd(context: Context, conditions: Array<Evaluable>): boolean {
-  let result = true;
-
-  for (let i = 0; i < conditions.length; i += 1) {
-    result = result && conditions[i].evaluate(context);
-  }
-
-  return result;
+function evaluateAnd(
+  context: Context,
+  conditions: Array<Evaluable>
+): Promise<boolean> {
+  return new Promise((resolve) => {
+    Promise.all(
+      conditions.map((condition) => condition.evaluate(context))
+    ).then((results) => {
+      resolve(results.every((result) => result === true));
+    });
+  });
 }
 
-function evaluateOr(context: Context, conditions: Array<Evaluable>): boolean {
-  let result = false;
-
-  for (let i = 0; i < conditions.length; i += 1) {
-    result = result || conditions[i].evaluate(context);
-
-    if (result) {
-      return true;
-    }
-  }
-
-  return false;
+function evaluateOr(
+  context: Context,
+  conditions: Array<Evaluable>
+): Promise<boolean> {
+  return new Promise((resolve) => {
+    Promise.all(
+      conditions.map((condition) => condition.evaluate(context))
+    ).then((results) => {
+      resolve(results.some((result) => result === true));
+    });
+  });
 }
 
 export function createRules(
@@ -68,11 +70,11 @@ export function createRule(
 ): ExecutableRule {
   return {
     execute: (context: Context) => {
-      if (condition.evaluate(context)) {
-        return consequences;
-      }
-
-      return [];
+      return new Promise((resolve) => {
+        condition.evaluate(context).then((result) => {
+          resolve(result ? consequences : []);
+        });
+      });
     },
     toString: () => {
       return `Rule{condition=${condition}, consequences=${consequences}}`;
@@ -108,15 +110,17 @@ export function createGroupDefinition(
 ): Evaluable {
   return {
     evaluate: (context) => {
-      if (LogicType.AND === logic) {
-        return evaluateAnd(context, conditions);
-      }
+      return new Promise((resolve) => {
+        if (LogicType.AND === logic) {
+          resolve(evaluateAnd(context, conditions));
+        }
 
-      if (LogicType.OR === logic) {
-        return evaluateOr(context, conditions);
-      }
+        if (LogicType.OR === logic) {
+          resolve(evaluateOr(context, conditions));
+        }
 
-      return false;
+        resolve(false);
+      });
     },
   };
 }
@@ -128,13 +132,16 @@ export function createMatcherDefinition(
 ): Evaluable {
   return {
     evaluate: (context) => {
-      const matcher = getMatcher(matcherKey);
+      return new Promise((resolve) => {
+        const matcher = getMatcher(matcherKey);
 
-      if (!matcher) {
-        return false;
-      }
+        if (!matcher) {
+          resolve(false);
+          return;
+        }
 
-      return matcher.matches(context, key, values);
+        resolve(matcher.matches(context, key, values));
+      });
     },
   };
 }
@@ -149,13 +156,21 @@ export function createHistoricalDefinition(
 ): Evaluable {
   return {
     evaluate: (context) => {
-      let eventCount;
-      if (SearchType.ORDERED === searchType) {
-        eventCount = queryAndCountOrderedEvent(events, context, from, to);
-      } else {
-        eventCount = queryAndCountAnyEvent(events, context, from, to);
-      }
-      return checkForHistoricalMatcher(eventCount, matcherKey, value);
+      return new Promise((resolve) => {
+        if (SearchType.ORDERED === searchType) {
+          queryAndCountOrderedEvent(events, context, from, to).then(
+            (eventCount) => {
+              resolve(checkForHistoricalMatcher(eventCount, matcherKey, value));
+            }
+          );
+        } else {
+          queryAndCountAnyEvent(events, context, from, to).then(
+            (eventCount) => {
+              resolve(checkForHistoricalMatcher(eventCount, matcherKey, value));
+            }
+          );
+        }
+      });
     },
   };
 }

@@ -11,7 +11,12 @@ governing permissions and limitations under the License.
 */
 import RulesEngine from "../src";
 import { Consequence } from "../src/types/schema";
-import { RuleSet } from "../types/types/schema";
+import { RuleSet } from "../src/types/schema";
+import {
+  addDataToFakeIndexDB,
+  clearFakeIndexedDB,
+  setupFakeIndexedDB,
+} from "./utils/fakeIndexedDB";
 
 let CONSEQUENCE: Consequence = {
   id: "6df71dd7-a24f-4944-9787-49345c417b01",
@@ -40,9 +45,43 @@ let CONSEQUENCE: Consequence = {
 };
 
 describe("rules from AJO", () => {
-  it("supports historical condition for searchType ANY", () => {
-    expect(
-      RulesEngine({
+  let db;
+
+  beforeAll(async () => {
+    db = await setupFakeIndexedDB();
+  });
+
+  afterAll(() => {
+    db.close();
+  });
+
+  it("supports historical condition for searchType ANY", async () => {
+    const records = [
+      {
+        "iam.id":
+          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+        "iam.eventType": "display",
+        "iam.action": "",
+        someMagicalKey: 123,
+        futureKeys: "secret_abc_keys",
+        firstTimestamp: 1609086720010,
+        timestamp: 1681321319855,
+      },
+      {
+        "iam.id":
+          "8cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+        "iam.eventType": "interact",
+        "iam.action": "",
+        someMagicalKey: 123,
+        futureKeys: "secret_abc_keys",
+        firstTimestamp: 1609086720010,
+        timestamp: 1681321319865,
+      },
+    ];
+
+    try {
+      db = await addDataToFakeIndexDB(records);
+      const results = await RulesEngine({
         version: 1,
         rules: [
           {
@@ -56,12 +95,13 @@ describe("rules from AJO", () => {
                           definition: {
                             events: [
                               {
-                                type: "display",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                                "iam.eventType": "display",
+                                "iam.id":
+                                  "28bea011-e596-4429-b8f7-b5bd630c6743#b45498cb-96d1-417a-81eb-2f09157ad8c6",
                               },
                             ],
                             matcher: "eq",
-                            value: 1,
+                            value: 0,
                             from: 1681321309855,
                             to: 1996681309855,
                           },
@@ -80,27 +120,28 @@ describe("rules from AJO", () => {
             consequences: [CONSEQUENCE],
           },
         ],
-      }).execute({
-        events: {
-          display: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-              {
-                event: {
-                  type: "display",
-                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-                },
-                timestamp: 1681321319855,
-                count: 1,
-              },
-          },
-        },
-      })
-    ).toEqual([[CONSEQUENCE]]);
+      }).execute({ events: db });
+      expect(results).toEqual([[CONSEQUENCE]]);
+      await clearFakeIndexedDB(db);
+    } catch (error) {
+      throw error;
+    }
   });
 
-  it("Should return empty consequence for historical condition when count doesn't match with matcher provided", () => {
-    expect(
-      RulesEngine({
+  it("Should return empty consequence for historical condition when count doesn't match with matcher provided", async () => {
+    const records = [
+      {
+        id: 1,
+        "iam.id":
+          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-5b51cf5dd3aa",
+        "iam.eventType": "display",
+        timestamp: 1681321319855,
+      },
+    ];
+
+    try {
+      db = await addDataToFakeIndexDB(records);
+      const results = await RulesEngine({
         version: 1,
         rules: [
           {
@@ -114,12 +155,18 @@ describe("rules from AJO", () => {
                           definition: {
                             events: [
                               {
-                                type: "display",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                                "iam.eventType": "display",
+                                "iam.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-5b51cf5dd3aa",
+                              },
+                              {
+                                "ajo.eventType": "display",
+                                "ajo.id":
+                                  "38bea011-e596-4429-b8f7-b5bd630c6743#b45498cb-96d1-417a-81eb-2f09157ad8c6",
                               },
                             ],
-                            matcher: "gt",
-                            value: 1,
+                            matcher: "eq",
+                            value: 0,
                             from: 1681321309855,
                             to: 1996681309855,
                           },
@@ -138,26 +185,35 @@ describe("rules from AJO", () => {
             consequences: [CONSEQUENCE],
           },
         ],
-      }).execute({
-        events: {
-          display: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-              {
-                event: {
-                  type: "display",
-                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-                },
-                timestamp: 1681321319855,
-                count: 1,
-              },
-          },
-        },
-      })
-    ).toEqual([]);
+      }).execute({ events: db });
+      expect(results).toEqual([]);
+      await clearFakeIndexedDB(db);
+    } catch (error) {
+      throw error;
+    }
   });
-  it("should return consequence in case count of an event is greater than one and the event is in the date range for ordered search type", () => {
-    expect(
-      RulesEngine({
+
+  it("should return consequence in case count of an event is greater than one and the event is in the date range for ordered search type", async () => {
+    const records = [
+      {
+        id: 1,
+        "ajo.id":
+          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-6b51cf5dd3aa",
+        "ajo.eventType": "display",
+        timestamp: 1681321319855,
+      },
+      {
+        id: 2,
+        "iam.id":
+          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
+        "iam.eventType": "interact",
+        timestamp: 1681321339855,
+      },
+    ];
+
+    try {
+      db = await addDataToFakeIndexDB(records);
+      const results = await RulesEngine({
         version: 1,
         rules: [
           {
@@ -171,12 +227,14 @@ describe("rules from AJO", () => {
                           definition: {
                             events: [
                               {
-                                type: "display",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                                "ajo.eventType": "display",
+                                "ajo.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-6b51cf5dd3aa",
                               },
                               {
-                                type: "interact",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
+                                "iam.eventType": "interact",
+                                "iam.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
                               },
                             ],
                             matcher: "ge",
@@ -200,37 +258,29 @@ describe("rules from AJO", () => {
             consequences: [CONSEQUENCE],
           },
         ],
-      }).execute({
-        events: {
-          display: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-              {
-                event: {
-                  type: "display",
-                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-                },
-                timestamp: 1681321319855,
-                count: 1,
-              },
-          },
-          interact: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb":
-              {
-                event: {
-                  type: "interact",
-                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
-                },
-                timestamp: 1681321339855,
-                count: 1,
-              },
-          },
-        },
-      })
-    ).toEqual([[CONSEQUENCE]]);
+      }).execute({ events: db });
+      expect(results).toEqual([[CONSEQUENCE]]);
+      await clearFakeIndexedDB(db);
+    } catch (error) {
+      throw error;
+    }
   });
-  it("Should return 0 if the count for any event is ever zero for ordered search type", () => {
-    expect(
-      RulesEngine({
+
+  it("Should return 0 if the count for any event is ever zero for ordered search type", async () => {
+    const records = [
+      {
+        id: 1,
+        "iam.id":
+          "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-7b51cf5dd3aa",
+        "iam.eventType": "display",
+        firstTimestamp: 1681321309855,
+        timestamp: 1681321319855,
+      },
+    ];
+
+    try {
+      db = await addDataToFakeIndexDB(records);
+      const results = await RulesEngine({
         version: 1,
         rules: [
           {
@@ -244,12 +294,14 @@ describe("rules from AJO", () => {
                           definition: {
                             events: [
                               {
-                                type: "display",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                                "iam.eventType": "display",
+                                "iam.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-7b51cf5dd3aa",
                               },
                               {
-                                type: "interact",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
+                                "iam.eventType": "interact",
+                                "iam.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-2b51cf5dd3bb",
                               },
                             ],
                             matcher: "eq",
@@ -273,25 +325,15 @@ describe("rules from AJO", () => {
             consequences: [CONSEQUENCE],
           },
         ],
-      }).execute({
-        events: {
-          display: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-              {
-                event: {
-                  type: "display",
-                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-                },
-                timestamp: 1681321319855,
-                count: 1,
-              },
-          },
-        },
-      })
-    ).toEqual([]);
+      }).execute({ events: db });
+      expect(results).toEqual([]);
+      await clearFakeIndexedDB(db);
+    } catch (error) {
+      throw error;
+    }
   });
 
-  it("distinguishes between display and interact events with the same id", () => {
+  it("distinguishes between display and interact events with the same id", async () => {
     const displayRuleset = {
       version: 1,
       rules: [
@@ -306,8 +348,8 @@ describe("rules from AJO", () => {
                         definition: {
                           events: [
                             {
-                              type: "display",
-                              id: "6cd5a8ed",
+                              "iam.eventType": "display",
+                              "iam.id": "6cd5a8ed",
                             },
                           ],
                           matcher: "ge",
@@ -344,8 +386,8 @@ describe("rules from AJO", () => {
                         definition: {
                           events: [
                             {
-                              type: "interact",
-                              id: "6cd5a8ed",
+                              "iam.eventType": "interact",
+                              "iam.id": "6cd5a8ed",
                             },
                           ],
                           matcher: "ge",
@@ -368,72 +410,60 @@ describe("rules from AJO", () => {
       ],
     };
 
-    expect(
-      RulesEngine(displayRuleset).execute({
-        events: {
-          interact: {
-            "6cd5a8ed": {
-              event: {
-                type: "interact",
-                id: "6cd5a8ed",
-              },
-              timestamp: 1681321939855,
-              count: 1,
-            },
-          },
+    try {
+      db = await addDataToFakeIndexDB([
+        {
+          id: 1,
+          "iam.id": "6cd5a8ed",
+          "iam.eventType": "interact",
+          timestamp: 1681321939855,
         },
-      })
-    ).toEqual([]);
+      ]);
+      expect(await RulesEngine(displayRuleset).execute({ events: db })).toEqual(
+        []
+      );
+      await clearFakeIndexedDB(db);
 
-    expect(
-      RulesEngine(displayRuleset).execute({
-        events: {
-          display: {
-            "6cd5a8ed": {
-              event: {
-                type: "display",
-                id: "6cd5a8ed",
-              },
-              timestamp: 1681321939855,
-              count: 1,
-            },
-          },
+      db = await addDataToFakeIndexDB([
+        {
+          id: 1,
+          "iam.id": "6cd5a8ed",
+          "iam.eventType": "display",
+          timestamp: 1681321939855,
         },
-      })
-    ).toEqual([[CONSEQUENCE]]);
+      ]);
+      expect(await RulesEngine(displayRuleset).execute({ events: db })).toEqual(
+        [[CONSEQUENCE]]
+      );
+      await clearFakeIndexedDB(db);
 
-    expect(
-      RulesEngine(interactRuleset).execute({
-        events: {
-          display: {
-            "6cd5a8ed": {
-              event: {
-                type: "display",
-                id: "6cd5a8ed",
-              },
-              timestamp: 1681321939855,
-              count: 1,
-            },
-          },
+      db = await addDataToFakeIndexDB([
+        {
+          id: 1,
+          "iam.id": "6cd5a8ed",
+          "iam.eventType": "display",
+          timestamp: 1681321939855,
         },
-      })
-    ).toEqual([]);
+      ]);
+      expect(
+        await RulesEngine(interactRuleset).execute({ events: db })
+      ).toEqual([]);
+      await clearFakeIndexedDB(db);
 
-    expect(
-      RulesEngine(interactRuleset).execute({
-        events: {
-          interact: {
-            "6cd5a8ed": {
-              event: {
-                type: "interact",
-                id: "6cd5a8ed",
-              },
-              timestamp: 1681321939855,
-              count: 1,
-            },
-          },
+      db = await addDataToFakeIndexDB([
+        {
+          id: 1,
+          "iam.id": "6cd5a8ed",
+          "iam.eventType": "interact",
+          timestamp: 1681321939855,
         },
-      })
-    ).toEqual([[CONSEQUENCE]]);
+      ]);
+      expect(
+        await RulesEngine(interactRuleset).execute({ events: db })
+      ).toEqual([[CONSEQUENCE]]);
+      await clearFakeIndexedDB(db);
+    } catch (error) {
+      throw error;
+    }
   });
 });

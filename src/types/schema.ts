@@ -46,18 +46,12 @@ export interface MatcherDefinition {
   matcher: SupportedMatcher;
   values?: Array<any>;
 }
-
-export interface HistoricalEvent {
-  id: string;
-  type: string;
-}
-
 export interface HistoricalDefinition {
-  events: Array<HistoricalEvent>;
-  from?: number;
-  to?: number;
+  events: Array<Object>;
   matcher: SupportedMatcher;
   value: number;
+  from?: number;
+  to?: number;
   searchType?: SupportedSearchType;
 }
 
@@ -70,4 +64,8 @@ export interface Consequence {
   type: string;
   detail: any;
   id: string;
+}
+
+export interface ContextEventTimestamp {
+  timestamp: number;
 }

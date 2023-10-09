@@ -21,11 +21,11 @@ export interface Matcher {
 }
 
 export interface Evaluable {
-  evaluate(context: Context): boolean;
+  evaluate(context: Context): Promise<boolean>;
   toString?(): string;
 }
 export interface ExecutableRule {
-  execute(context: Context): Array<Consequence>;
+  execute(context: Context): Promise<Array<Consequence>>;
   toString?(): string;
 }
 

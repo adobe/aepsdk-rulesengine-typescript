@@ -90,8 +90,8 @@ describe("nested group", () => {
     ruleset = RulesEngine(RULE_DEFINITION);
   });
 
-  it("execute all conditions true", () => {
-    const result = ruleset.execute({
+  it("execute all conditions true", async () => {
+    const result = await ruleset.execute({
       key1: "value1",
       key2: "value2",
       key3: "value5",
@@ -100,8 +100,8 @@ describe("nested group", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("execute all conditions true, nested or first true second false", () => {
-    const result = ruleset.execute({
+  it("execute all conditions true, nested or first true second false", async () => {
+    const result = await ruleset.execute({
       key1: "value1",
       key2: "value3",
       key3: "value5",
@@ -110,8 +110,8 @@ describe("nested group", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("execute all conditions true, nested or first false second true", () => {
-    const result = ruleset.execute({
+  it("execute all conditions true, nested or first false second true", async () => {
+    const result = await ruleset.execute({
       key1: "valueX",
       key2: "value2",
       key3: "value5",
@@ -120,8 +120,8 @@ describe("nested group", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("execute first condition false", () => {
-    const result = ruleset.execute({
+  it("execute first condition false", async () => {
+    const result = await ruleset.execute({
       key1: "valueX",
       key2: "value3",
       key3: "value5",
@@ -130,8 +130,8 @@ describe("nested group", () => {
     expect(result).toEqual([]);
   });
 
-  it("execute second condition false", () => {
-    const result = ruleset.execute({
+  it("execute second condition false", async () => {
+    const result = await ruleset.execute({
       key1: "value1",
       key2: "value2",
       key3: "valueX",

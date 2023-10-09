@@ -60,8 +60,8 @@ describe("simple group-or", () => {
     ruleset = RulesEngine(RULE_DEFINITION);
   });
 
-  it("execute both conditions true", () => {
-    const result = ruleset.execute({
+  it("execute both conditions true", async () => {
+    const result = await ruleset.execute({
       key1: "value1",
       key2: "value2",
       key3: "value5",
@@ -70,8 +70,8 @@ describe("simple group-or", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("execute first condition true", () => {
-    const result = ruleset.execute({
+  it("execute first condition true", async () => {
+    const result = await ruleset.execute({
       key1: "value1",
       key2: "value2",
       key3: "valueX",
@@ -80,8 +80,8 @@ describe("simple group-or", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("execute second condition true", () => {
-    const result = ruleset.execute({
+  it("execute second condition true", async () => {
+    const result = await ruleset.execute({
       key1: "valueX",
       key2: "value2",
       key3: "value5",
@@ -90,8 +90,8 @@ describe("simple group-or", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("execute both conditions false", () => {
-    const result = ruleset.execute({
+  it("execute both conditions false", async () => {
+    const result = await ruleset.execute({
       key1: "valueX",
       key2: "value2",
       key3: "valueX",

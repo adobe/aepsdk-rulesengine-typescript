@@ -45,9 +45,9 @@ let CONSEQUENCE: Consequence = {
 };
 
 describe("Message Trigger Track Action", () => {
-  it("on specific days show messages", () => {
+  it("on specific days show messages", async () => {
     expect(
-      RulesEngine({
+      await RulesEngine({
         version: 1,
         rules: [
           {
@@ -106,9 +106,9 @@ describe("Message Trigger Track Action", () => {
       })
     ).toEqual([[CONSEQUENCE]]);
   });
-  it("empty consequence when desired day of week is not passed in", () => {
+  it("empty consequence when desired day of week is not passed in", async () => {
     expect(
-      RulesEngine({
+      await RulesEngine({
         version: 1,
         rules: [
           {

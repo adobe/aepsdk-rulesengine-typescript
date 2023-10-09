@@ -123,8 +123,8 @@ describe("( Collect PII event happens) AND (( OS version ≠ Apple macOS, Linux 
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("display message when condition values doesn't match the given context value of osversion", () => {
-    const result = ruleset.execute({
+  it("display message when condition values doesn't match the given context value of osversion", async () => {
+    const result = await ruleset.execute({
       "~type": "com.adobe.eventType.generic.pii",
       "~source": "com.adobe.eventSource.requestContent",
       "~state.com.adobe.module.lifecycle/lifecyclecontextdata.osversion":
@@ -135,8 +135,8 @@ describe("( Collect PII event happens) AND (( OS version ≠ Apple macOS, Linux 
     });
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
-  it("shouldn't display message when condition values matching the given context value of osversion", () => {
-    const result = ruleset.execute({
+  it("shouldn't display message when condition values matching the given context value of osversion", async () => {
+    const result = await ruleset.execute({
       "~type": "com.adobe.eventType.generic.pii",
       "~source": "com.adobe.eventSource.requestContent",
       "~state.com.adobe.module.lifecycle/lifecyclecontextdata.osversion":

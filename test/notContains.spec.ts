@@ -54,8 +54,8 @@ describe("matcher type - not contains (nc)", () => {
     ruleset = RulesEngine(RULE_DEFINITION);
   });
 
-  it("returns consequences when none of the condition definition values partially matches the relevant key's value of given context", () => {
-    const result = ruleset.execute({
+  it("returns consequences when none of the condition definition values partially matches the relevant key's value of given context", async () => {
+    const result = await ruleset.execute({
       fabric: "cotton",
       brand: "Nike",
       color:
@@ -66,8 +66,8 @@ describe("matcher type - not contains (nc)", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("returns empty consequence when any of the condition definition values partially matches the relevant key's value of given context", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when any of the condition definition values partially matches the relevant key's value of given context", async () => {
+    const result = await ruleset.execute({
       fabric: "cotton",
       brand: "Polo",
       color: "red is my favorite",
@@ -76,8 +76,8 @@ describe("matcher type - not contains (nc)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is null", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when the input context key's value is null", async () => {
+    const result = await ruleset.execute({
       fabric: "cotton",
       brand: "Polo",
       color: null,
@@ -86,8 +86,8 @@ describe("matcher type - not contains (nc)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is undefined", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when the input context key's value is undefined", async () => {
+    const result = await ruleset.execute({
       fabric: "cotton",
       brand: "Polo",
       color: undefined,
@@ -96,8 +96,8 @@ describe("matcher type - not contains (nc)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is new Set()", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when the input context key's value is new Set()", async () => {
+    const result = await ruleset.execute({
       fabric: "cotton",
       brand: "Polo",
       color: new Set(),
@@ -106,8 +106,8 @@ describe("matcher type - not contains (nc)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is an object", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when the input context key's value is an object", async () => {
+    const result = await ruleset.execute({
       fabric: "cotton",
       brand: "Polo",
       color: {},
@@ -116,8 +116,8 @@ describe("matcher type - not contains (nc)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is boolean false", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when the input context key's value is boolean false", async () => {
+    const result = await ruleset.execute({
       fabric: "cotton",
       brand: "Polo",
       color: true,
@@ -126,8 +126,8 @@ describe("matcher type - not contains (nc)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequences when the input context key's value is emoji", () => {
-    const result = ruleset.execute({
+  it("returns empty consequences when the input context key's value is emoji", async () => {
+    const result = await ruleset.execute({
       fabric: "cotton",
       brand: "Polo",
       color: "🙃",

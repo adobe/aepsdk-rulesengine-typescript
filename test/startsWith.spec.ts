@@ -44,8 +44,8 @@ describe("matcher type - starts with (sw)", () => {
     ruleset = RulesEngine(RULE_DEFINITION);
   });
 
-  it("returns consequences when any of the condition definition values starts with the relevant key's value of given context", () => {
-    const result = ruleset.execute({
+  it("returns consequences when any of the condition definition values starts with the relevant key's value of given context", async () => {
+    const result = await ruleset.execute({
       state: "Hawaii",
       weather: "Tropical",
       text: "Ohana is a human circle of complete Aloha",
@@ -54,8 +54,8 @@ describe("matcher type - starts with (sw)", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("returns consequences when  condition definition values starts with the true", () => {
-    const result = ruleset.execute({
+  it("returns consequences when  condition definition values starts with the true", async () => {
+    const result = await ruleset.execute({
       state: "Hawaii",
       weather: "Tropical",
       text: "true",
@@ -64,8 +64,8 @@ describe("matcher type - starts with (sw)", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
-  it("returns empty consequence when condition definition values does not starts with the relevant key's value of given context", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when condition definition values does not starts with the relevant key's value of given context", async () => {
+    const result = await ruleset.execute({
       state: "Hawaii",
       weather: "Tropical",
       text: "Ho'omaluhia",
@@ -74,8 +74,8 @@ describe("matcher type - starts with (sw)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is null", () => {
-    const result = ruleset.execute({
+  it("returns empty consequence when the input context key's value is null", async () => {
+    const result = await ruleset.execute({
       state: "Hawaii",
       weather: "Tropical",
       text: null,
@@ -84,8 +84,8 @@ describe("matcher type - starts with (sw)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns  empty consequence when the input context key's value is undefined", () => {
-    const result = ruleset.execute({
+  it("returns  empty consequence when the input context key's value is undefined", async () => {
+    const result = await ruleset.execute({
       state: "Hawaii",
       weather: "Tropical",
       text: undefined,
