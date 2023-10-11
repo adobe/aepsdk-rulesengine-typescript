@@ -14,6 +14,8 @@ import { Context } from "./types/engine";
 import { HistoricalEvent } from "./types/schema";
 import { isUndefined } from "./utils/isUndefined";
 
+const IAM_ID = "iam.id";
+const IAM_EVENT_TYPE = "iam.eventType";
 export function checkForHistoricalMatcher(
   eventCount: number,
   matcherKey: SupportedMatcher,
@@ -52,12 +54,12 @@ export function queryAndCountAnyEvent(
   to?: any
 ) {
   return events.reduce((countTotal, event) => {
-    const eventsOfType = context.events[event["iam.eventType"]];
+    const eventsOfType = context.events[event[IAM_EVENT_TYPE]];
     if (!eventsOfType) {
       return countTotal;
     }
 
-    const contextEvent = eventsOfType[event["iam.id"]];
+    const contextEvent = eventsOfType[event[IAM_ID]];
     if (!contextEvent) {
       return countTotal;
     }
@@ -94,12 +96,12 @@ export function queryAndCountOrderedEvent(
 ) {
   let previousEventTimestamp = from;
   const sameSequence = events.every((event) => {
-    const eventsOfType = context.events[event["iam.eventType"]];
+    const eventsOfType = context.events[event[IAM_EVENT_TYPE]];
     if (!eventsOfType) {
       return false;
     }
 
-    const contextEvent = eventsOfType[event["iam.id"]];
+    const contextEvent = eventsOfType[event[IAM_ID]];
     if (
       contextEvent === null ||
       isUndefined(contextEvent) ||
