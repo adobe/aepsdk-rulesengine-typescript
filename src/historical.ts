@@ -14,6 +14,16 @@ import { Context } from "./types/engine";
 import { HistoricalEvent } from "./types/schema";
 import { isUndefined } from "./utils/isUndefined";
 
+const IAM_ID = "iam.id";
+const ID = "id";
+
+const IAM_EVENT_TYPE = "iam.eventType";
+const EVENT_TYPE = "eventType";
+const TYPE = "type";
+
+const VALID_EVENT_TYPES = [IAM_EVENT_TYPE, EVENT_TYPE, TYPE];
+const VALID_EVENT_IDS = [IAM_ID, ID];
+
 export function checkForHistoricalMatcher(
   eventCount: number,
   matcherKey: SupportedMatcher,
@@ -37,6 +47,30 @@ export function checkForHistoricalMatcher(
   }
 }
 
+function oneOf(context: Context, properties: Array<string>) {
+  for (let i = 0; i < properties.length; i += 1) {
+    if (!isUndefined(context[properties[i]])) {
+      return context[properties[i]];
+    }
+  }
+  return undefined;
+}
+
+function eventSatisfiesCondition(
+  historicalEventCondition: HistoricalEvent,
+  eventContext: Context
+) {
+  const eventKeys = Object.keys(historicalEventCondition);
+  for (let i = 0; i < eventKeys.length; i += 1) {
+    const key = eventKeys[i];
+    const { event = {} } = eventContext;
+    if (event[eventKeys[i]] !== historicalEventCondition[key]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 /**
  * This function is used to query and count any event
  * @param events
@@ -52,15 +86,32 @@ export function queryAndCountAnyEvent(
   to?: any
 ) {
   return events.reduce((countTotal, event) => {
-    const eventsOfType = context.events[event.type];
+    const eventType = oneOf(event, VALID_EVENT_TYPES);
+
+    if (!eventType) {
+      return countTotal;
+    }
+
+    const eventsOfType = context.events[eventType];
     if (!eventsOfType) {
       return countTotal;
     }
 
-    const contextEvent = eventsOfType[event.id];
+    const eventId = oneOf(event, VALID_EVENT_IDS);
+
+    if (!eventId) {
+      return countTotal;
+    }
+
+    const contextEvent = eventsOfType[eventId];
     if (!contextEvent) {
       return countTotal;
     }
+
+    if (!eventSatisfiesCondition(event, contextEvent)) {
+      return countTotal;
+    }
+
     const { count: eventCount = 1 } = contextEvent;
     if (
       isUndefined(from) ||
@@ -94,12 +145,28 @@ export function queryAndCountOrderedEvent(
 ) {
   let previousEventTimestamp = from;
   const sameSequence = events.every((event) => {
-    const eventsOfType = context.events[event.type];
+    const eventType = oneOf(event, VALID_EVENT_TYPES);
+    if (!eventType) {
+      return false;
+    }
+
+    const eventsOfType = context.events[eventType];
     if (!eventsOfType) {
       return false;
     }
 
-    const contextEvent = eventsOfType[event.id];
+    const eventId = oneOf(event, VALID_EVENT_IDS);
+
+    if (!eventId) {
+      return false;
+    }
+
+    const contextEvent = eventsOfType[eventId];
+
+    if (!eventSatisfiesCondition(event, contextEvent)) {
+      return false;
+    }
+
     if (
       contextEvent === null ||
       isUndefined(contextEvent) ||

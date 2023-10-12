@@ -56,12 +56,13 @@ describe("rules from AJO", () => {
                           definition: {
                             events: [
                               {
-                                type: "display",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                                "iam.eventType": "display",
+                                "iam.id":
+                                  "28bea011-e596-4429-b8f7-b5bd630c6743#b45498cb-96d1-417a-81eb-2f09157ad8c6",
                               },
                             ],
                             matcher: "eq",
-                            value: 1,
+                            value: 0,
                             from: 1681321309855,
                             to: 1996681309855,
                           },
@@ -83,14 +84,16 @@ describe("rules from AJO", () => {
       }).execute({
         events: {
           display: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
+            "28bea011-e596-4429-b8f7-b5bd630c6743#b45498cb-96d1-417a-81eb-2f09157ad8c6":
               {
                 event: {
-                  type: "display",
-                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                  "iam.eventType": "display",
+                  "iam.id":
+                    "28bea011-e596-4429-b8f7-b5bd630c6743#b45498cb-96d1-417a-81eb-2f09157ad8c6",
                 },
-                timestamp: 1681321319855,
-                count: 1,
+                firstTimestamp: 1695065771698,
+                timestamp: 1695065771698,
+                count: 0,
               },
           },
         },
@@ -114,12 +117,13 @@ describe("rules from AJO", () => {
                           definition: {
                             events: [
                               {
-                                type: "display",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                                "iam.eventType": "display",
+                                "iam.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
                               },
                             ],
-                            matcher: "gt",
-                            value: 1,
+                            matcher: "eq",
+                            value: 0,
                             from: 1681321309855,
                             to: 1996681309855,
                           },
@@ -144,8 +148,9 @@ describe("rules from AJO", () => {
             "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
               {
                 event: {
-                  type: "display",
-                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                  "iam.eventType": "display",
+                  "iam.id":
+                    "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
                 },
                 timestamp: 1681321319855,
                 count: 1,
@@ -155,7 +160,7 @@ describe("rules from AJO", () => {
       })
     ).toEqual([]);
   });
-  it("should return consequence in case count of an event is greater than one and the event is in the date range for ordered search type", () => {
+  it("should return  in case count of an event is greater than one and the event is in the date range for ordered search type", () => {
     expect(
       RulesEngine({
         version: 1,
@@ -171,12 +176,14 @@ describe("rules from AJO", () => {
                           definition: {
                             events: [
                               {
-                                type: "display",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                                "iam.eventType": "display",
+                                "iam.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
                               },
                               {
-                                type: "interact",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
+                                "iam.eventType": "interact",
+                                "iam.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
                               },
                             ],
                             matcher: "ge",
@@ -206,8 +213,9 @@ describe("rules from AJO", () => {
             "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
               {
                 event: {
-                  type: "display",
-                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                  "iam.eventType": "display",
+                  "iam.id":
+                    "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
                 },
                 timestamp: 1681321319855,
                 count: 1,
@@ -217,8 +225,9 @@ describe("rules from AJO", () => {
             "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb":
               {
                 event: {
-                  type: "interact",
-                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
+                  "iam.eventType": "interact",
+                  "iam.id":
+                    "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
                 },
                 timestamp: 1681321339855,
                 count: 1,
@@ -244,12 +253,14 @@ describe("rules from AJO", () => {
                           definition: {
                             events: [
                               {
-                                type: "display",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                                "iam.eventType": "display",
+                                "iam.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
                               },
                               {
-                                type: "interact",
-                                id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
+                                "iam.eventType": "interact",
+                                "iam.id":
+                                  "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
                               },
                             ],
                             matcher: "eq",
@@ -279,8 +290,9 @@ describe("rules from AJO", () => {
             "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
               {
                 event: {
-                  type: "display",
-                  id: "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
+                  "iam.eventType": "display",
+                  "iam.id":
+                    "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
                 },
                 timestamp: 1681321319855,
                 count: 1,
@@ -306,8 +318,8 @@ describe("rules from AJO", () => {
                         definition: {
                           events: [
                             {
-                              type: "display",
-                              id: "6cd5a8ed",
+                              "iam.eventType": "display",
+                              "iam.id": "6cd5a8ed",
                             },
                           ],
                           matcher: "ge",
@@ -344,8 +356,8 @@ describe("rules from AJO", () => {
                         definition: {
                           events: [
                             {
-                              type: "interact",
-                              id: "6cd5a8ed",
+                              "iam.eventType": "interact",
+                              "iam.id": "6cd5a8ed",
                             },
                           ],
                           matcher: "ge",
@@ -374,8 +386,8 @@ describe("rules from AJO", () => {
           interact: {
             "6cd5a8ed": {
               event: {
-                type: "interact",
-                id: "6cd5a8ed",
+                "iam.eventType": "interact",
+                "iam.id": "6cd5a8ed",
               },
               timestamp: 1681321939855,
               count: 1,
@@ -391,8 +403,8 @@ describe("rules from AJO", () => {
           display: {
             "6cd5a8ed": {
               event: {
-                type: "display",
-                id: "6cd5a8ed",
+                "iam.eventType": "display",
+                "iam.id": "6cd5a8ed",
               },
               timestamp: 1681321939855,
               count: 1,
@@ -408,8 +420,8 @@ describe("rules from AJO", () => {
           display: {
             "6cd5a8ed": {
               event: {
-                type: "display",
-                id: "6cd5a8ed",
+                "iam.eventType": "display",
+                "iam.id": "6cd5a8ed",
               },
               timestamp: 1681321939855,
               count: 1,
@@ -425,8 +437,8 @@ describe("rules from AJO", () => {
           interact: {
             "6cd5a8ed": {
               event: {
-                type: "interact",
-                id: "6cd5a8ed",
+                "iam.eventType": "interact",
+                "iam.id": "6cd5a8ed",
               },
               timestamp: 1681321939855,
               count: 1,

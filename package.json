@@ -1,6 +1,6 @@
 {
   "name": "@adobe/aep-rules-engine",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Adobe Experience Platform rules engine.",
   "repository": {
     "type": "git",
