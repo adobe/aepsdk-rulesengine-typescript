@@ -55,6 +55,138 @@ describe("test helper functions", () => {
     const result = queryAndCountAnyEvent(events, context, from, to);
     expect(result).toBe(8);
   });
+  it("should work with property conditions not prefixed with 'iam'", () => {
+    const events = [
+      {
+        eventType: "display",
+        id: "abc",
+      },
+    ];
+    const context = {
+      events: {
+        display: {
+          abc: {
+            event: {
+              eventType: "display",
+              id: "abc",
+            },
+            timestamp: 1609086720000,
+            count: 2,
+          },
+        },
+      },
+    };
+    const from = 1609086720000;
+    const to = 1609086720000;
+    const result = queryAndCountAnyEvent(events, context, from, to);
+    expect(result).toBe(2);
+  });
+
+  it("should work with 'iam' prefixed property conditions", () => {
+    const events = [
+      {
+        "iam.eventType": "display",
+        "iam.id": "abc",
+      },
+    ];
+    const context = {
+      events: {
+        display: {
+          abc: {
+            event: {
+              "iam.eventType": "display",
+              "iam.id": "abc",
+            },
+            timestamp: 1609086720000,
+            count: 2,
+          },
+        },
+      },
+    };
+    const from = 1609086720000;
+    const to = 1609086720000;
+    const result = queryAndCountAnyEvent(events, context, from, to);
+    expect(result).toBe(2);
+  });
+
+  it("should  fail gracefully when event condition lacks properties", () => {
+    const events = [{}];
+    const context = {
+      events: {
+        display: {
+          abc: {
+            event: {
+              "iam.eventType": "display",
+              "iam.id": "abc",
+            },
+            timestamp: 1609086720000,
+            count: 2,
+          },
+        },
+      },
+    };
+    const from = 1609086720000;
+    const to = 1609086720000;
+    const result = queryAndCountAnyEvent(events, context, from, to);
+    expect(result).toBe(0);
+  });
+
+  it("should work with additional event properties - positive case", () => {
+    const events = [
+      {
+        "iam.eventType": "display",
+        "iam.id": "abc",
+        isSpecial: true,
+      },
+    ];
+    const context = {
+      events: {
+        display: {
+          abc: {
+            event: {
+              "iam.eventType": "display",
+              "iam.id": "abc",
+              isSpecial: true,
+            },
+            timestamp: 1609086720000,
+            count: 1,
+          },
+        },
+      },
+    };
+    const from = 1609086720000;
+    const to = 1609086720000;
+    const result = queryAndCountAnyEvent(events, context, from, to);
+    expect(result).toBe(1);
+  });
+
+  it("should work with additional event properties - negative case", () => {
+    const events = [
+      {
+        "iam.eventType": "display",
+        "iam.id": "abc",
+        isSpecial: true,
+      },
+    ];
+    const context = {
+      events: {
+        display: {
+          abc: {
+            event: {
+              "iam.eventType": "display",
+              "iam.id": "abc",
+            },
+            timestamp: 1609086720000,
+            count: 1,
+          },
+        },
+      },
+    };
+    const from = 1609086720000;
+    const to = 1609086720000;
+    const result = queryAndCountAnyEvent(events, context, from, to);
+    expect(result).toBe(0);
+  });
 
   it("should return total count of the number of events even if the `to` and `from` is undefined", () => {
     const events = [
@@ -95,7 +227,7 @@ describe("test helper functions", () => {
     expect(result).toBe(8);
   });
 
-  it("returns 1 (true )If all the events are ordered and within the time range", () => {
+  it("returns 1 (true) If all the events are ordered and within the time range", () => {
     jest.setTimeout(10000);
     const events = [
       { "iam.eventType": "display", "iam.id": "A" },
@@ -105,9 +237,21 @@ describe("test helper functions", () => {
     const context = {
       events: {
         display: {
-          A: { count: 1, timestamp: 1 },
-          B: { count: 1, timestamp: 2 },
-          C: { count: 1, timestamp: 3 },
+          A: {
+            count: 1,
+            timestamp: 1,
+            event: { "iam.eventType": "display", "iam.id": "A" },
+          },
+          B: {
+            count: 1,
+            timestamp: 2,
+            event: { "iam.eventType": "display", "iam.id": "B" },
+          },
+          C: {
+            count: 1,
+            timestamp: 3,
+            event: { "iam.eventType": "display", "iam.id": "C" },
+          },
         },
       },
     };

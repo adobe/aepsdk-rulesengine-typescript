@@ -48,8 +48,14 @@ export interface MatcherDefinition {
 }
 
 export interface HistoricalEvent {
-  "iam.eventType": string;
-  "iam.id": string;
+  "iam.eventType"?: string;
+  "iam.id"?: string;
+  id?: string;
+
+  eventType?: string;
+  type?: string;
+
+  [key: string]: any;
 }
 
 export interface HistoricalDefinition {
