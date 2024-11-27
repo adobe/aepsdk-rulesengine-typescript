@@ -13,8 +13,8 @@ import {
   checkForHistoricalMatcher,
   queryAndCountAnyEvent,
   queryAndCountOrderedEvent,
-} from "./historical";
-import { MatcherType } from "./types/enums";
+} from "../src/historical";
+import { MatcherType } from "../src/types/enums";
 
 describe("test helper functions", () => {
   it("should return a count of the number of events that match", () => {
