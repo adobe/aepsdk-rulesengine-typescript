@@ -17,12 +17,19 @@ import {
   SupportedSearchType,
 } from "./enums";
 
+export interface RuleSetMetadata {
+  provider: string;
+  providerData: any;
+}
+
 export interface RuleSet {
   version: number;
+  metadata?: RuleSetMetadata;
   rules: Array<Rule>;
 }
 
 export interface Rule {
+  key?: string;
   condition: GroupCondition | MatcherCondition | HistoricalCondition;
   consequences: Array<Consequence>;
 }

@@ -24,12 +24,20 @@ export interface Evaluable {
   evaluate(context: Context): boolean;
   toString?(): string;
 }
+
 export interface ExecutableRule {
+  key?: string;
   execute(context: Context): Array<Consequence>;
   toString?(): string;
+}
+
+export interface ExecutableRuleSetMetadata {
+  provider: string;
+  providerData: any;
 }
 
 export interface ExecutableRuleSet {
   version: number;
   rules: Array<ExecutableRule>;
+  metadata?: ExecutableRuleSetMetadata;
 }

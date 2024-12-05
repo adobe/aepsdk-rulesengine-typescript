@@ -28,9 +28,16 @@ import {
   MatcherDefinition,
   Rule,
   RuleSet,
+  RuleSetMetadata,
 } from "./types/schema";
-import { Evaluable, ExecutableRule, ExecutableRuleSet } from "./types/engine";
+import {
+  Evaluable,
+  ExecutableRule,
+  ExecutableRuleSet,
+  ExecutableRuleSetMetadata,
+} from "./types/engine";
 import { ConditionType } from "./types/enums";
+import { assign } from "./utils/assign";
 
 function parseMatcherDefinition(definition: MatcherDefinition): Evaluable {
   const { key, matcher, values } = definition;
@@ -49,6 +56,7 @@ function parseHistoricalDefinition(
   definition: HistoricalDefinition
 ): Evaluable {
   const { events, from, to, matcher, value, searchType } = definition;
+
   return createHistoricalDefinition(
     events,
     matcher,
@@ -65,24 +73,23 @@ function parseCondition(
   const { type, definition } = condition;
 
   if (ConditionType.MATCHER === type) {
-    return createCondition(
-      type,
-      parseMatcherDefinition(<MatcherDefinition>definition)
-    );
+    const matchers = parseMatcherDefinition(<MatcherDefinition>definition);
+
+    return createCondition(type, matchers);
   }
 
   if (ConditionType.GROUP === type) {
-    return createCondition(
-      type,
-      parseGroupDefinition(<GroupDefinition>definition)
-    );
+    const definitions = parseGroupDefinition(<GroupDefinition>definition);
+
+    return createCondition(type, definitions);
   }
 
   if (ConditionType.HISTORICAL === type) {
-    return createCondition(
-      type,
-      parseHistoricalDefinition(<HistoricalDefinition>definition)
+    const definitions = parseHistoricalDefinition(
+      <HistoricalDefinition>definition
     );
+
+    return createCondition(type, definitions);
   }
 
   throw new Error("Can not parse condition");
@@ -95,16 +102,32 @@ function parseConsequence(consequence: Consequence): Consequence {
 }
 
 function parseRule(rule: Rule): ExecutableRule {
-  const { condition, consequences } = rule;
+  const { condition, consequences, key } = rule;
+  const parsedCondition = parseCondition(condition);
+  const parsedConsequences = consequences.map(parseConsequence);
 
-  return createRule(
-    parseCondition(condition),
-    consequences.map(parseConsequence)
-  );
+  return createRule(parsedCondition, parsedConsequences, key);
+}
+
+function parseMetadata(
+  metadata?: RuleSetMetadata
+): ExecutableRuleSetMetadata | undefined {
+  if (!metadata) {
+    return undefined;
+  }
+
+  const result = {
+    provider: metadata.provider,
+    providerData: assign({}, metadata.providerData),
+  };
+
+  return result;
 }
 
 export function parseRules(ruleset: RuleSet): ExecutableRuleSet {
-  const { version, rules } = ruleset;
+  const { version, rules, metadata } = ruleset;
+  const parsedRules = rules.map(parseRule);
+  const parsedMetadata = parseMetadata(metadata);
 
-  return createRules(version, rules.map(parseRule));
+  return createRules(version, parsedRules, parsedMetadata);
 }
