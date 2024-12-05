@@ -19,6 +19,6 @@
     "types": ["@types/jest"],
     "paths": {}
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "test/historical.spec.ts"],
   "exclude": ["node_modules", "dist"]
 }
