@@ -9,18 +9,19 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { isDefined } from "./isDefined";
+import { memoize } from "../../src/utils/memoize";
 
-export function memoize(func, keyResolverFunc = (arr) => arr[0]) {
-  const memoizedValues = {};
+describe("memoize", () => {
+  it("should memoize", () => {
+    let counter = 0;
+    const fn = (num: number): number => {
+      counter++;
+      return num * num;
+    };
+    const memoizedFn = memoize(fn);
 
-  return function memoized(...funcArgs) {
-    const key = keyResolverFunc.call(this, funcArgs);
-
-    if (!isDefined(memoizedValues[key])) {
-      memoizedValues[key] = func.call(null, ...funcArgs);
-    }
-
-    return memoizedValues[key];
-  };
-}
+    expect(memoizedFn(2)).toBe(4);
+    expect(memoizedFn(2)).toBe(4);
+    expect(counter).toBe(1);
+  });
+});
