@@ -58,10 +58,8 @@ export interface HistoricalEvent {
   "iam.eventType"?: string;
   "iam.id"?: string;
   id?: string;
-
   eventType?: string;
   type?: string;
-
   [key: string]: any;
 }
 
@@ -80,7 +78,9 @@ export interface GroupDefinition {
 }
 
 export interface Consequence {
+  id: string;
   type: string;
   detail: any;
-  id: string;
 }
+
+export type Consequences = Array<Consequence>;

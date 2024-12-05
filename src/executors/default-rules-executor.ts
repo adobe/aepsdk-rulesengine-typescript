@@ -9,13 +9,10 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { parseRules } from "./parser";
-import { Consequence, Consequences, RuleSet } from "./types/schema";
-import { Context, ExecutableRule } from "./types/engine";
+import { Consequence, Consequences } from "../types/schema";
+import { Context, ExecutableRule } from "../types/engine";
 
-export default function RulesEngine(ruleset: RuleSet) {
-  const { rules } = parseRules(ruleset);
-
+export default function DefaultRulesExecutor(rules: Array<ExecutableRule>) {
   return {
     execute: (context: Context): Array<Consequences> =>
       rules
