@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Adobe. All rights reserved.
+Copyright 2024 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -16,6 +16,10 @@ import {
   ExecutableRuleSetMetadata,
 } from "../types/engine";
 import { keys } from "../utils/keys";
+import { createId } from "./id-factory";
+import { createContext } from "./context-factory";
+
+const BUCKETS = 10000;
 
 function groupRules(rules: Array<ExecutableRule>) {
   const result: { [key: string]: Array<ExecutableRule> } = {};
@@ -44,26 +48,16 @@ function evaluateRules(context: Context, rules: Array<ExecutableRule>) {
     .filter((arr: Array<Consequence>) => arr.length > 0);
 }
 
-function createContext(
-  metadata: ExecutableRuleSetMetadata,
-  key: string,
-  context: Context
-): Context {
-  return {
-    ...context,
-    key,
-  };
-}
-
 export default function TargetRulesExecutor(
   metadata: ExecutableRuleSetMetadata,
   rules: Array<ExecutableRule>
 ) {
   const rulesNoKey = rules.filter((rule) => !rule.key);
   const rulesWithKeys = groupRules(rules);
+  const buckets = metadata.providerData.buckets || BUCKETS;
 
   return {
-    execute: (context: Context): Array<Consequences> => {
+    execute: (identity: string, context: Context): Array<Consequences> => {
       const consequencesNoKey = evaluateRules(context, rulesNoKey);
       const rulesKeys = keys(rulesWithKeys);
       const consequencesWithKeys: Array<Consequences> = [];
@@ -71,7 +65,8 @@ export default function TargetRulesExecutor(
       for (let i = 0; i < rulesKeys.length; i += 1) {
         const key = rulesKeys[i];
         const rulesForKey = rulesWithKeys[key];
-        const contextForKey = createContext(metadata, key, context);
+        const id = createId(identity, key, metadata);
+        const contextForKey = createContext(id, buckets, context);
         const consequences = evaluateRules(contextForKey, rulesForKey);
 
         consequencesWithKeys.push(...consequences);
