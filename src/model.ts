@@ -15,6 +15,7 @@ import {
   Evaluable,
   ExecutableRule,
   ExecutableRuleSet,
+  ExecutableRuleSetMetadata,
 } from "./types/engine";
 import { Consequence } from "./types/schema";
 import {
@@ -57,16 +58,19 @@ function evaluateOr(context: Context, conditions: Array<Evaluable>): boolean {
 
 export function createRules(
   version: number,
-  rules: Array<ExecutableRule>
+  rules: Array<ExecutableRule>,
+  metadata?: ExecutableRuleSetMetadata
 ): ExecutableRuleSet {
-  return { version, rules };
+  return { version, rules, metadata };
 }
 
 export function createRule(
   condition: Evaluable,
-  consequences: Array<Consequence>
+  consequences: Array<Consequence>,
+  key?: string
 ): ExecutableRule {
   return {
+    key,
     execute: (context: Context) => {
       if (condition.evaluate(context)) {
         return consequences;
@@ -150,11 +154,13 @@ export function createHistoricalDefinition(
   return {
     evaluate: (context) => {
       let eventCount;
+
       if (SearchType.ORDERED === searchType) {
         eventCount = queryAndCountOrderedEvent(events, context, from, to);
       } else {
         eventCount = queryAndCountAnyEvent(events, context, from, to);
       }
+
       return checkForHistoricalMatcher(eventCount, matcherKey, value);
     },
   };

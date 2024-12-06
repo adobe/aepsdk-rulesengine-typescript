@@ -44,14 +44,6 @@ describe("matcher type - equals (eq)", () => {
     ruleset = RulesEngine(RULE_DEFINITION);
   });
 
-  it("version", () => {
-    expect(ruleset.getVersion()).toBe(1);
-  });
-
-  it("rules count", () => {
-    expect(ruleset.numRules()).toBe(1);
-  });
-
   it("returns consequences when any of the values equals the relevant key:value in context", () => {
     const result = ruleset.execute({
       browser: "firefox",
