@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Adobe. All rights reserved.
+Copyright 2024 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -9,12 +9,21 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { createContext } from "../../src/executors/context-factory";
+import { ExecutableRuleSetMetadata } from "../../types/engine";
 
-describe("Create context with allocation", () => {
-  it("should create allocation value", () => {
-    const result = createContext("id", 10000, {});
+const KEY_PATTERN = "<key>";
+const IDENTITY_PATTERN = "<identity>";
 
-    expect(result).toEqual({ allocation: 76.01 });
-  });
-});
+export function createId(
+  identity: string,
+  key: string,
+  metadata: ExecutableRuleSetMetadata
+) {
+  const { providerData } = metadata;
+  // identityTemplate: "<clientCode>.<key>.<identity>.0"
+  const { identityTemplate } = providerData;
+
+  return identityTemplate
+    .replace(KEY_PATTERN, key)
+    .replace(IDENTITY_PATTERN, identity);
+}

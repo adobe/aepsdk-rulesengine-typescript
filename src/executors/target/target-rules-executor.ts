@@ -9,17 +9,18 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { Consequence, Consequences } from "../types/schema";
+import { Consequence, Consequences } from "../../types/schema";
 import {
   Context,
   ExecutableRule,
   ExecutableRuleSetMetadata,
-} from "../types/engine";
-import { keys } from "../utils/keys";
+} from "../../types/engine";
+import { validateMetadata } from "./validator";
+import { keys } from "../../utils/keys";
+import { extractIdentity } from "./identity-extractor";
 import { createId } from "./id-factory";
 import { createContext } from "./context-factory";
-
-const BUCKETS = 10000;
+import { TARGET_PROVIDER } from "../constants";
 
 function groupRules(rules: Array<ExecutableRule>) {
   const result: { [key: string]: Array<ExecutableRule> } = {};
@@ -48,16 +49,20 @@ function evaluateRules(context: Context, rules: Array<ExecutableRule>) {
     .filter((arr: Array<Consequence>) => arr.length > 0);
 }
 
-export default function TargetRulesExecutor(
-  metadata: ExecutableRuleSetMetadata,
-  rules: Array<ExecutableRule>
+export function createTargetRulesExecutor(
+  rules: Array<ExecutableRule>,
+  metadata: ExecutableRuleSetMetadata
 ) {
+  validateMetadata(metadata);
+
   const rulesNoKey = rules.filter((rule) => !rule.key);
   const rulesWithKeys = groupRules(rules);
-  const buckets = metadata.providerData.buckets || BUCKETS;
+  const { buckets } = metadata.providerData;
 
   return {
-    execute: (identity: string, context: Context): Array<Consequences> => {
+    provider: TARGET_PROVIDER,
+    execute: (context: Context): Array<Consequences> => {
+      const identity = extractIdentity(context);
       const consequencesNoKey = evaluateRules(context, rulesNoKey);
       const rulesKeys = keys(rulesWithKeys);
       const consequencesWithKeys: Array<Consequences> = [];

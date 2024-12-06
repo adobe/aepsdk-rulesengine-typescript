@@ -1,5 +1,5 @@
 /*
-Copyright 2023 Adobe. All rights reserved.
+Copyright 2024 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -9,14 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { Consequence, Consequences } from "../types/schema";
-import { Context, ExecutableRule } from "../types/engine";
+import { keys } from "../../src/utils/keys";
 
-export default function DefaultRulesExecutor(rules: Array<ExecutableRule>) {
-  return {
-    execute: (context: Context): Array<Consequences> =>
-      rules
-        .map((rule: ExecutableRule) => rule.execute(context))
-        .filter((arr: Array<Consequence>) => arr.length > 0),
-  };
-}
+describe("Object keys", () => {
+  it("should return all the object keys", () => {
+    expect(keys({ a: 1, b: 2 })).toEqual(["a", "b"]);
+  });
+
+  it("should return empty array for empty object", () => {
+    expect(keys({})).toEqual([]);
+  });
+});

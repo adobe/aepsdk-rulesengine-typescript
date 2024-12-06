@@ -9,12 +9,26 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { parseRules } from "./parser";
-import { RuleSet } from "./types/schema";
-import { createExecutor } from "./executors";
+import { createExecutor } from "../../src/executors";
 
-export default function RulesEngine(ruleset: RuleSet) {
-  const { rules, metadata } = parseRules(ruleset);
+describe("Create executor", () => {
+  it("should return Target executor when provider TGT", () => {
+    const metadata = {
+      provider: "TGT",
+      providerData: {
+        identityTemplate: "identityTemplate",
+        buckets: 1,
+      },
+    };
 
-  return createExecutor(rules, metadata);
-}
+    const executor = createExecutor([], metadata);
+
+    expect(executor.provider).toEqual("TGT");
+  });
+
+  it("should return default executor when no provider", () => {
+    const executor = createExecutor([], {});
+
+    expect(executor.provider).toEqual("DEFAULT");
+  });
+});

@@ -13,6 +13,7 @@ import { MatcherType, SupportedMatcher } from "./types/enums";
 import { Context } from "./types/engine";
 import { HistoricalEvent } from "./types/schema";
 import { isUndefined } from "./utils/isUndefined";
+import { keys } from "./utils/keys";
 
 const IAM_ID = "iam.id";
 const ID = "id";
@@ -60,7 +61,7 @@ function eventSatisfiesCondition(
   historicalEventCondition: HistoricalEvent,
   eventContext: Context
 ) {
-  const eventKeys = Object.keys(historicalEventCondition);
+  const eventKeys = keys(historicalEventCondition);
   for (let i = 0; i < eventKeys.length; i += 1) {
     const key = eventKeys[i];
     const { event = {} } = eventContext;

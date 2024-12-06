@@ -9,25 +9,16 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { ExecutableRuleSetMetadata } from "../types/engine";
+import { Consequence, Consequences } from "../../types/schema";
+import { Context, ExecutableRule } from "../../types/engine";
+import { DEFAULT_PROVIDER } from "../constants";
 
-export function createId(
-  identity: string,
-  key: string,
-  metadata: ExecutableRuleSetMetadata
-) {
-  const { providerData } = metadata;
-
-  if (!providerData) {
-    return identity;
-  }
-
-  // identityTemplate: "<clientCode>.<key>.<identity>.0"
-  const { identityTemplate } = providerData;
-
-  if (!identityTemplate) {
-    return identity;
-  }
-
-  return identityTemplate.replace("<key>", key).replace("<identity>", identity);
+export function createDefaultRulesExecutor(rules: Array<ExecutableRule>) {
+  return {
+    provider: DEFAULT_PROVIDER,
+    execute: (context: Context): Array<Consequences> =>
+      rules
+        .map((rule: ExecutableRule) => rule.execute(context))
+        .filter((arr: Array<Consequence>) => arr.length > 0),
+  };
 }
