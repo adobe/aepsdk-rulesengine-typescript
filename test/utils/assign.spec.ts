@@ -9,12 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { parseRules } from "./parser";
-import { RuleSet } from "./types/schema";
-import { createExecutor } from "./executors";
+import { assign } from "../../src/utils/assign";
 
-export default function RulesEngine(ruleset: RuleSet) {
-  const { rules, metadata } = parseRules(ruleset);
+describe("assign", () => {
+  it("returns merged objects", () => {
+    const result = assign({ prop1: "value1" }, { prop2: "value2" });
 
-  return createExecutor(rules, metadata);
-}
+    expect(result.prop1).toBe("value1");
+    expect(result.prop2).toBe("value2");
+  });
+});

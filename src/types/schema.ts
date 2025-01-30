@@ -17,12 +17,19 @@ import {
   SupportedSearchType,
 } from "./enums";
 
+export interface RuleSetMetadata {
+  provider: string;
+  providerData: any;
+}
+
 export interface RuleSet {
   version: number;
+  metadata?: RuleSetMetadata;
   rules: Array<Rule>;
 }
 
 export interface Rule {
+  key?: string;
   condition: GroupCondition | MatcherCondition | HistoricalCondition;
   consequences: Array<Consequence>;
 }
@@ -51,10 +58,8 @@ export interface HistoricalEvent {
   "iam.eventType"?: string;
   "iam.id"?: string;
   id?: string;
-
   eventType?: string;
   type?: string;
-
   [key: string]: any;
 }
 
@@ -73,7 +78,9 @@ export interface GroupDefinition {
 }
 
 export interface Consequence {
+  id: string;
   type: string;
   detail: any;
-  id: string;
 }
+
+export type Consequences = Array<Consequence>;
