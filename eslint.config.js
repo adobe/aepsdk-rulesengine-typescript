@@ -33,6 +33,7 @@ export default tseslint.config([
       "types/**",
     ],
   },
+
   {
     ...jest.configs["flat/recommended"],
 
@@ -43,10 +44,22 @@ export default tseslint.config([
       },
     },
 
+    settings: {
+      parserOptions: {
+        project: "./tsconfig.json",
+      },
+    },
+
     files: ["**/*.{js,cjs,mjs,ts}"],
 
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+      "n/no-missing-import": [
+        "error",
+        {
+          tryExtensions: [".ts", ".js"],
+        },
+      ],
       ...jest.configs["flat/recommended"].rules,
     },
   },

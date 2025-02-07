@@ -13,10 +13,10 @@ import {
   ExecutableRule,
   ExecutableRuleSetMetadata,
   Executor,
-} from "../types/engine.ts";
-import { createDefaultRulesExecutor } from "./default/default-rules-executor.ts";
-import { createTargetRulesExecutor } from "./target/target-rules-executor.ts";
-import { TARGET_PROVIDER } from "./constants.ts";
+} from "../types/engine";
+import { createDefaultRulesExecutor } from "./default/default-rules-executor";
+import { createTargetRulesExecutor } from "./target/target-rules-executor";
+import { TARGET_PROVIDER } from "./constants";
 
 export function createExecutor(
   rules: Array<ExecutableRule>,

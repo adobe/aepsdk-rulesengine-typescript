@@ -9,8 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { validateMetadata } from "../../../src/executors/target/validator.ts";
-import { ExecutableRuleSetMetadata } from "../../../src/types/engine.ts";
+import { validateMetadata } from "../../../src/executors/target/validator";
+import { ExecutableRuleSetMetadata } from "../../../src/types/engine";
 
 describe("Target Validator", () => {
   it("should throw when provider data is missing", () => {

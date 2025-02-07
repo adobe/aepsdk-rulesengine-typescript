@@ -8,8 +8,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { Matcher } from "../types/engine.ts";
-import { isNumber } from "../utils/isNumber.ts";
+import { Matcher } from "../types/engine";
+import { isNumber } from "../utils/isNumber";
 
 export function createGreaterThan(): Matcher {
   return {

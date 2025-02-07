@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { memoize } from "./memoize.ts";
+import { memoize } from "./memoize";
 
 function mul32(m: number, n: number) {
   const nlo = n & 0xffff;

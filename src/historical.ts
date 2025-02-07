@@ -9,11 +9,11 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { MatcherType, SupportedMatcher } from "./types/enums.ts";
-import { Context } from "./types/engine.ts";
-import { HistoricalEvent } from "./types/schema.ts";
-import { isUndefined } from "./utils/isUndefined.ts";
-import { keys } from "./utils/keys.ts";
+import { MatcherType, SupportedMatcher } from "./types/enums";
+import { Context } from "./types/engine";
+import { HistoricalEvent } from "./types/schema";
+import { isUndefined } from "./utils/isUndefined";
+import { keys } from "./utils/keys";
 
 const IAM_ID = "iam.id";
 const ID = "id";

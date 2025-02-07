@@ -9,8 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import RulesEngine from "../src/index.ts";
-import { Consequence, RuleSet } from "../src/types/schema.ts";
+import RulesEngine from "../src/index";
+import { Consequence, RuleSet } from "../src/types/schema";
 
 const CONSEQUENCE: Consequence = {
   id: "1ba6ce8f-5a1c-4ce3-9689-098adb26b8d8",

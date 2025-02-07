@@ -24,13 +24,19 @@ export default defineConfig([
   // CommonJS
   {
     input: "src/index.ts",
-    output: { file: "dist/cjs/index.cjs", format: "cjs", indent: false },
+    output: {
+      file: "dist/cjs/index.cjs",
+      format: "cjs",
+      indent: false,
+    },
     external: [],
     plugins: [
       nodeResolve({
         extensions,
       }),
-      typescript({ useTsconfigDeclarationDir: true }),
+      typescript({
+        useTsconfigDeclarationDir: true,
+      }),
       babel({
         extensions,
         plugins: [],

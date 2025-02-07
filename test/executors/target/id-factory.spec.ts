@@ -9,8 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { createId } from "../../../src/executors/target/id-factory.ts";
-import { ExecutableRuleSetMetadata } from "../../../src/types/engine.ts";
+import { createId } from "../../../src/executors/target/id-factory";
+import { ExecutableRuleSetMetadata } from "../../../src/types/engine";
 
 describe("Create ID for hasing", () => {
   it("should create ID using metadata", () => {

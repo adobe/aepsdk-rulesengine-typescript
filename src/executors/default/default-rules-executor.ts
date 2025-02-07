@@ -9,9 +9,9 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { Consequence, Consequences } from "../../types/schema.ts";
-import { Context, ExecutableRule } from "../../types/engine.ts";
-import { DEFAULT_PROVIDER } from "../constants.ts";
+import { Consequence, Consequences } from "../../types/schema";
+import { Context, ExecutableRule } from "../../types/engine";
+import { DEFAULT_PROVIDER } from "../constants";
 
 export function createDefaultRulesExecutor(rules: Array<ExecutableRule>) {
   return {

@@ -14,7 +14,7 @@ import {
   queryAndCountAnyEvent,
   queryAndCountOrderedEvent,
 } from "../src/historical";
-import { MatcherType } from "../src/types/enums.ts";
+import { MatcherType } from "../src/types/enums";
 
 describe("test helper functions", () => {
   it("should return a count of the number of events that match", () => {

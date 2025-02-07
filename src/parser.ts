@@ -36,8 +36,8 @@ import {
   ExecutableRuleSet,
   ExecutableRuleSetMetadata,
 } from "./types/engine";
-import { ConditionType } from "./types/enums.ts";
-import { assign } from "./utils/assign.ts";
+import { ConditionType } from "./types/enums";
+import { assign } from "./utils/assign";
 
 function parseMatcherDefinition(definition: MatcherDefinition): Evaluable {
   const { key, matcher, values } = definition;
