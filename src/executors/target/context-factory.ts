@@ -9,9 +9,9 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { Context } from "../../types/engine";
-import { hashUnencodedChars } from "../../utils/hashing";
-import { memoize } from "../../utils/memoize";
+import { Context } from "../../types/engine.ts";
+import { hashUnencodedChars } from "../../utils/hashing.ts";
+import { memoize } from "../../utils/memoize.ts";
 
 const MAX_PERCENTAGE = 100;
 
@@ -29,7 +29,7 @@ const createAllocationMemoized = memoize(createAllocation);
 export function createContext(
   id: string,
   buckets: number,
-  context: Context
+  context: Context,
 ): Context {
   const allocation = createAllocationMemoized(id, buckets);
 

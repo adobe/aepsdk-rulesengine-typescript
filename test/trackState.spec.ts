@@ -9,10 +9,10 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import RulesEngine from "../src/index";
-import { Consequence, RuleSet } from "../src/types/schema";
+import RulesEngine from "../src/index.ts";
+import { Consequence, RuleSet } from "../src/types/schema.ts";
 
-let CONSEQUENCE: Consequence = {
+const CONSEQUENCE: Consequence = {
   id: "c5001836-1b57-4992-af20-52d7962a1494",
   type: "cjmiam",
   detail: {

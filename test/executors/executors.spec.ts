@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { createExecutor } from "../../src/executors";
+import { createExecutor } from "../../src/executors/index.ts";
 
 describe("Create executor", () => {
   it("should return Target executor when provider TGT", () => {
@@ -27,7 +27,7 @@ describe("Create executor", () => {
   });
 
   it("should return default executor when no provider", () => {
-    const executor = createExecutor([], {});
+    const executor = createExecutor([], { provider: "", providerData: {} });
 
     expect(executor.provider).toEqual("DEFAULT");
   });

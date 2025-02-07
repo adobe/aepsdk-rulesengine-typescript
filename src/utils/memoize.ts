@@ -9,14 +9,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { isDefined } from "./isDefined";
+import { isDefined } from "./isDefined.ts";
 
 type KeyResolverFunc = (args: any[]) => any;
 type AnyFunc = (...args: any[]) => any;
 
 export function memoize<T extends AnyFunc>(
   func: T,
-  keyResolverFunc: KeyResolverFunc = (arr) => arr[0]
+  keyResolverFunc: KeyResolverFunc = (arr) => arr[0],
 ): T {
   const memoizedValues: Record<string, ReturnType<T>> = {};
 

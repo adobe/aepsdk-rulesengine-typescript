@@ -9,8 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import RulesEngine from "../src/index";
-import { RuleSet } from "../src/types/schema";
+import RulesEngine from "../src/index.ts";
+import { RuleSet } from "../src/types/schema.ts";
 
 const RULE_SET: RuleSet = {
   version: 1.1,
@@ -99,7 +99,7 @@ describe("matcher type - greater than  (gt)", () => {
     expect(result).toEqual([]);
   });
 
-  it("returns empty consequence when the input context key's value is not greater than any rule's condition definition values", () => {
+  it("returns empty consequence when the input context key's value is equal with the lower limit of the rule's condition definition values", () => {
     const result = ruleset.execute({
       country: "USA",
       city: "Salt Lake City",

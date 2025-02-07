@@ -9,15 +9,15 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { getMatcher } from "./matchers";
+import { getMatcher } from "./matchers/index.ts";
 import {
   Context,
   Evaluable,
   ExecutableRule,
   ExecutableRuleSet,
   ExecutableRuleSetMetadata,
-} from "./types/engine";
-import { Consequence } from "./types/schema";
+} from "./types/engine.ts";
+import { Consequence } from "./types/schema.ts";
 import {
   LogicType,
   SupportedCondition,
@@ -25,12 +25,12 @@ import {
   SupportedMatcher,
   SearchType,
   SupportedSearchType,
-} from "./types/enums";
+} from "./types/enums.ts";
 import {
   checkForHistoricalMatcher,
   queryAndCountAnyEvent,
   queryAndCountOrderedEvent,
-} from "./historical";
+} from "./historical.ts";
 
 function evaluateAnd(context: Context, conditions: Array<Evaluable>): boolean {
   let result = true;
@@ -59,7 +59,7 @@ function evaluateOr(context: Context, conditions: Array<Evaluable>): boolean {
 export function createRules(
   version: number,
   rules: Array<ExecutableRule>,
-  metadata?: ExecutableRuleSetMetadata
+  metadata?: ExecutableRuleSetMetadata,
 ): ExecutableRuleSet {
   return { version, rules, metadata };
 }
@@ -67,7 +67,7 @@ export function createRules(
 export function createRule(
   condition: Evaluable,
   consequences: Array<Consequence>,
-  key?: string
+  key?: string,
 ): ExecutableRule {
   return {
     key,
@@ -86,7 +86,7 @@ export function createRule(
 
 export function createCondition(
   type: SupportedCondition,
-  definition: Evaluable
+  definition: Evaluable,
 ): Evaluable {
   return {
     evaluate: (context) => {
@@ -101,14 +101,14 @@ export function createCondition(
 export function createConsequence(
   id: string,
   type: string,
-  detail: any
+  detail: any,
 ): Consequence {
   return { id, type, detail };
 }
 
 export function createGroupDefinition(
   logic: SupportedLogic,
-  conditions: Array<Evaluable>
+  conditions: Array<Evaluable>,
 ): Evaluable {
   return {
     evaluate: (context) => {
@@ -128,7 +128,7 @@ export function createGroupDefinition(
 export function createMatcherDefinition(
   key: string,
   matcherKey: SupportedMatcher,
-  values?: Array<any>
+  values?: Array<any>,
 ): Evaluable {
   return {
     evaluate: (context) => {
@@ -149,7 +149,7 @@ export function createHistoricalDefinition(
   value: number,
   from?: number,
   to?: number,
-  searchType?: SupportedSearchType
+  searchType?: SupportedSearchType,
 ): Evaluable {
   return {
     evaluate: (context) => {

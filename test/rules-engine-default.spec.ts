@@ -9,10 +9,10 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import RulesEngine from "../src/index";
-import { Consequence, RuleSet } from "../src/types/schema";
+import RulesEngine from "../src/index.ts";
+import { Consequence, RuleSet } from "../src/types/schema.ts";
 
-let CONSEQUENCE: Consequence = {
+const CONSEQUENCE: Consequence = {
   id: "e16cc85b-8bf3-4c70-83a2-883fd934b9fc",
   type: "cjmiam",
   detail: {
@@ -138,7 +138,7 @@ const RULE_SET: RuleSet = {
  AND ( Carrier name does not equal T-Mobile ) 
  AND(( Days since first use is less than or equal to 10 ) OR ( Days since upgrade ≥ 1 ))
 */
-describe("Track state event happens ", () => {
+describe("Track state event happens", () => {
   let ruleset;
   beforeEach(() => {
     ruleset = RulesEngine(RULE_SET);

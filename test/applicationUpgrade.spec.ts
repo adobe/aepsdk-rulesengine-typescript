@@ -9,10 +9,10 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import RulesEngine from "../src/index";
-import { Consequence, RuleSet } from "../src/types/schema";
+import RulesEngine from "../src/index.ts";
+import { Consequence, RuleSet } from "../src/types/schema.ts";
 
-let CONSEQUENCE: Consequence = {
+const CONSEQUENCE: Consequence = {
   id: "277680bc-b3db-4c94-8e0e-e1a7ce9573ab",
   type: "cjmiam",
   detail: {
@@ -101,7 +101,7 @@ const RULE_SET: RuleSet = {
     },
   ],
 };
-describe("( Application upgrade event happens) AND ( Days since upgrade ≥ 2 ) AND ( Days since last use is less than or equal to 1 ) ", () => {
+describe("( Application upgrade event happens) AND ( Days since upgrade ≥ 2 ) AND ( Days since last use is less than or equal to 1 )", () => {
   let ruleset;
   beforeEach(() => {
     ruleset = RulesEngine(RULE_SET);

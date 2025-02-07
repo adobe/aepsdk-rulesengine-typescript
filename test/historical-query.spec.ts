@@ -9,11 +9,10 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import RulesEngine from "../src";
-import { Consequence } from "../src/types/schema";
-import { RuleSet } from "../types/types/schema";
+import RulesEngine from "../src/index.ts";
+import { Consequence, RuleSet } from "../src/types/schema.ts";
 
-let CONSEQUENCE: Consequence = {
+const CONSEQUENCE: Consequence = {
   id: "6df71dd7-a24f-4944-9787-49345c417b01",
   type: "cjmiam",
   detail: {
@@ -97,7 +96,7 @@ describe("rules from AJO", () => {
               },
           },
         },
-      })
+      }),
     ).toEqual([[CONSEQUENCE]]);
   });
 
@@ -157,7 +156,7 @@ describe("rules from AJO", () => {
               },
           },
         },
-      })
+      }),
     ).toEqual([]);
   });
   it("should return  in case count of an event is greater than one and the event is in the date range for ordered search type", () => {
@@ -234,7 +233,7 @@ describe("rules from AJO", () => {
               },
           },
         },
-      })
+      }),
     ).toEqual([[CONSEQUENCE]]);
   });
   it("Should return 0 if the count for any event is ever zero for ordered search type", () => {
@@ -299,7 +298,7 @@ describe("rules from AJO", () => {
               },
           },
         },
-      })
+      }),
     ).toEqual([]);
   });
 
@@ -394,7 +393,7 @@ describe("rules from AJO", () => {
             },
           },
         },
-      })
+      }),
     ).toEqual([]);
 
     expect(
@@ -411,7 +410,7 @@ describe("rules from AJO", () => {
             },
           },
         },
-      })
+      }),
     ).toEqual([[CONSEQUENCE]]);
 
     expect(
@@ -428,7 +427,7 @@ describe("rules from AJO", () => {
             },
           },
         },
-      })
+      }),
     ).toEqual([]);
 
     expect(
@@ -445,7 +444,7 @@ describe("rules from AJO", () => {
             },
           },
         },
-      })
+      }),
     ).toEqual([[CONSEQUENCE]]);
   });
 });

@@ -9,11 +9,11 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { MatcherType, SupportedMatcher } from "./types/enums";
-import { Context } from "./types/engine";
-import { HistoricalEvent } from "./types/schema";
-import { isUndefined } from "./utils/isUndefined";
-import { keys } from "./utils/keys";
+import { MatcherType, SupportedMatcher } from "./types/enums.ts";
+import { Context } from "./types/engine.ts";
+import { HistoricalEvent } from "./types/schema.ts";
+import { isUndefined } from "./utils/isUndefined.ts";
+import { keys } from "./utils/keys.ts";
 
 const IAM_ID = "iam.id";
 const ID = "id";
@@ -28,7 +28,7 @@ const VALID_EVENT_IDS = [IAM_ID, ID];
 export function checkForHistoricalMatcher(
   eventCount: number,
   matcherKey: SupportedMatcher,
-  value: number
+  value: number,
 ) {
   switch (matcherKey) {
     case MatcherType.GREATER_THAN:
@@ -59,7 +59,7 @@ function oneOf(context: Context, properties: Array<string>) {
 
 function eventSatisfiesCondition(
   historicalEventCondition: HistoricalEvent,
-  eventContext: Context
+  eventContext: Context,
 ) {
   const eventKeys = keys(historicalEventCondition);
   for (let i = 0; i < eventKeys.length; i += 1) {
@@ -84,7 +84,7 @@ export function queryAndCountAnyEvent(
   events: Array<HistoricalEvent>,
   context: Context,
   from?: any,
-  to?: any
+  to?: any,
 ) {
   return events.reduce((countTotal, event) => {
     const eventType = oneOf(event, VALID_EVENT_TYPES);
@@ -142,7 +142,7 @@ export function queryAndCountOrderedEvent(
   events: Array<HistoricalEvent>,
   context: Context,
   from?: any,
-  to?: any
+  to?: any,
 ) {
   let previousEventTimestamp = from;
   const sameSequence = events.every((event) => {

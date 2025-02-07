@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { isObjectOrUndefined } from "../../src/utils/isObjectOrUndefined";
+import { isObjectOrUndefined } from "../../src/utils/isObjectOrUndefined.ts";
 
 describe("isObjectOrUndefined", () => {
   it("returns false when passed a string", () => {

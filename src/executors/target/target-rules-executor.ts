@@ -9,18 +9,18 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { Consequence, Consequences } from "../../types/schema";
+import { Consequence, Consequences } from "../../types/schema.ts";
 import {
   Context,
   ExecutableRule,
   ExecutableRuleSetMetadata,
 } from "../../types/engine";
-import { validateMetadata } from "./validator";
-import { keys } from "../../utils/keys";
-import { extractIdentity } from "./identity-extractor";
-import { createId } from "./id-factory";
-import { createContext } from "./context-factory";
-import { TARGET_PROVIDER } from "../constants";
+import { validateMetadata } from "./validator.ts";
+import { keys } from "../../utils/keys.ts";
+import { extractIdentity } from "./identity-extractor.ts";
+import { createId } from "./id-factory.ts";
+import { createContext } from "./context-factory.ts";
+import { TARGET_PROVIDER } from "../constants.ts";
 
 function groupRules(rules: Array<ExecutableRule>) {
   const result: { [key: string]: Array<ExecutableRule> } = {};
@@ -29,7 +29,6 @@ function groupRules(rules: Array<ExecutableRule>) {
     const rule = rules[i];
 
     if (!rule.key) {
-      // eslint-disable-next-line no-continue
       continue;
     }
 
@@ -51,7 +50,7 @@ function evaluateRules(context: Context, rules: Array<ExecutableRule>) {
 
 export function createTargetRulesExecutor(
   rules: Array<ExecutableRule>,
-  metadata: ExecutableRuleSetMetadata
+  metadata: ExecutableRuleSetMetadata,
 ) {
   validateMetadata(metadata);
 

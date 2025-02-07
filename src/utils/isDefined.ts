@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { isUndefined } from "./isUndefined";
+import { isUndefined } from "./isUndefined.ts";
 
 export function isDefined(value: any): boolean {
   return !isUndefined(value);

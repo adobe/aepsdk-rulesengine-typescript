@@ -9,8 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import RulesEngine from "../src/index";
-import { RuleSet } from "../src/types/schema";
+import RulesEngine from "../src/index.ts";
+import { RuleSet } from "../src/types/schema.ts";
 
 const RULE_SET: RuleSet = {
   version: 1.1,
@@ -43,7 +43,7 @@ describe("matcher type - exists (ex)", () => {
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("it returns consequences when key does exist", () => {
+  it("returns consequences when key does exist", () => {
     const result = ruleset.execute({
       browser: "firefox",
       timeSpentOnPage: 5,
@@ -53,7 +53,7 @@ describe("matcher type - exists (ex)", () => {
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
-  it("it returns empty when key does not exist", () => {
+  it("returns empty when key does not exist", () => {
     const result = ruleset.execute({
       browser: "safari",
       timeSpentOnPage: "5 seconds",

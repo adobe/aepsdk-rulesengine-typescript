@@ -9,9 +9,9 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { parseRules } from "./parser";
-import { RuleSet } from "./types/schema";
-import { createExecutor } from "./executors";
+import { parseRules } from "./parser.ts";
+import { RuleSet } from "./types/schema.ts";
+import { createExecutor } from "./executors/index.ts";
 
 export default function RulesEngine(ruleset: RuleSet) {
   const { rules, metadata } = parseRules(ruleset);

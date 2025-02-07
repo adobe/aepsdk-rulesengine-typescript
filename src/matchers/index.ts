@@ -10,20 +10,20 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { Matcher } from "../types/engine";
-import { MatcherType, SupportedMatcher } from "../types/enums";
-import { createEquals } from "./equals";
-import { createNotEquals } from "./notEquals";
-import { createExists } from "./exists";
-import { createNotExists } from "./notexists";
-import { createGreaterThan } from "./greaterThan";
-import { createGreaterThanEquals } from "./greaterThanEquals";
-import { createLessThan } from "./lessThan";
-import { createLessThanEquals } from "./lessThanEquals";
-import { createContains } from "./contains";
-import { createNotContains } from "./notContains";
-import { createStartsWith } from "./startsWith";
-import { createEndsWith } from "./endsWith";
+import { Matcher } from "../types/engine.ts";
+import { MatcherType, SupportedMatcher } from "../types/enums.ts";
+import { createEquals } from "./equals.ts";
+import { createNotEquals } from "./notEquals.ts";
+import { createExists } from "./exists.ts";
+import { createNotExists } from "./notexists.ts";
+import { createGreaterThan } from "./greaterThan.ts";
+import { createGreaterThanEquals } from "./greaterThanEquals.ts";
+import { createLessThan } from "./lessThan.ts";
+import { createLessThanEquals } from "./lessThanEquals.ts";
+import { createContains } from "./contains.ts";
+import { createNotContains } from "./notContains.ts";
+import { createStartsWith } from "./startsWith.ts";
+import { createEndsWith } from "./endsWith.ts";
 
 const MATCHERS: { [key: string]: Matcher } = {
   [MatcherType.EQUALS]: createEquals(),

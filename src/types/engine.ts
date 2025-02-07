@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { Consequence, Consequences } from "./schema";
+import { Consequence, Consequences } from "./schema.ts";
 
 export interface Context {
   [key: string]: any;

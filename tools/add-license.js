@@ -9,12 +9,16 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const fs = require("fs");
-const path = require("path");
-const stagedGitFiles = require("staged-git-files");
-const Handlebars = require("handlebars");
 
-const PROJECT_ROOT = path.resolve(__dirname, "../");
+import fs from "fs";
+import path from "path";
+import stagedGitFiles from "staged-git-files";
+import Handlebars from "handlebars";
+import { fileURLToPath } from "url";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const PROJECT_ROOT = path.resolve(dirname, "../");
 const SOURCE_TEMPLATE = "source-header.handlebars";
 
 const GIT_DELETED = "Deleted";
@@ -33,7 +37,7 @@ async function walk(dir, matchesFilter) {
         } else if (stats.isFile()) {
           return filePath;
         }
-      })
+      }),
   );
 
   return files.reduce((all, folderContents) => all.concat(folderContents), []);
@@ -83,8 +87,8 @@ async function run() {
   const stagedOnly = typeof process.env.STAGED_ONLY !== "undefined";
 
   const template = fs.readFileSync(
-    path.resolve(__dirname, SOURCE_TEMPLATE),
-    "utf-8"
+    path.resolve(dirname, SOURCE_TEMPLATE),
+    "utf-8",
   );
 
   const renderTemplate = Handlebars.compile(template);
@@ -105,4 +109,4 @@ async function run() {
   });
 }
 
-run();
+await run();
