@@ -25,9 +25,11 @@
   ],
   "scripts": {
     "add-license": "node tools/add-license.js",
+    "prebuild": "npm run clean && npm run lint",
     "build": "rollup -c",
     "clean": "rimraf dist types",
     "format": "prettier --write \"{src,test}/**/*.{js,cjs,mjs,ts}\" \"**/*.md\"",
+    "prelint": "npm run format && npm run add-license",
     "lint": "./node_modules/.bin/eslint && tsc",
     "prepare": "husky",
     "prepublishOnly": "rollup -c",
