@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 ./node_modules/.bin/pretty-quick --staged
 STAGED_ONLY=true npm run add-license
+npm test

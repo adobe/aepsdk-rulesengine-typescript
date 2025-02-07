@@ -29,7 +29,7 @@
     "clean": "rimraf dist types",
     "format": "prettier --write \"{src,test}/**/*.{js,cjs,mjs,ts}\" \"**/*.md\"",
     "lint": "./node_modules/.bin/eslint && tsc",
-    "prepare": "husky install",
+    "prepare": "husky",
     "prepublishOnly": "rollup -c",
     "pretty-quick": "pretty-quick",
     "pretest": "npm run lint",
