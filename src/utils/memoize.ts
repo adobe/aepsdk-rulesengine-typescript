@@ -16,7 +16,7 @@ type AnyFunc = (...args: any[]) => any;
 
 export function memoize<T extends AnyFunc>(
   func: T,
-  keyResolverFunc: KeyResolverFunc = (arr) => arr[0]
+  keyResolverFunc: KeyResolverFunc = (arr) => arr[0],
 ): T {
   const memoizedValues: Record<string, ReturnType<T>> = {};
 

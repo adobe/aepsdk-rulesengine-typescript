@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 import RulesEngine from "../src/index";
 import { Consequence, RuleSet } from "../src/types/schema";
 
-let CONSEQUENCE: Consequence = {
+const CONSEQUENCE: Consequence = {
   id: "27f487bf-e108-4e02-bf10-d2c094812291",
   type: "cjmiam",
   detail: {

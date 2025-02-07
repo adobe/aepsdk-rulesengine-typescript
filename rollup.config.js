@@ -20,19 +20,23 @@ import cleanup from "rollup-plugin-cleanup";
 const extensions = [".ts"];
 const noDeclarationFiles = { compilerOptions: { declaration: false } };
 
-const external = [];
-
 export default defineConfig([
   // CommonJS
   {
     input: "src/index.ts",
-    output: { file: "dist/cjs/index.cjs", format: "cjs", indent: false },
-    external,
+    output: {
+      file: "dist/cjs/index.cjs",
+      format: "cjs",
+      indent: false,
+    },
+    external: [],
     plugins: [
       nodeResolve({
         extensions,
       }),
-      typescript({ useTsconfigDeclarationDir: true }),
+      typescript({
+        useTsconfigDeclarationDir: true,
+      }),
       babel({
         extensions,
         plugins: [],
@@ -49,7 +53,7 @@ export default defineConfig([
   {
     input: "src/index.ts",
     output: { file: "dist/es/index.js", format: "es", indent: false },
-    external,
+    external: [],
     plugins: [
       nodeResolve({
         extensions,

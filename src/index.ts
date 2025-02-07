@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 import { parseRules } from "./parser";
 import { RuleSet } from "./types/schema";
-import { createExecutor } from "./executors";
+import { createExecutor } from "./executors/index";
 
 export default function RulesEngine(ruleset: RuleSet) {
   const { rules, metadata } = parseRules(ruleset);

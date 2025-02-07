@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 import RulesEngine from "../src/index";
 import { Consequence } from "../src/types/schema";
 
-let CONSEQUENCE: Consequence = {
+const CONSEQUENCE: Consequence = {
   id: "d2788421-7b30-4895-aeae-2df42b9e993c",
   type: "cjmiam",
   detail: {
@@ -103,7 +103,7 @@ describe("Message Trigger Track Action", () => {
         "~source": "com.adobe.eventSource.requestContent",
         action: {},
         "~state.com.adobe.module.lifecycle/lifecyclecontextdata.dayofweek": 3,
-      })
+      }),
     ).toEqual([[CONSEQUENCE]]);
   });
   it("empty consequence when desired day of week is not passed in", () => {
@@ -164,7 +164,7 @@ describe("Message Trigger Track Action", () => {
         "~source": "com.adobe.eventSource.requestContent",
         action: {},
         "~state.com.adobe.module.lifecycle/lifecyclecontextdata.dayofweek": 1,
-      })
+      }),
     ).toEqual([]);
   });
 });

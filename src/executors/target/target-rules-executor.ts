@@ -29,7 +29,6 @@ function groupRules(rules: Array<ExecutableRule>) {
     const rule = rules[i];
 
     if (!rule.key) {
-      // eslint-disable-next-line no-continue
       continue;
     }
 
@@ -51,7 +50,7 @@ function evaluateRules(context: Context, rules: Array<ExecutableRule>) {
 
 export function createTargetRulesExecutor(
   rules: Array<ExecutableRule>,
-  metadata: ExecutableRuleSetMetadata
+  metadata: ExecutableRuleSetMetadata,
 ) {
   validateMetadata(metadata);
 

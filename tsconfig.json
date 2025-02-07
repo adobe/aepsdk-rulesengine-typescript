@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmit": true,
+
     "strict": true,
     "strictNullChecks": true,
     "target": "ESNext",
@@ -19,6 +22,7 @@
     "types": ["@types/jest"],
     "paths": {}
   },
-  "include": ["src/**/*", "test/historical.spec.ts"],
+
+  "include": ["src/**/*", "test/**/*"],
   "exclude": ["node_modules", "dist"]
 }

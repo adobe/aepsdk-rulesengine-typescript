@@ -9,10 +9,10 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import RulesEngine from "../src";
+import RulesEngine from "../src/index";
 import { Consequence, RuleSet } from "../src/types/schema";
 
-let CONSEQUENCE: Consequence = {
+const CONSEQUENCE: Consequence = {
   id: "1ba6ce8f-5a1c-4ce3-9689-098adb26b8d8",
   type: "cjmiam",
   detail: {
@@ -118,7 +118,7 @@ describe("rules from AJO", () => {
           "Verizon",
         "~state.com.adobe.module.lifecycle/lifecyclecontextdata.dayofweek": 3,
         "contextdata.color": "orange is great",
-      })
+      }),
     ).toEqual([[CONSEQUENCE]]);
   });
   it("supports 'Sent data to Platform'", () => {
@@ -213,7 +213,7 @@ describe("rules from AJO", () => {
         // "~state.com.adobe.module.lifecycle/lifecyclecontextdata.devicename":
         //   "iphone",
         "~state.com.adobe.module.lifecycle/lifecyclecontextdata.dayssincefirstuse": 15,
-      })
+      }),
     ).toEqual([[CONSEQUENCE]]);
   });
 });

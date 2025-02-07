@@ -48,12 +48,11 @@ function parseMatcherDefinition(definition: MatcherDefinition): Evaluable {
 function parseGroupDefinition(definition: GroupDefinition): Evaluable {
   const { logic, conditions } = definition;
 
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   return createGroupDefinition(logic, conditions.map(parseCondition));
 }
 
 function parseHistoricalDefinition(
-  definition: HistoricalDefinition
+  definition: HistoricalDefinition,
 ): Evaluable {
   const { events, from, to, matcher, value, searchType } = definition;
 
@@ -63,12 +62,12 @@ function parseHistoricalDefinition(
     value,
     from,
     to,
-    searchType
+    searchType,
   );
 }
 
 function parseCondition(
-  condition: MatcherCondition | GroupCondition | HistoricalCondition
+  condition: MatcherCondition | GroupCondition | HistoricalCondition,
 ): Evaluable {
   const { type, definition } = condition;
 
@@ -86,7 +85,7 @@ function parseCondition(
 
   if (ConditionType.HISTORICAL === type) {
     const definitions = parseHistoricalDefinition(
-      <HistoricalDefinition>definition
+      <HistoricalDefinition>definition,
     );
 
     return createCondition(type, definitions);
@@ -110,7 +109,7 @@ function parseRule(rule: Rule): ExecutableRule {
 }
 
 function parseMetadata(
-  metadata?: RuleSetMetadata
+  metadata?: RuleSetMetadata,
 ): ExecutableRuleSetMetadata | undefined {
   if (!metadata) {
     return undefined;

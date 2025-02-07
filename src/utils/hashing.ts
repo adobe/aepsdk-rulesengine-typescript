@@ -12,7 +12,6 @@ governing permissions and limitations under the License.
 
 import { memoize } from "./memoize";
 
-/* eslint-disable no-bitwise */
 function mul32(m: number, n: number) {
   const nlo = n & 0xffff;
   const nhi = n - nlo;
@@ -63,5 +62,5 @@ function hashUnencodedCharsRaw(stringValue: string, seed: number = 0): number {
 
 export const hashUnencodedChars = memoize(
   hashUnencodedCharsRaw,
-  (arr: Array<number>) => arr.join("-")
+  (arr: Array<number>) => arr.join("-"),
 );

@@ -42,7 +42,7 @@ describe("Identity extractor", () => {
     }).toThrow();
   });
 
-  it("should throw when no xdm -> identityMap identities", () => {
+  it("should throw when no xdm -> identityMap ECIDs", () => {
     const context = {
       xdm: {
         identityMap: {

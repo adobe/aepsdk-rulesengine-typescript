@@ -13,14 +13,14 @@ import {
   ExecutableRule,
   ExecutableRuleSetMetadata,
   Executor,
-} from "src/types/engine";
+} from "../types/engine";
 import { createDefaultRulesExecutor } from "./default/default-rules-executor";
 import { createTargetRulesExecutor } from "./target/target-rules-executor";
 import { TARGET_PROVIDER } from "./constants";
 
 export function createExecutor(
   rules: Array<ExecutableRule>,
-  metadata?: ExecutableRuleSetMetadata
+  metadata?: ExecutableRuleSetMetadata,
 ): Executor {
   if (!metadata) {
     return createDefaultRulesExecutor(rules);

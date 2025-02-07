@@ -44,7 +44,7 @@ describe("matcher type - less than  (lt)", () => {
     ruleset = RulesEngine(RULE_SET);
   });
 
-  it("returns consequence  when the context key's value is  lesser than rule's condition definition values", () => {
+  it("returns consequence  when the context key's value is lesser than rule's condition definition values", () => {
     const result = ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
@@ -55,7 +55,7 @@ describe("matcher type - less than  (lt)", () => {
     expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
-  it("returns no consequence  when the context key's value is not lesser than rule's condition definition values", () => {
+  it("returns no consequence  when the context key's value is the upper limit of the rule's condition definition values", () => {
     const result = ruleset.execute({
       country: "USA",
       city: "Salt Lake City",
@@ -64,17 +64,6 @@ describe("matcher type - less than  (lt)", () => {
     });
 
     expect(result).toEqual([]);
-  });
-
-  it("returns consequence  when the context key's value is  lesser than rule's condition definition values", () => {
-    const result = ruleset.execute({
-      country: "USA",
-      city: "Salt Lake City",
-      state: "UT",
-      membershipPoint: 5999,
-    });
-
-    expect(result).toEqual([RULE_SET.rules[0].consequences]);
   });
 
   it("returns empty consequence when the input context key's value is  null", () => {

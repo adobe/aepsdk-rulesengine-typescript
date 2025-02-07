@@ -10,6 +10,5 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 export function keys(value: any): Array<string> {
-  // eslint-disable-next-line no-restricted-properties
   return Object.keys(value);
 }

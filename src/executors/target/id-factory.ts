@@ -17,7 +17,7 @@ const IDENTITY_PATTERN = "<identity>";
 export function createId(
   identity: string,
   key: string,
-  metadata: ExecutableRuleSetMetadata
+  metadata: ExecutableRuleSetMetadata,
 ) {
   const { providerData } = metadata;
   // identityTemplate: "<clientCode>.<key>.<identity>.0"

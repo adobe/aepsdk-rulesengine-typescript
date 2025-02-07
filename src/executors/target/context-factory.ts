@@ -29,7 +29,7 @@ const createAllocationMemoized = memoize(createAllocation);
 export function createContext(
   id: string,
   buckets: number,
-  context: Context
+  context: Context,
 ): Context {
   const allocation = createAllocationMemoized(id, buckets);
 
