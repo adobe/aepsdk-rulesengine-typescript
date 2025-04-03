@@ -34,7 +34,6 @@
     "prepare": "husky",
     "prepublishOnly": "rollup -c",
     "pretty-quick": "pretty-quick",
-    "pretest": "npm run lint",
     "test": "NODE_ENV=development jest"
   },
   "author": "Adobe",

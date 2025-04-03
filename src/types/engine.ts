@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { Consequence, Consequences } from "./schema";
+import { Consequence, Consequences, RulesEngineOptions } from "./schema";
 
 export interface Context {
   [key: string]: any;
@@ -21,19 +21,19 @@ export interface Matcher {
 }
 
 export interface Evaluable {
-  evaluate(context: Context): boolean;
+  evaluate(context: Context, options: RulesEngineOptions): boolean;
   toString?(): string;
 }
 
 export interface ExecutableRule {
   key?: string;
-  execute(context: Context): Array<Consequence>;
+  execute(context: Context, options?: RulesEngineOptions): Array<Consequence>;
   toString?(): string;
 }
 
 export interface ExecutableRuleSetMetadata {
-  provider: string;
-  providerData: any;
+  provider?: string;
+  providerData?: any;
 }
 
 export interface ExecutableRuleSet {

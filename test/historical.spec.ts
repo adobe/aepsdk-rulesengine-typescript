@@ -16,6 +16,10 @@ import {
 } from "../src/historical";
 import { MatcherType } from "../src/types/enums";
 
+const options = {
+  generateEventHash: (event) => JSON.stringify(event),
+};
+
 describe("test helper functions", () => {
   it("should return a count of the number of events that match", () => {
     const events = [
@@ -52,7 +56,7 @@ describe("test helper functions", () => {
     };
     const from = 1609086720000;
     const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(8);
   });
   it("should work with property conditions not prefixed with 'iam'", () => {
@@ -78,7 +82,7 @@ describe("test helper functions", () => {
     };
     const from = 1609086720000;
     const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(2);
   });
 
@@ -105,7 +109,7 @@ describe("test helper functions", () => {
     };
     const from = 1609086720000;
     const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(2);
   });
 
@@ -127,7 +131,7 @@ describe("test helper functions", () => {
     };
     const from = 1609086720000;
     const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(0);
   });
 
@@ -156,7 +160,7 @@ describe("test helper functions", () => {
     };
     const from = 1609086720000;
     const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(1);
   });
 
@@ -184,7 +188,7 @@ describe("test helper functions", () => {
     };
     const from = 1609086720000;
     const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(0);
   });
 
@@ -223,7 +227,7 @@ describe("test helper functions", () => {
     };
     const from = undefined;
     const to = undefined;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(8);
   });
 
@@ -257,7 +261,13 @@ describe("test helper functions", () => {
     };
     const from = 0;
     const to = 4;
-    const result = queryAndCountOrderedEvent(events, context, from, to);
+    const result = queryAndCountOrderedEvent(
+      events,
+      context,
+      options,
+      from,
+      to,
+    );
     expect(result).toBe(1);
   });
 
@@ -279,7 +289,13 @@ describe("test helper functions", () => {
     };
     const from = 0;
     const to = 2;
-    const result = queryAndCountOrderedEvent(events, context, from, to);
+    const result = queryAndCountOrderedEvent(
+      events,
+      context,
+      options,
+      from,
+      to,
+    );
     expect(result).toBe(0);
   });
 

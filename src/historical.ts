@@ -11,9 +11,8 @@ governing permissions and limitations under the License.
 */
 import { MatcherType, SupportedMatcher } from "./types/enums";
 import { Context } from "./types/engine";
-import { HistoricalEvent } from "./types/schema";
+import { HistoricalEvent, RulesEngineOptions } from "./types/schema";
 import { isUndefined } from "./utils/isUndefined";
-import { keys } from "./utils/keys";
 
 const IAM_ID = "iam.id";
 const ID = "id";
@@ -57,132 +56,80 @@ function oneOf(context: Context, properties: Array<string>) {
   return undefined;
 }
 
-function eventSatisfiesCondition(
-  historicalEventCondition: HistoricalEvent,
-  eventContext: Context,
-) {
-  const eventKeys = keys(historicalEventCondition);
-  for (let i = 0; i < eventKeys.length; i += 1) {
-    const key = eventKeys[i];
-    const { event = {} } = eventContext;
-    if (event[eventKeys[i]] !== historicalEventCondition[key]) {
-      return false;
-    }
-  }
-  return true;
-}
-
 /**
- * This function is used to query and count any event
- * @param events
- * @param context
- * @param from
- * @param to
- * @returns countTotal
+ * Counts the number of historical events that match the specified criteria within a given time range.
+ *
+ * @param events - Array of historical event conditions to match against
+ * @param context - The context object containing the events history
+ * @param options - Rules engine options with event hash generation capability
+ * @param from - Optional timestamp (in milliseconds) marking the start of the time range (default: 0)
+ * @param to - Optional timestamp (in milliseconds) marking the end of the time range (default: Infinity)
+ * @returns The total count of matching events within the specified time range
  */
 export function queryAndCountAnyEvent(
   events: Array<HistoricalEvent>,
   context: Context,
-  from?: any,
-  to?: any,
+  options: RulesEngineOptions,
+  from = 0,
+  to = Infinity,
 ) {
   return events.reduce((countTotal, event) => {
+    debugger;
     const eventType = oneOf(event, VALID_EVENT_TYPES);
-
-    if (!eventType) {
-      return countTotal;
-    }
-
-    const eventsOfType = context.events[eventType];
-    if (!eventsOfType) {
-      return countTotal;
-    }
-
     const eventId = oneOf(event, VALID_EVENT_IDS);
 
-    if (!eventId) {
-      return countTotal;
-    }
+    const eventHash = options.generateEventHash({ eventId, eventType });
 
-    const contextEvent = eventsOfType[eventId];
+    const contextEvent = context.events[eventHash];
     if (!contextEvent) {
       return countTotal;
     }
 
-    if (!eventSatisfiesCondition(event, contextEvent)) {
-      return countTotal;
-    }
-
-    const { count: eventCount = 1 } = contextEvent;
-    if (
-      isUndefined(from) ||
-      isUndefined(to) ||
-      (contextEvent.timestamp >= from && contextEvent.timestamp <= to)
-    ) {
-      return countTotal + eventCount;
-    }
-
-    return countTotal;
+    const { timestamps = [] } = contextEvent;
+    return timestamps.filter((t: number) => t >= from && t <= to).length;
   }, 0);
 }
 
 /**
- * Iterates through the events in the query.
- * If the event doesn't exist or has no count, return 0.
- * If the event is in the right order, update the previousEventTimestamp.
- * If the event is not in the right order, return 0
- * If all events are in the right order, return 1
- * @param events
- * @param context
- * @param from
- * @param to
- * @returns {number}
+ * Verifies if a sequence of historical events occurred in the specified order within a given time range.
+ *
+ * @param events - Array of historical event conditions to check in sequence
+ * @param context - The context object containing the events history
+ * @param options - Rules engine options with event hash generation capability
+ * @param from - Optional timestamp (in milliseconds) marking the start of the time range (default: 0)
+ * @param to - Optional timestamp (in milliseconds) marking the end of the time range (default: Infinity)
+ * @returns 1 if the events occurred in the specified order within the time range, 0 otherwise
  */
 export function queryAndCountOrderedEvent(
   events: Array<HistoricalEvent>,
   context: Context,
-  from?: any,
-  to?: any,
+  options: RulesEngineOptions,
+  from = 0,
+  to = Infinity,
 ) {
   let previousEventTimestamp = from;
+
   const sameSequence = events.every((event) => {
     const eventType = oneOf(event, VALID_EVENT_TYPES);
-    if (!eventType) {
-      return false;
-    }
-
-    const eventsOfType = context.events[eventType];
-    if (!eventsOfType) {
-      return false;
-    }
-
     const eventId = oneOf(event, VALID_EVENT_IDS);
 
-    if (!eventId) {
+    const eventHash = options.generateEventHash({ eventId, eventType });
+
+    const contextEvent = context.events[eventHash];
+    if (!contextEvent) {
       return false;
     }
 
-    const contextEvent = eventsOfType[eventId];
+    const contextEventFirstTimestamp = contextEvent.timestamps[0];
 
-    if (!eventSatisfiesCondition(event, contextEvent)) {
-      return false;
-    }
+    const isOrdered =
+      contextEventFirstTimestamp >= previousEventTimestamp &&
+      contextEventFirstTimestamp <= to;
 
-    if (
-      contextEvent === null ||
-      isUndefined(contextEvent) ||
-      contextEvent.count === 0
-    ) {
-      return false;
-    }
-
-    const ordered =
-      (isUndefined(previousEventTimestamp) ||
-        contextEvent.timestamp >= previousEventTimestamp) &&
-      (isUndefined(to) || contextEvent.timestamp <= to);
     previousEventTimestamp = contextEvent.timestamp;
-    return ordered;
+
+    return isOrdered;
   });
 
-  return sameSequence ? 1 : 0;
+  return Number(sameSequence);
 }

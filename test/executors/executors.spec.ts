@@ -11,6 +11,10 @@ governing permissions and limitations under the License.
 */
 import { createExecutor } from "../../src/executors/index";
 
+const options = {
+  generateEventHash: (event: object) => JSON.stringify(event),
+};
+
 describe("Create executor", () => {
   it("should return Target executor when provider TGT", () => {
     const metadata = {
@@ -21,13 +25,17 @@ describe("Create executor", () => {
       },
     };
 
-    const executor = createExecutor([], metadata);
+    const executor = createExecutor([], metadata, options);
 
     expect(executor.provider).toEqual("TGT");
   });
 
   it("should return default executor when no provider", () => {
-    const executor = createExecutor([], { provider: "", providerData: {} });
+    const executor = createExecutor(
+      [],
+      { provider: "", providerData: {} },
+      options,
+    );
 
     expect(executor.provider).toEqual("DEFAULT");
   });

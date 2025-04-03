@@ -17,7 +17,7 @@ import {
   ExecutableRuleSet,
   ExecutableRuleSetMetadata,
 } from "./types/engine";
-import { Consequence } from "./types/schema";
+import { Consequence, RulesEngineOptions } from "./types/schema";
 import {
   LogicType,
   SupportedCondition,
@@ -32,21 +32,29 @@ import {
   queryAndCountOrderedEvent,
 } from "./historical";
 
-function evaluateAnd(context: Context, conditions: Array<Evaluable>): boolean {
+function evaluateAnd(
+  context: Context,
+  conditions: Array<Evaluable>,
+  options: RulesEngineOptions,
+): boolean {
   let result = true;
 
   for (let i = 0; i < conditions.length; i += 1) {
-    result = result && conditions[i].evaluate(context);
+    result = result && conditions[i].evaluate(context, options);
   }
 
   return result;
 }
 
-function evaluateOr(context: Context, conditions: Array<Evaluable>): boolean {
+function evaluateOr(
+  context: Context,
+  conditions: Array<Evaluable>,
+  options: RulesEngineOptions,
+): boolean {
   let result = false;
 
   for (let i = 0; i < conditions.length; i += 1) {
-    result = result || conditions[i].evaluate(context);
+    result = result || conditions[i].evaluate(context, options);
 
     if (result) {
       return true;
@@ -71,8 +79,8 @@ export function createRule(
 ): ExecutableRule {
   return {
     key,
-    execute: (context: Context) => {
-      if (condition.evaluate(context)) {
+    execute: (context: Context, options: RulesEngineOptions) => {
+      if (condition.evaluate(context, options)) {
         return consequences;
       }
 
@@ -89,8 +97,8 @@ export function createCondition(
   definition: Evaluable,
 ): Evaluable {
   return {
-    evaluate: (context) => {
-      return definition.evaluate(context);
+    evaluate: (context, options: RulesEngineOptions) => {
+      return definition.evaluate(context, options);
     },
     toString() {
       return `Condition{type=${type}, definition=${definition}}`;
@@ -111,13 +119,13 @@ export function createGroupDefinition(
   conditions: Array<Evaluable>,
 ): Evaluable {
   return {
-    evaluate: (context) => {
+    evaluate: (context, options: RulesEngineOptions) => {
       if (LogicType.AND === logic) {
-        return evaluateAnd(context, conditions);
+        return evaluateAnd(context, conditions, options);
       }
 
       if (LogicType.OR === logic) {
-        return evaluateOr(context, conditions);
+        return evaluateOr(context, conditions, options);
       }
 
       return false;
@@ -152,13 +160,19 @@ export function createHistoricalDefinition(
   searchType?: SupportedSearchType,
 ): Evaluable {
   return {
-    evaluate: (context) => {
-      let eventCount;
+    evaluate: (context, options) => {
+      let eventCount: number;
 
       if (SearchType.ORDERED === searchType) {
-        eventCount = queryAndCountOrderedEvent(events, context, from, to);
+        eventCount = queryAndCountOrderedEvent(
+          events,
+          context,
+          options,
+          from,
+          to,
+        );
       } else {
-        eventCount = queryAndCountAnyEvent(events, context, from, to);
+        eventCount = queryAndCountAnyEvent(events, context, options, from, to);
       }
 
       return checkForHistoricalMatcher(eventCount, matcherKey, value);
