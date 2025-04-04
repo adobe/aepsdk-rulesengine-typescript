@@ -34,7 +34,7 @@ export default defineConfig([
       nodeResolve({
         extensions,
       }),
-      typescript({ declarationDir: "dist/cjs/types" }),
+      typescript(),
       babel({
         extensions,
         plugins: [],
@@ -61,7 +61,7 @@ export default defineConfig([
       nodeResolve({
         extensions,
       }),
-      typescript({ declarationDir: "dist/es/types" }),
+      typescript(),
       babel({
         extensions,
         plugins: [],
@@ -91,7 +91,7 @@ export default defineConfig([
         preventAssignment: true,
         "process.env.NODE_ENV": JSON.stringify("production"),
       }),
-      typescript({ declaration: false, declarationDir: null }),
+      typescript(),
       babel({
         extensions,
         exclude: "node_modules/**",
