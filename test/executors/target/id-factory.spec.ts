@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 import { createId } from "../../../src/executors/target/id-factory";
 import { ExecutableRuleSetMetadata } from "../../../src/types/engine";
+import { it, describe, expect } from "vitest";
 
 describe("Create ID for hasing", () => {
   it("should create ID using metadata", () => {

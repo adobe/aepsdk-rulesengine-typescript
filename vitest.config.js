@@ -9,16 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-
 export default {
-  generateEventHash: (event: object) => {
-    const sortedEvent = {};
-    const keys = Object.keys(event).sort();
-
-    for (const key of keys) {
-      sortedEvent[key] = event[key];
-    }
-
-    return JSON.stringify(sortedEvent);
+  test: {
+    globals: true,
+    include: ["**/*.spec.ts"],
+    typecheck: {
+      enabled: true,
+      tsconfig: "./tsconfig.json",
+    },
   },
 };

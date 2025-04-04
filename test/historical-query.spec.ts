@@ -13,6 +13,7 @@ governing permissions and limitations under the License.
 import RulesEngine from "../src/index";
 import { Consequence, RuleSet } from "../src/types/schema";
 import rulesEngineOptions from "./helpers/rulesEngineOptions";
+import { it, describe, expect } from "vitest";
 
 const CONSEQUENCE: Consequence = {
   id: "6df71dd7-a24f-4944-9787-49345c417b01",
@@ -151,22 +152,15 @@ describe("rules from AJO", () => {
         rulesEngineOptions,
       ).execute({
         events: {
-          display: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-              {
-                event: {
-                  "iam.eventType": "display",
-                  "iam.id":
-                    "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-                },
-                timestamp: 1681321319855,
-                count: 1,
-              },
-          },
+          '{"eventId":"6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa","eventType":"display"}':
+            {
+              timestamps: [1681321319855],
+            },
         },
       }),
     ).toEqual([]);
   });
+
   it("should return  in case count of an event is greater than one and the event is in the date range for ordered search type", () => {
     expect(
       RulesEngine(
@@ -219,34 +213,19 @@ describe("rules from AJO", () => {
         rulesEngineOptions,
       ).execute({
         events: {
-          display: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa":
-              {
-                event: {
-                  "iam.eventType": "display",
-                  "iam.id":
-                    "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa",
-                },
-                timestamp: 1681321319855,
-                count: 1,
-              },
-          },
-          interact: {
-            "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb":
-              {
-                event: {
-                  "iam.eventType": "interact",
-                  "iam.id":
-                    "6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb",
-                },
-                timestamp: 1681321339855,
-                count: 1,
-              },
-          },
+          '{"eventId":"6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3aa","eventType":"display"}':
+            {
+              timestamps: [1681321319855],
+            },
+          '{"eventId":"6cd5a8ed-e183-48b7-a0ef-657a4467df74#0477a309-6f63-4638-b729-ab51cf5dd3bb","eventType":"interact"}':
+            {
+              timestamps: [1681321319855],
+            },
         },
       }),
     ).toEqual([[CONSEQUENCE]]);
   });
+
   it("Should return 0 if the count for any event is ever zero for ordered search type", () => {
     expect(
       RulesEngine(
@@ -396,7 +375,7 @@ describe("rules from AJO", () => {
     expect(
       RulesEngine(displayRuleset, rulesEngineOptions).execute({
         events: {
-          '{"iam.eventType":"interact","iam.id":"6cd5a8ed"}': {
+          '{"eventId":"6cd5a8ed","eventType":"interact"}': {
             timestamps: [1681321939855],
           },
         },
@@ -406,7 +385,7 @@ describe("rules from AJO", () => {
     expect(
       RulesEngine(displayRuleset, rulesEngineOptions).execute({
         events: {
-          '{"iam.eventType":"display","iam.id":"6cd5a8ed"}': {
+          '{"eventId":"6cd5a8ed","eventType":"display"}': {
             timestamps: [1681321939855],
           },
         },
@@ -416,7 +395,7 @@ describe("rules from AJO", () => {
     expect(
       RulesEngine(interactRuleset, rulesEngineOptions).execute({
         events: {
-          '{"iam.eventType":"display","iam.id":"6cd5a8ed"}': {
+          '{"eventId":"6cd5a8ed","eventType":"display"}': {
             timestamps: [1681321939855],
           },
         },
@@ -426,7 +405,7 @@ describe("rules from AJO", () => {
     expect(
       RulesEngine(interactRuleset, rulesEngineOptions).execute({
         events: {
-          '{"iam.eventType":"interact","iam.id":"6cd5a8ed"}': {
+          '{"eventId":"6cd5a8ed","eventType":"interact"}': {
             timestamps: [1681321939855],
           },
         },

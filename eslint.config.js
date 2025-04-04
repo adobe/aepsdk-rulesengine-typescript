@@ -16,7 +16,7 @@ import tseslint from "typescript-eslint";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import nodePlugin from "eslint-plugin-n";
 import pluginPromise from "eslint-plugin-promise";
-import jest from "eslint-plugin-jest";
+import vitest from "@vitest/eslint-plugin";
 
 export default tseslint.config([
   eslint.configs.recommended,
@@ -35,8 +35,6 @@ export default tseslint.config([
   },
 
   {
-    ...jest.configs["flat/recommended"],
-
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -60,7 +58,23 @@ export default tseslint.config([
           tryExtensions: [".ts", ".js"],
         },
       ],
-      ...jest.configs["flat/recommended"].rules,
+      "n/no-unsupported-features/node-builtins": [
+        "error",
+        {
+          version: ">=20.0.0",
+          ignores: [],
+        },
+      ],
+    },
+  },
+
+  {
+    files: ["**/*.spec.{js,cjs,mjs,ts}"],
+    plugins: {
+      vitest,
+    },
+    rules: {
+      ...vitest.configs.recommended.rules,
     },
   },
 

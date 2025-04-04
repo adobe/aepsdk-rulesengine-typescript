@@ -10,6 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import RulesEngine from "../src/index";
+import { it, describe, expect } from "vitest";
 
 describe("RulesEngine", () => {
   it("evaluates a ruleset and returns consequences", () => {

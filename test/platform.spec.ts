@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 import RulesEngine from "../src/index";
 import { Consequence, RuleSet } from "../src/types/schema";
+import { it, describe, expect, beforeEach } from "vitest";
 
 const CONSEQUENCE: Consequence = {
   id: "27f487bf-e108-4e02-bf10-d2c094812291",

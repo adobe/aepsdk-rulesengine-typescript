@@ -10,6 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import { isObjectOrUndefined } from "../../src/utils/isObjectOrUndefined";
+import { it, describe, expect } from "vitest";
 
 describe("isObjectOrUndefined", () => {
   it("returns false when passed a string", () => {

@@ -10,7 +10,7 @@
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "lib": ["dom", "es2017"],
+    "lib": ["dom", "es2021"],
     "jsx": "react",
     "declaration": true,
     "declarationDir": "./types",
@@ -19,7 +19,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "baseUrl": "./",
-    "types": ["@types/jest"],
+    "types": [],
     "paths": {}
   },
 
