@@ -17,5 +17,8 @@ export default {
       enabled: true,
       tsconfig: "./tsconfig.json",
     },
+    coverage: {
+      reporter: ["html", "lcov", "text", "json"],
+    },
   },
 };

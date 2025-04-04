@@ -35,7 +35,7 @@
     "prepare": "husky",
     "prepublishOnly": "rollup -c",
     "pretty-quick": "pretty-quick",
-    "test": "vitest run"
+    "test": "vitest run --coverage"
   },
   "author": "Adobe",
   "license": "Apache-2.0",
@@ -70,5 +70,8 @@
   },
   "overrides": {
     "eslint": "^9.23.0"
+  },
+  "dependencies": {
+    "@vitest/coverage-v8": "^3.1.1"
   }
 }
