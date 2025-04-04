@@ -13,12 +13,11 @@ import { defineConfig } from "rollup";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import babel from "@rollup/plugin-babel";
 import replace from "@rollup/plugin-replace";
-import typescript from "rollup-plugin-typescript2";
+import typescript from "@rollup/plugin-typescript";
 import terser from "@rollup/plugin-terser";
 import cleanup from "rollup-plugin-cleanup";
 
 const extensions = [".ts"];
-const noDeclarationFiles = { compilerOptions: { declaration: false } };
 
 export default defineConfig([
   // CommonJS
@@ -28,15 +27,14 @@ export default defineConfig([
       file: "dist/cjs/index.cjs",
       format: "cjs",
       indent: false,
+      sourcemap: true,
     },
     external: [],
     plugins: [
       nodeResolve({
         extensions,
       }),
-      typescript({
-        useTsconfigDeclarationDir: true,
-      }),
+      typescript({ declarationDir: "dist/cjs/types" }),
       babel({
         extensions,
         plugins: [],
@@ -52,13 +50,18 @@ export default defineConfig([
   // ES
   {
     input: "src/index.ts",
-    output: { file: "dist/es/index.js", format: "es", indent: false },
+    output: {
+      file: "dist/es/index.js",
+      format: "es",
+      indent: false,
+      sourcemap: true,
+    },
     external: [],
     plugins: [
       nodeResolve({
         extensions,
       }),
-      typescript({ tsconfigOverride: noDeclarationFiles }),
+      typescript({ declarationDir: "dist/es/types" }),
       babel({
         extensions,
         plugins: [],
@@ -74,7 +77,12 @@ export default defineConfig([
   // ES for Browsers
   {
     input: "src/index.ts",
-    output: { file: "dist/es/ruleEngine.mjs", format: "es", indent: false },
+    output: {
+      file: "dist/es/ruleEngine.mjs",
+      format: "es",
+      indent: false,
+      sourcemap: true,
+    },
     plugins: [
       nodeResolve({
         extensions,
@@ -83,7 +91,7 @@ export default defineConfig([
         preventAssignment: true,
         "process.env.NODE_ENV": JSON.stringify("production"),
       }),
-      typescript({ tsconfigOverride: noDeclarationFiles }),
+      typescript({ declaration: false, declarationDir: null }),
       babel({
         extensions,
         exclude: "node_modules/**",
