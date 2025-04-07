@@ -17,6 +17,10 @@ import {
   SupportedSearchType,
 } from "./enums";
 
+export interface RulesEngineOptions {
+  generateEventHash: (event: object) => string;
+}
+
 export interface RuleSetMetadata {
   provider: string;
   providerData: any;

@@ -15,6 +15,8 @@ import {
   queryAndCountOrderedEvent,
 } from "../src/historical";
 import { MatcherType } from "../src/types/enums";
+import options from "./helpers/rulesEngineOptions";
+import { it, describe, expect } from "vitest";
 
 describe("test helper functions", () => {
   it("should return a count of the number of events that match", () => {
@@ -30,31 +32,27 @@ describe("test helper functions", () => {
     ];
     const context = {
       events: {
-        display: {
-          abc: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "abc",
-            },
-            timestamp: 1609086720000,
-            count: 2,
-          },
-          def: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "def",
-            },
-            timestamp: 1609086720000,
-            count: 6,
-          },
+        '{"eventId":"abc","eventType":"display"}': {
+          timestamps: [1609086720000, 1609086720001],
+        },
+
+        '{"eventId":"def","eventType":"display"}': {
+          timestamps: [
+            1609086720000, 1609086720001, 1609086720002, 1609086720003,
+            1609086720004, 1609086720005,
+          ],
         },
       },
     };
+
     const from = 1609086720000;
-    const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const to = 1609086720006;
+
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
+
     expect(result).toBe(8);
   });
+
   it("should work with property conditions not prefixed with 'iam'", () => {
     const events = [
       {
@@ -64,21 +62,14 @@ describe("test helper functions", () => {
     ];
     const context = {
       events: {
-        display: {
-          abc: {
-            event: {
-              eventType: "display",
-              id: "abc",
-            },
-            timestamp: 1609086720000,
-            count: 2,
-          },
+        '{"eventId":"abc","eventType":"display"}': {
+          timestamps: [1, 2],
         },
       },
     };
-    const from = 1609086720000;
-    const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const from = 1;
+    const to = 2;
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(2);
   });
 
@@ -89,45 +80,34 @@ describe("test helper functions", () => {
         "iam.id": "abc",
       },
     ];
+
     const context = {
       events: {
-        display: {
-          abc: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "abc",
-            },
-            timestamp: 1609086720000,
-            count: 2,
-          },
+        '{"eventId":"abc","eventType":"display"}': {
+          timestamps: [1609086720000, 1609086720001],
         },
       },
     };
+
     const from = 1609086720000;
-    const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const to = 1609086720001;
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(2);
   });
 
-  it("should  fail gracefully when event condition lacks properties", () => {
+  it("should fail gracefully when event condition lacks properties", () => {
     const events = [{}];
+
     const context = {
       events: {
-        display: {
-          abc: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "abc",
-            },
-            timestamp: 1609086720000,
-            count: 2,
-          },
+        '{"eventId":"abc","eventType":"display"}': {
+          timestamps: [1609086720000, 1609086720001],
         },
       },
     };
     const from = 1609086720000;
-    const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const to = 1609086720001;
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(0);
   });
 
@@ -139,24 +119,19 @@ describe("test helper functions", () => {
         isSpecial: true,
       },
     ];
+
     const context = {
       events: {
-        display: {
-          abc: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "abc",
-              isSpecial: true,
-            },
-            timestamp: 1609086720000,
-            count: 1,
-          },
+        '{"eventId":"abc","eventType":"display","isSpecial":true}': {
+          timestamps: [1609086720000],
         },
       },
     };
+
     const from = 1609086720000;
     const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(1);
   });
 
@@ -168,23 +143,18 @@ describe("test helper functions", () => {
         isSpecial: true,
       },
     ];
+
     const context = {
       events: {
-        display: {
-          abc: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "abc",
-            },
-            timestamp: 1609086720000,
-            count: 1,
-          },
+        '{"eventId":"abc","eventType":"display"}': {
+          timestamps: [1609086720000],
         },
       },
     };
+
     const from = 1609086720000;
     const to = 1609086720000;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(0);
   });
 
@@ -199,70 +169,57 @@ describe("test helper functions", () => {
         "iam.id": "def",
       },
     ];
+
     const context = {
       events: {
-        display: {
-          abc: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "abc",
-            },
-            timestamp: 1609086720000,
-            count: 2,
-          },
-          def: {
-            event: {
-              "iam.eventType": "display",
-              "iam.id": "def",
-            },
-            timestamp: 1609086720000,
-            count: 6,
-          },
+        '{"eventId":"abc","eventType":"display"}': {
+          timestamps: [1609086720000, 1609086720001],
+        },
+        '{"eventId":"def","eventType":"display"}': {
+          timestamps: [
+            1609086720000, 1609086720001, 1609086720002, 1609086720003,
+            1609086720004, 1609086720005,
+          ],
         },
       },
     };
+
     const from = undefined;
     const to = undefined;
-    const result = queryAndCountAnyEvent(events, context, from, to);
+
+    const result = queryAndCountAnyEvent(events, context, options, from, to);
     expect(result).toBe(8);
   });
 
   it("returns 1 (true) If all the events are ordered and within the time range", () => {
-    jest.setTimeout(10000);
     const events = [
       { "iam.eventType": "display", "iam.id": "A" },
       { "iam.eventType": "display", "iam.id": "B" },
       { "iam.eventType": "display", "iam.id": "C" },
     ];
+
     const context = {
       events: {
-        display: {
-          A: {
-            count: 1,
-            timestamp: 1,
-            event: { "iam.eventType": "display", "iam.id": "A" },
-          },
-          B: {
-            count: 1,
-            timestamp: 2,
-            event: { "iam.eventType": "display", "iam.id": "B" },
-          },
-          C: {
-            count: 1,
-            timestamp: 3,
-            event: { "iam.eventType": "display", "iam.id": "C" },
-          },
-        },
+        '{"eventId":"A","eventType":"display"}': { timestamps: [1] },
+        '{"eventId":"B","eventType":"display"}': { timestamps: [2] },
+        '{"eventId":"C","eventType":"display"}': { timestamps: [3] },
       },
     };
+
     const from = 0;
     const to = 4;
-    const result = queryAndCountOrderedEvent(events, context, from, to);
+
+    const result = queryAndCountOrderedEvent(
+      events,
+      context,
+      options,
+      from,
+      to,
+    );
     expect(result).toBe(1);
   });
 
   it("returns 0 If any of the events are ordered but not within the time range", () => {
-    jest.setTimeout(10000);
     const events = [
       { "iam.eventType": "display", "iam.id": "A" },
       { "iam.eventType": "display", "iam.id": "B" },
@@ -279,7 +236,13 @@ describe("test helper functions", () => {
     };
     const from = 0;
     const to = 2;
-    const result = queryAndCountOrderedEvent(events, context, from, to);
+    const result = queryAndCountOrderedEvent(
+      events,
+      context,
+      options,
+      from,
+      to,
+    );
     expect(result).toBe(0);
   });
 

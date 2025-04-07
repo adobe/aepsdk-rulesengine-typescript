@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 import { validateMetadata } from "../../../src/executors/target/validator";
 import { ExecutableRuleSetMetadata } from "../../../src/types/engine";
+import { it, describe, expect } from "vitest";
 
 describe("Target Validator", () => {
   it("should throw when provider data is missing", () => {

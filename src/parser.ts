@@ -37,7 +37,6 @@ import {
   ExecutableRuleSetMetadata,
 } from "./types/engine";
 import { ConditionType } from "./types/enums";
-import { assign } from "./utils/assign";
 
 function parseMatcherDefinition(definition: MatcherDefinition): Evaluable {
   const { key, matcher, values } = definition;
@@ -117,7 +116,7 @@ function parseMetadata(
 
   const result = {
     provider: metadata.provider,
-    providerData: assign({}, metadata.providerData),
+    providerData: Object.assign({}, metadata.providerData),
   };
 
   return result;

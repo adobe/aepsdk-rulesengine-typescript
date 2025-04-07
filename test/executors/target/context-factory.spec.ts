@@ -10,6 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import { createContext } from "../../../src/executors/target/context-factory";
+import { it, describe, expect } from "vitest";
 
 describe("Create context with allocation", () => {
   it("should create allocation value", () => {

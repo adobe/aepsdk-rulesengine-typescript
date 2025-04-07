@@ -10,6 +10,11 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import { createExecutor } from "../../src/executors/index";
+import { it, describe, expect } from "vitest";
+
+const options = {
+  generateEventHash: (event: object) => JSON.stringify(event),
+};
 
 describe("Create executor", () => {
   it("should return Target executor when provider TGT", () => {
@@ -21,13 +26,17 @@ describe("Create executor", () => {
       },
     };
 
-    const executor = createExecutor([], metadata);
+    const executor = createExecutor([], metadata, options);
 
     expect(executor.provider).toEqual("TGT");
   });
 
   it("should return default executor when no provider", () => {
-    const executor = createExecutor([], { provider: "", providerData: {} });
+    const executor = createExecutor(
+      [],
+      { provider: "", providerData: {} },
+      options,
+    );
 
     expect(executor.provider).toEqual("DEFAULT");
   });

@@ -10,6 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import { memoize } from "../../src/utils/memoize";
+import { it, describe, expect } from "vitest";
 
 describe("memoize", () => {
   it("should memoize", () => {

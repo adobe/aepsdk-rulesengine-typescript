@@ -9,16 +9,23 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { Consequence, Consequences } from "../../types/schema";
+import {
+  Consequence,
+  Consequences,
+  RulesEngineOptions,
+} from "../../types/schema";
 import { Context, ExecutableRule } from "../../types/engine";
 import { DEFAULT_PROVIDER } from "../constants";
 
-export function createDefaultRulesExecutor(rules: Array<ExecutableRule>) {
+export function createDefaultRulesExecutor(
+  rules: Array<ExecutableRule>,
+  options: RulesEngineOptions,
+) {
   return {
     provider: DEFAULT_PROVIDER,
     execute: (context: Context): Array<Consequences> =>
       rules
-        .map((rule: ExecutableRule) => rule.execute(context))
+        .map((rule: ExecutableRule) => rule.execute(context, options))
         .filter((arr: Array<Consequence>) => arr.length > 0),
   };
 }

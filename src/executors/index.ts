@@ -17,20 +17,18 @@ import {
 import { createDefaultRulesExecutor } from "./default/default-rules-executor";
 import { createTargetRulesExecutor } from "./target/target-rules-executor";
 import { TARGET_PROVIDER } from "./constants";
+import { RulesEngineOptions } from "../types/schema";
 
 export function createExecutor(
   rules: Array<ExecutableRule>,
-  metadata?: ExecutableRuleSetMetadata,
+  metadata: ExecutableRuleSetMetadata,
+  options: RulesEngineOptions,
 ): Executor {
-  if (!metadata) {
-    return createDefaultRulesExecutor(rules);
-  }
-
   const { provider } = metadata;
 
   if (provider === TARGET_PROVIDER) {
     return createTargetRulesExecutor(rules, metadata);
   }
 
-  return createDefaultRulesExecutor(rules);
+  return createDefaultRulesExecutor(rules, options);
 }

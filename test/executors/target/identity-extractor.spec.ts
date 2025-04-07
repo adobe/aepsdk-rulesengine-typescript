@@ -10,6 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 import { extractIdentity } from "../../../src/executors/target/identity-extractor";
+import { it, describe, expect } from "vitest";
 
 describe("Identity extractor", () => {
   it("should throw when no xdm", () => {

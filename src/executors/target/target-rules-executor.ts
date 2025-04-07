@@ -16,7 +16,6 @@ import {
   ExecutableRuleSetMetadata,
 } from "../../types/engine";
 import { validateMetadata } from "./validator";
-import { keys } from "../../utils/keys";
 import { extractIdentity } from "./identity-extractor";
 import { createId } from "./id-factory";
 import { createContext } from "./context-factory";
@@ -63,7 +62,7 @@ export function createTargetRulesExecutor(
     execute: (context: Context): Array<Consequences> => {
       const identity = extractIdentity(context);
       const consequencesNoKey = evaluateRules(context, rulesNoKey);
-      const rulesKeys = keys(rulesWithKeys);
+      const rulesKeys = Object.keys(rulesWithKeys);
       const consequencesWithKeys: Array<Consequences> = [];
 
       for (let i = 0; i < rulesKeys.length; i += 1) {

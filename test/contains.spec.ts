@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 import RulesEngine from "../src/index";
 import { RuleSet } from "../src/types/schema";
+import { it, describe, expect } from "vitest";
 
 const RULE_DEFINITION: RuleSet = {
   version: 1,
