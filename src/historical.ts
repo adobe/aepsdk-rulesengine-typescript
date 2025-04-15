@@ -202,26 +202,22 @@ export function queryAndCountMostRecentEvent(
     return events.reduce(
       (mostRecent, event, index) => {
         const eventHash = options.generateEventHash(normalizeEvent(event));
-
         const contextEvent = context.events[eventHash];
-
         if (!contextEvent) {
           return mostRecent;
         }
 
-        const mostRecentTimestamp =
-          contextEvent.timestamps[contextEvent.timestamps.length - 1];
+        const mostRecentTimestamp = contextEvent.timestamps
+          .filter((t: number) => t >= from && t <= to)
+          .pop();
 
-        return mostRecentTimestamp &&
-          mostRecentTimestamp >= from &&
-          mostRecentTimestamp <= to &&
-          mostRecentTimestamp > mostRecent.timestamp
+        return mostRecentTimestamp && mostRecentTimestamp > mostRecent.timestamp
           ? { index, timestamp: mostRecentTimestamp }
           : mostRecent;
       },
-      { index: Infinity, timestamp: 0 },
+      { index: -1, timestamp: 0 },
     ).index;
   } catch {
-    return Infinity;
+    return -1;
   }
 }
