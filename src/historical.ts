@@ -180,3 +180,46 @@ export function queryAndCountOrderedEvent(
     return 0;
   }
 }
+
+/**
+ * Queries a list of events and returns the index of the most recent event that occurred within a specified time range.
+ *
+ * @param events - Array of historical event conditions to check
+ * @param context - The context object containing the events history
+ * @param options - Rules engine options with event hash generation capability
+ * @param from - Optional timestamp (in milliseconds) marking the start of the time range (default: 0)
+ * @param to - Optional timestamp (in milliseconds) marking the end of the time range (default: Infinity)
+ * @returns
+ */
+export function queryAndCountMostRecentEvent(
+  events: Array<HistoricalEvent>,
+  context: Context,
+  options: RulesEngineOptions,
+  from = 0,
+  to = Infinity,
+) {
+  try {
+    return events.reduce(
+      (mostRecent, event, index) => {
+        const eventHash = options.generateEventHash(normalizeEvent(event));
+
+        const contextEvent = context.events[eventHash];
+
+        if (!contextEvent) {
+          return mostRecent;
+        }
+
+        const mostRecentTimestamp = contextEvent.timestamps
+          .filter((t: number) => t >= from && t <= to)
+          .pop();
+
+        return mostRecentTimestamp && mostRecentTimestamp > mostRecent.timestamp
+          ? { index, timestamp: mostRecentTimestamp }
+          : mostRecent;
+      },
+      { index: Infinity, timestamp: 0 },
+    ).index;
+  } catch {
+    return Infinity;
+  }
+}
