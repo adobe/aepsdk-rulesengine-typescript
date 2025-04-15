@@ -209,11 +209,13 @@ export function queryAndCountMostRecentEvent(
           return mostRecent;
         }
 
-        const mostRecentTimestamp = contextEvent.timestamps
-          .filter((t: number) => t >= from && t <= to)
-          .pop();
+        const mostRecentTimestamp =
+          contextEvent.timestamps[contextEvent.timestamps.length - 1];
 
-        return mostRecentTimestamp && mostRecentTimestamp > mostRecent.timestamp
+        return mostRecentTimestamp &&
+          mostRecentTimestamp >= from &&
+          mostRecentTimestamp <= to &&
+          mostRecentTimestamp > mostRecent.timestamp
           ? { index, timestamp: mostRecentTimestamp }
           : mostRecent;
       },
