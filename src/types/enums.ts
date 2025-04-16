@@ -38,6 +38,7 @@ export const LogicType = {
 export const SearchType = {
   ANY: "any",
   ORDERED: "ordered",
+  MOST_RECENT: "mostRecent",
 };
 
 export type SupportedCondition =
