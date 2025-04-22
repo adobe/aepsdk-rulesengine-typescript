@@ -189,7 +189,7 @@ export function queryAndCountOrderedEvent(
  * @param options - Rules engine options with event hash generation capability
  * @param from - Optional timestamp (in milliseconds) marking the start of the time range (default: 0)
  * @param to - Optional timestamp (in milliseconds) marking the end of the time range (default: Infinity)
- * @returns
+ * @returns the index of the most recent event. -1 if no event is found
  */
 export function queryAndCountMostRecentEvent(
   events: Array<HistoricalEvent>,
