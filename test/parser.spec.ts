@@ -65,6 +65,9 @@ const RULE_SET_WITH_RULE_KEY: RuleSet = {
   rules: [
     {
       key: "rule1",
+      meta: {
+        ruleType: "card",
+      },
       condition: {
         definition: {
           key: "foo",

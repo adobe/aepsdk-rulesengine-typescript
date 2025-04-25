@@ -34,6 +34,7 @@ export interface RuleSet {
 
 export interface Rule {
   key?: string;
+  meta?: object;
   condition: GroupCondition | MatcherCondition | HistoricalCondition;
   consequences: Array<Consequence>;
 }
