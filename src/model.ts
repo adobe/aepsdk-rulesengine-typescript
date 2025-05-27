@@ -29,6 +29,7 @@ import {
 import {
   checkForHistoricalMatcher,
   queryAndCountAnyEvent,
+  queryAndCountMostRecentEvent,
   queryAndCountOrderedEvent,
 } from "./historical";
 
@@ -163,7 +164,15 @@ export function createHistoricalDefinition(
     evaluate: (context, options) => {
       let eventCount: number;
 
-      if (SearchType.ORDERED === searchType) {
+      if (SearchType.MOST_RECENT === searchType) {
+        eventCount = queryAndCountMostRecentEvent(
+          events,
+          context,
+          options,
+          from,
+          to,
+        );
+      } else if (SearchType.ORDERED === searchType) {
         eventCount = queryAndCountOrderedEvent(
           events,
           context,
