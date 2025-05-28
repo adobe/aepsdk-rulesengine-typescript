@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@4
+        uses: actions/checkout@master
         with:
           fetch-depth: 0
           token: ${{ secrets.ADOBE_BOT_GITHUB_TOKEN }}
