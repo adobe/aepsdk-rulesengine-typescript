@@ -33,7 +33,6 @@
     "prelint": "npm run format && npm run add-license",
     "lint": "./node_modules/.bin/eslint && tsc",
     "prepare": "husky",
-    "prepublishOnly": "rollup -c",
     "pretty-quick": "pretty-quick",
     "test": "vitest run --coverage"
   },

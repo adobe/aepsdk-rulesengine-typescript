@@ -8,20 +8,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@master
+        uses: actions/checkout@4
         with:
           fetch-depth: 0
           token: ${{ secrets.ADOBE_BOT_GITHUB_TOKEN }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 24
           registry-url: https://registry.npmjs.org/
 
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Step
+        run: npm run build --if-present
+
       - name: Publish to registry.npmjs.org
-        run: |
-          npm ci
-          npm publish
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.ADOBE_BOT_NPM_TOKEN}}
