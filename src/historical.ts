@@ -25,6 +25,8 @@ const TYPE = "type";
 const VALID_EVENT_TYPES = [IAM_EVENT_TYPE, EVENT_TYPE, TYPE];
 const VALID_EVENT_IDS = [IAM_ID, ID];
 
+const IAM_PREFIX = "iam.";
+
 export const checkForHistoricalMatcher = (
   eventCount: number,
   matcherKey: SupportedMatcher,
@@ -70,12 +72,19 @@ const detectKeyName = (context: Context, properties: Array<string>) => {
 };
 
 /**
- * Normalizes event object by standardizing the event type and event ID field names.
+ * Normalizes event object by standardizing the field names.
  *
- * Web SDK events are stored alwaysed with the field names eventId and eventType.
+ * Web SDK events are always stored with the field names eventId and eventType,
+ * and any additional fields (such as action) are stored without a namespace.
  * The historical event that we receive in the rules engine will contain the iam.id
- * and iam.eventType fields. We use this method to transform the historical event
- * to match the web SDK event format. We leave the other fields names in place.
+ * and iam.eventType fields, and may contain other iam prefixed fields such as
+ * iam.action. We use this method to transform the historical event to match the
+ * web SDK event format:
+ *   - iam.eventType (or type) becomes eventType
+ *   - iam.id (or id) becomes eventId
+ *   - any other iam prefixed field has the prefix removed (e.g. iam.action becomes action)
+ * When both a prefixed and a non-prefixed version of a field are present, the
+ * prefixed value is used. Fields without the iam prefix are left in place.
  *
  * @param event - The historical event object to normalize
  * @returns The normalized event object with standardized field names
@@ -93,6 +102,15 @@ const normalizeEvent = (originalEvent: HistoricalEvent) => {
     }
 
     event[normalizedKeyName] = event[keyName];
+    delete event[keyName];
+  });
+
+  Object.keys(event).forEach((keyName) => {
+    if (!keyName.startsWith(IAM_PREFIX)) {
+      return;
+    }
+
+    event[keyName.substring(IAM_PREFIX.length)] = event[keyName];
     delete event[keyName];
   });
 
