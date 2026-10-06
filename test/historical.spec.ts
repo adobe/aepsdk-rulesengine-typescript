@@ -158,7 +158,7 @@ describe("test helper functions", () => {
     expect(result).toBe(0);
   });
 
-  it("should normalize 'iam' prefixed additional properties like 'iam.action'", () => {
+  it("should normalize 'iam.action' to 'action'", () => {
     const events = [
       {
         "iam.eventType": "interact",
@@ -224,7 +224,7 @@ describe("test helper functions", () => {
     expect(result).toBe(1);
   });
 
-  it("should prefer the 'iam' prefixed value when both prefixed and non-prefixed properties exist", () => {
+  it("should prefer 'iam.action' when both 'iam.action' and 'action' exist", () => {
     const events = [
       {
         "iam.eventType": "interact",
@@ -246,7 +246,7 @@ describe("test helper functions", () => {
     expect(result).toBe(1);
   });
 
-  it("should normalize 'iam' prefixed properties for ordered searches", () => {
+  it("should normalize 'iam.action' for ordered searches", () => {
     const events = [
       { "iam.eventType": "display", "iam.id": "A" },
       { "iam.eventType": "interact", "iam.id": "A", "iam.action": "clicked" },
@@ -262,6 +262,30 @@ describe("test helper functions", () => {
     };
 
     const result = queryAndCountOrderedEvent(events, context, options, 0, 3);
+    expect(result).toBe(1);
+  });
+
+  it("should leave other 'iam' prefixed properties in place", () => {
+    const events = [
+      {
+        "iam.eventType": "interact",
+        "iam.id": "abc",
+        "iam.other": "value",
+      },
+    ];
+
+    const context = {
+      events: {
+        '{"eventId":"abc","eventType":"interact","iam.other":"value"}': {
+          timestamps: [1609086720000],
+        },
+        '{"eventId":"abc","eventType":"interact","other":"value"}': {
+          timestamps: [1609086720000, 1609086720001],
+        },
+      },
+    };
+
+    const result = queryAndCountAnyEvent(events, context, options);
     expect(result).toBe(1);
   });
 

@@ -25,7 +25,8 @@ const TYPE = "type";
 const VALID_EVENT_TYPES = [IAM_EVENT_TYPE, EVENT_TYPE, TYPE];
 const VALID_EVENT_IDS = [IAM_ID, ID];
 
-const IAM_PREFIX = "iam.";
+const IAM_ACTION = "iam.action";
+const ACTION = "action";
 
 export const checkForHistoricalMatcher = (
   eventCount: number,
@@ -72,19 +73,17 @@ const detectKeyName = (context: Context, properties: Array<string>) => {
 };
 
 /**
- * Normalizes event object by standardizing the field names.
+ * Normalizes event object by standardizing the event type, event ID and action field names.
  *
- * Web SDK events are always stored with the field names eventId and eventType,
- * and any additional fields (such as action) are stored without a namespace.
- * The historical event that we receive in the rules engine will contain the iam.id
- * and iam.eventType fields, and may contain other iam prefixed fields such as
- * iam.action. We use this method to transform the historical event to match the
- * web SDK event format:
+ * Web SDK events are always stored with the field names eventId, eventType and
+ * (optionally) action. The historical event that we receive in the rules engine
+ * will contain the iam.id and iam.eventType fields, and may contain the iam.action
+ * field. We use this method to transform the historical event to match the web SDK
+ * event format:
  *   - iam.eventType (or type) becomes eventType
  *   - iam.id (or id) becomes eventId
- *   - any other iam prefixed field has the prefix removed (e.g. iam.action becomes action)
- * When both a prefixed and a non-prefixed version of a field are present, the
- * prefixed value is used. Fields without the iam prefix are left in place.
+ *   - iam.action becomes action (iam.action wins if both are present)
+ * We leave the other field names in place.
  *
  * @param event - The historical event object to normalize
  * @returns The normalized event object with standardized field names
@@ -105,14 +104,10 @@ const normalizeEvent = (originalEvent: HistoricalEvent) => {
     delete event[keyName];
   });
 
-  Object.keys(event).forEach((keyName) => {
-    if (!keyName.startsWith(IAM_PREFIX)) {
-      return;
-    }
-
-    event[keyName.substring(IAM_PREFIX.length)] = event[keyName];
-    delete event[keyName];
-  });
+  if (!isUndefined(event[IAM_ACTION])) {
+    event[ACTION] = event[IAM_ACTION];
+    delete event[IAM_ACTION];
+  }
 
   return event;
 };
