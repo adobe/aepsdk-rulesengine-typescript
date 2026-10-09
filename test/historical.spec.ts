@@ -158,6 +158,137 @@ describe("test helper functions", () => {
     expect(result).toBe(0);
   });
 
+  it("should normalize 'iam.action' to 'action'", () => {
+    const events = [
+      {
+        "iam.eventType": "interact",
+        "iam.id": "abc",
+        "iam.action": "clicked",
+      },
+    ];
+
+    const context = {
+      events: {
+        '{"action":"clicked","eventId":"abc","eventType":"interact"}': {
+          timestamps: [1609086720000, 1609086720001],
+        },
+      },
+    };
+
+    const result = queryAndCountAnyEvent(events, context, options);
+    expect(result).toBe(2);
+  });
+
+  it("should not match 'iam.action' against an event with a different action", () => {
+    const events = [
+      {
+        "iam.eventType": "interact",
+        "iam.id": "abc",
+        "iam.action": "clicked",
+      },
+    ];
+
+    const context = {
+      events: {
+        '{"action":"cancel","eventId":"abc","eventType":"interact"}': {
+          timestamps: [1609086720000],
+        },
+        '{"eventId":"abc","eventType":"interact"}': {
+          timestamps: [1609086720000],
+        },
+      },
+    };
+
+    const result = queryAndCountAnyEvent(events, context, options);
+    expect(result).toBe(0);
+  });
+
+  it("should continue to support non-prefixed 'action' properties", () => {
+    const events = [
+      {
+        "iam.eventType": "interact",
+        "iam.id": "abc",
+        action: "clicked",
+      },
+    ];
+
+    const context = {
+      events: {
+        '{"action":"clicked","eventId":"abc","eventType":"interact"}': {
+          timestamps: [1609086720000],
+        },
+      },
+    };
+
+    const result = queryAndCountAnyEvent(events, context, options);
+    expect(result).toBe(1);
+  });
+
+  it("should prefer 'iam.action' when both 'iam.action' and 'action' exist", () => {
+    const events = [
+      {
+        "iam.eventType": "interact",
+        "iam.id": "abc",
+        "iam.action": "clicked",
+        action: "cancel",
+      },
+    ];
+
+    const context = {
+      events: {
+        '{"action":"clicked","eventId":"abc","eventType":"interact"}': {
+          timestamps: [1609086720000],
+        },
+      },
+    };
+
+    const result = queryAndCountAnyEvent(events, context, options);
+    expect(result).toBe(1);
+  });
+
+  it("should normalize 'iam.action' for ordered searches", () => {
+    const events = [
+      { "iam.eventType": "display", "iam.id": "A" },
+      { "iam.eventType": "interact", "iam.id": "A", "iam.action": "clicked" },
+    ];
+
+    const context = {
+      events: {
+        '{"eventId":"A","eventType":"display"}': { timestamps: [1] },
+        '{"action":"clicked","eventId":"A","eventType":"interact"}': {
+          timestamps: [2],
+        },
+      },
+    };
+
+    const result = queryAndCountOrderedEvent(events, context, options, 0, 3);
+    expect(result).toBe(1);
+  });
+
+  it("should leave other 'iam' prefixed properties in place", () => {
+    const events = [
+      {
+        "iam.eventType": "interact",
+        "iam.id": "abc",
+        "iam.other": "value",
+      },
+    ];
+
+    const context = {
+      events: {
+        '{"eventId":"abc","eventType":"interact","iam.other":"value"}': {
+          timestamps: [1609086720000],
+        },
+        '{"eventId":"abc","eventType":"interact","other":"value"}': {
+          timestamps: [1609086720000, 1609086720001],
+        },
+      },
+    };
+
+    const result = queryAndCountAnyEvent(events, context, options);
+    expect(result).toBe(1);
+  });
+
   it("should return total count of the number of events even if the `to` and `from` is undefined", () => {
     const events = [
       {

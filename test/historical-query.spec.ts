@@ -613,4 +613,73 @@ describe("rules from AJO", () => {
       ).toEqual([]);
     });
   });
+
+  describe("with an 'iam.action' condition (show until click through)", () => {
+    const ACTIVITY_ID =
+      "a1b2c3d4-0000-4000-8000-000000000001_e5f6a7b8-0000-4000-8000-000000000002#c9d0e1f2-0000-4000-8000-000000000003";
+
+    // Shape of the frequency rule AJO delivers for "Show until click through".
+    const untilClickThroughRuleset: RuleSet = {
+      version: 1,
+      rules: [
+        {
+          condition: {
+            definition: {
+              conditions: [
+                {
+                  definition: {
+                    events: [
+                      {
+                        "iam.eventType": "interact",
+                        "iam.action": "clicked",
+                        "iam.id": ACTIVITY_ID,
+                      },
+                    ],
+                    matcher: "lt",
+                    value: 1,
+                  },
+                  type: "historical",
+                },
+              ],
+              logic: "and",
+            },
+            type: "group",
+          },
+          consequences: [CONSEQUENCE],
+        },
+      ],
+    };
+
+    it("returns the consequence before the message has been clicked", () => {
+      expect(
+        RulesEngine(untilClickThroughRuleset, rulesEngineOptions).execute({
+          events: {
+            [`{"eventId":"${ACTIVITY_ID}","eventType":"display"}`]: {
+              timestamps: [1681321309855],
+            },
+            [`{"action":"cancel","eventId":"${ACTIVITY_ID}","eventType":"interact"}`]:
+              {
+                timestamps: [1681321309856],
+              },
+          },
+        }),
+      ).toEqual([[CONSEQUENCE]]);
+    });
+
+    it("returns no consequence once a clicked interaction has been recorded", () => {
+      expect(
+        RulesEngine(untilClickThroughRuleset, rulesEngineOptions).execute({
+          events: {
+            [`{"eventId":"${ACTIVITY_ID}","eventType":"display"}`]: {
+              timestamps: [1681321309855],
+            },
+            [`{"action":"clicked","eventId":"${ACTIVITY_ID}","eventType":"interact"}`]:
+              {
+                timestamps: [1681321309856],
+              },
+          },
+        }),
+      ).toEqual([]);
+    });
+  });
 });

@@ -25,6 +25,9 @@ const TYPE = "type";
 const VALID_EVENT_TYPES = [IAM_EVENT_TYPE, EVENT_TYPE, TYPE];
 const VALID_EVENT_IDS = [IAM_ID, ID];
 
+const IAM_ACTION = "iam.action";
+const ACTION = "action";
+
 export const checkForHistoricalMatcher = (
   eventCount: number,
   matcherKey: SupportedMatcher,
@@ -70,12 +73,17 @@ const detectKeyName = (context: Context, properties: Array<string>) => {
 };
 
 /**
- * Normalizes event object by standardizing the event type and event ID field names.
+ * Normalizes event object by standardizing the event type, event ID and action field names.
  *
- * Web SDK events are stored alwaysed with the field names eventId and eventType.
- * The historical event that we receive in the rules engine will contain the iam.id
- * and iam.eventType fields. We use this method to transform the historical event
- * to match the web SDK event format. We leave the other fields names in place.
+ * Web SDK events are always stored with the field names eventId, eventType and
+ * (optionally) action. The historical event that we receive in the rules engine
+ * will contain the iam.id and iam.eventType fields, and may contain the iam.action
+ * field. We use this method to transform the historical event to match the web SDK
+ * event format:
+ *   - iam.eventType (or type) becomes eventType
+ *   - iam.id (or id) becomes eventId
+ *   - iam.action becomes action (iam.action wins if both are present)
+ * We leave the other field names in place.
  *
  * @param event - The historical event object to normalize
  * @returns The normalized event object with standardized field names
@@ -95,6 +103,11 @@ const normalizeEvent = (originalEvent: HistoricalEvent) => {
     event[normalizedKeyName] = event[keyName];
     delete event[keyName];
   });
+
+  if (!isUndefined(event[IAM_ACTION])) {
+    event[ACTION] = event[IAM_ACTION];
+    delete event[IAM_ACTION];
+  }
 
   return event;
 };
