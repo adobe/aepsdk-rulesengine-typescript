@@ -65,6 +65,70 @@ describe("matcher type - ends with (ew)", () => {
     expect(result).toEqual([RULE_DEFINITION.rules[0].consequences]);
   });
 
+  it.each([
+    { value: 9, text: "94109", matches: true },
+    { value: 0, text: "94100", matches: true },
+    { value: true, text: "is TRUE", matches: true },
+    { value: false, text: "is FALSE", matches: true },
+    { value: 9, text: "94100", matches: false },
+    { value: true, text: "is FALSE", matches: false },
+  ])(
+    "coerces condition value $value when matching $text",
+    ({ value, text, matches }) => {
+      const consequences = RULE_DEFINITION.rules[0].consequences;
+      const result = RulesEngine({
+        version: 1,
+        rules: [
+          {
+            condition: {
+              type: "matcher",
+              definition: { key: "text", matcher: "ew", values: [value] },
+            },
+            consequences,
+          },
+        ],
+      }).execute({ text });
+
+      expect(result).toEqual(matches ? [consequences] : []);
+    },
+  );
+
+  it("returns unrelated matching rules when a numeric ends-with condition does not match", () => {
+    const definition: RuleSet = {
+      version: 1,
+      rules: [
+        {
+          condition: {
+            type: "matcher",
+            definition: { key: "zip", matcher: "eq", values: ["94109"] },
+          },
+          consequences: [{ id: "before", type: "item", detail: {} }],
+        },
+        {
+          condition: {
+            type: "matcher",
+            definition: { key: "zip", matcher: "ew", values: [8] },
+          },
+          consequences: [{ id: "suffix", type: "item", detail: {} }],
+        },
+        {
+          condition: {
+            type: "matcher",
+            definition: { key: "zip", matcher: "sw", values: ["94"] },
+          },
+          consequences: [{ id: "after", type: "item", detail: {} }],
+        },
+      ],
+    };
+
+    const result = RulesEngine(definition).execute({ zip: "94109" });
+
+    expect(result).toEqual([
+      definition.rules[0].consequences,
+      definition.rules[2].consequences,
+    ]);
+  });
+
   it("returns empty consequence when condition definition values does not ends with the relevant key's value of given context", () => {
     const result = ruleset.execute({
       state: "Hawaii",
