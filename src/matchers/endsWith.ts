@@ -22,7 +22,7 @@ export function createEndsWith(): Matcher {
       for (let i = 0; i < values.length; i += 1) {
         if (
           !isObjectOrUndefined(values[i]) &&
-          contextValue.endsWith(values[i].toLowerCase())
+          contextValue.endsWith(String(values[i]).toLowerCase())
         ) {
           return true;
         }
